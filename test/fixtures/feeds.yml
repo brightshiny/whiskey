@@ -1,2 +1,5 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
+techcrunch
+  title: TechCrunch
+  link:  http://feedproxy.google.com/TechCrunch

@@ -31,8 +31,8 @@ test:
   encoding: utf8
   database: whiskey_test
   pool: 5
-  username: root
-  password:
+  username: whiskey
+  password: whiskey
   socket: /tmp/mysql.sock
 
 production:
@@ -40,6 +40,6 @@ production:
   encoding: utf8
   database: whiskey_production
   pool: 5
-  username: root
-  password: 
+  username: whiskey
+  password: whiskey
   socket: /tmp/mysql.sock

@@ -1,0 +1,17 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+nick:
+  id: 1
+  nickname: nick
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+keith:
+  id: 2
+  nickname: keith
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>
+janko:
+  id: 3
+  nickname: janko
+  created_at: <%= Time.now %>
+  updated_at: <%= Time.now %>

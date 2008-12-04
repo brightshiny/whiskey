@@ -6,6 +6,13 @@ class UserTest < ActiveSupport::TestCase
   include AuthenticatedTestHelper
   fixtures :users
 
+  # Replace this with your real tests.
+  test "default users" do
+    assert_equal "nick", User.find(1).nickname
+    assert_equal "keith", User.find(2).nickname
+    assert_equal "janko", User.find(3).nickname
+  end
+
   def test_should_create_user
     assert_difference 'User.count' do
       user = create_user
@@ -99,5 +106,5 @@ protected
     record = User.new({ :login => 'quire', :email => 'quire@example.com', :password => 'quire69', :password_confirmation => 'quire69' }.merge(options))
     record.save
     record
-  end
+
 end

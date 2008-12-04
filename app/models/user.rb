@@ -5,6 +5,10 @@ class User < ActiveRecord::Base
   include Authentication::ByPassword
   include Authentication::ByCookieToken
 
+  has_many :feeds, :through => :feed_users
+  has_many :clicks
+  has_many :reads
+
   validates_presence_of     :login
   validates_length_of       :login,    :within => 3..40
   validates_uniqueness_of   :login
@@ -49,6 +53,4 @@ class User < ActiveRecord::Base
 
   protected
     
-
-
 end

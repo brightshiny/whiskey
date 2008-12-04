@@ -1,22 +1,27 @@
 class CreateUsers < ActiveRecord::Migration
   def self.up
-    create_table "users", :force => true do |t|
-      t.column :login,                     :string, :limit => 40
-      t.column :name,                      :string, :limit => 100, :default => '', :null => true
-      t.column :email,                     :string, :limit => 100
-      t.column :crypted_password,          :string, :limit => 40
-      t.column :salt,                      :string, :limit => 40
-      t.column :created_at,                :datetime
-      t.column :updated_at,                :datetime
-      t.column :remember_token,            :string, :limit => 40
-      t.column :remember_token_expires_at, :datetime
-
-
-    end
+    add_column :users, :login,                     :string, :limit => 40
+    add_column :users, :name,                      :string, :limit => 100, :default => '', :null => true
+    add_column :users, :email,                     :string, :limit => 100
+    add_column :users, :crypted_password,          :string, :limit => 40
+    add_column :users, :salt,                      :string, :limit => 40
+    add_column :users, :created_at,                :datetime
+    add_column :users, :updated_at,                :datetime
+    add_column :users, :remember_token,            :string, :limit => 40
+    add_column :users, :remember_token_expires_at, :datetime
     add_index :users, :login, :unique => true
   end
 
   def self.down
-    drop_table "users"
+    remove_column :users, :login
+    remove_column :users, :name
+    remove_column :users, :email
+    remove_column :users, :crypted_password
+    remove_column :users, :salt
+    remove_column :users, :created_at
+    remove_column :users, :updated_at
+    remove_column :users, :remember_token
+    remove_column :users, :remember_token_expires_at
+    remove_index :users, :login
   end
 end

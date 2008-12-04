@@ -1,0 +1,12 @@
+digraph whiskey
+	{
+		feeds -> feed_users [dir=back];
+		users -> feed_users [dir=back];
+		feeds -> items [dir=back];
+		users -> clicks [dir=back];
+		users -> reads [dir=back];
+		items -> clicks [dir=back];
+		items -> reads [dir=back];
+		words -> item_words [dir=back];
+		items -> item_words [dir=back];
+	}

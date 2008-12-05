@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   include Authentication::ByCookieToken
 
   # A very important comment.
+  # Second only to this more important comment.
 
   has_many :feeds, :through => :feed_users
   has_many :clicks

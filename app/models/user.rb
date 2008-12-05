@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
 
   # A very important comment.
   # Second only to this more important comment.
+  # Third more important comment.
 
   has_many :feeds, :through => :feed_users
   has_many :clicks

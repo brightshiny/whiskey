@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<opml version="1.0">
+    <head>
+        <title>Keith subscriptions in Google Reader</title>
+    </head>
+    <body>
+        <outline text="All about Microsoft" title="All about Microsoft"
+            type="rss"
+            xmlUrl="http://feeds.feedburner.com/zdnet/microsoft" htmlUrl="http://blogs.zdnet.com/microsoft"/>
+        <outline text="Call Me Fishmeal." title="Call Me Fishmeal."
+            type="rss" xmlUrl="http://wilshipley.com/blog/feed.xml" htmlUrl="http://wilshipley.com/blog/"/>
+        <outline text="Coding Horror" title="Coding Horror" type="rss"
+            xmlUrl="http://feeds.feedburner.com/codinghorror/" htmlUrl="http://www.codinghorror.com/blog/"/>
+        <outline text="Evil Mad Scientist Laboratories"
+            title="Evil Mad Scientist Laboratories" type="rss"
+            xmlUrl="http://www.evilmadscientist.com/backend/geeklog.rss" htmlUrl="http://www.evilmadscientist.com"/>
+        <outline text="Freedom to Tinker" title="Freedom to Tinker"
+            type="rss"
+            xmlUrl="http://feeds.freedom-to-tinker.com/freedom-to-tinker" htmlUrl="http://www.freedom-to-tinker.com"/>
+        <outline text="I, Cringely . The Pulpit | PBS"
+            title="I, Cringely . The Pulpit | PBS" type="rss"
+            xmlUrl="http://www.pbs.org/cringely/pulpit/rss2.xml" htmlUrl="http://www.pbs.org/cringely/pulpit/"/>
+        <outline text="Internet Retailer Daily News Articles"
+            title="Internet Retailer Daily News Articles" type="rss"
+            xmlUrl="http://brightshiny.me/ir/feed.xml" htmlUrl="http://lewisthecat.com/ir/feed.xml"/>
+        <outline text="Lisa Gold: Research Maven"
+            title="Lisa Gold: Research Maven" type="rss"
+            xmlUrl="http://lisagoldresearch.wordpress.com/feed/" htmlUrl="http://lisagoldresearch.wordpress.com"/>
+        <outline text="Mini-Microsoft" title="Mini-Microsoft" type="rss"
+            xmlUrl="http://minimsft.blogspot.com/feeds/posts/default" htmlUrl="http://minimsft.blogspot.com/"/>
+        <outline text="Paul Graham: Essays" title="Paul Graham: Essays"
+            type="rss"
+            xmlUrl="http://www.aaronsw.com/2002/feeds/pgessays.rss" htmlUrl="http://www.paulgraham.com/"/>
+        <outline text="SF Site" title="SF Site" type="rss"
+            xmlUrl="http://www.sfsite.com/depts/front.xml" htmlUrl="http://www.sfsite.com/"/>
+        <outline text="The Personal Finance Weblog"
+            title="The Personal Finance Weblog" type="rss"
+            xmlUrl="http://www.finance-weblog.com/index.rdf" htmlUrl="http://www.finance-weblog.com/"/>
+        <outline text="The Sartorialist" title="The Sartorialist"
+            type="rss"
+            xmlUrl="http://thesartorialist.blogspot.com/feeds/posts/default" htmlUrl="http://thesartorialist.blogspot.com/"/>
+        <outline
+            text="Threadwatch.org - Marketing and Technology Discussed"
+            title="Threadwatch.org - Marketing and Technology Discussed"
+            type="rss" xmlUrl="http://www.threadwatch.org/node/feed" htmlUrl="http://www.threadwatch.org"/>
+        <outline text="Three Minds @ Organic"
+            title="Three Minds @ Organic" type="rss"
+            xmlUrl="http://threeminds.organic.com/atom.xml" htmlUrl="http://threeminds.organic.com/"/>
+        <outline text="TorrentFreak" title="TorrentFreak" type="rss"
+            xmlUrl="http://feed.torrentfreak.com/Torrentfreak/" htmlUrl="http://torrentfreak.com"/>
+        <outline text="TV Worth Watching" title="TV Worth Watching"
+            type="rss"
+            xmlUrl="http://www.tvworthwatching.com/blog/atom.xml" htmlUrl="http://www.tvworthwatching.com/blog/"/>
+        <outline text="xkcd.com" title="xkcd.com" type="rss"
+            xmlUrl="http://xkcd.com/atom.xml" htmlUrl="http://xkcd.com/"/>
+        <outline title="trends" text="trends">
+            <outline text="Don Dodge on The Next Big Thing"
+                title="Don Dodge on The Next Big Thing" type="rss"
+                xmlUrl="http://microsoftstartupzone.com/blogs/the_next_big_thing/rss.aspx" htmlUrl="http://microsoftstartupzone.com/blogs/the_next_big_thing/default.aspx"/>
+        </outline>
+        <outline title="1 - news - tech" text="1 - news - tech">
+            <outline text="BBC News | Technology | World Edition"
+                title="BBC News | Technology | World Edition" type="rss"
+                xmlUrl="http://newsrss.bbc.co.uk/rss/newsonline_world_edition/technology/rss.xml" htmlUrl="http://news.bbc.co.uk/go/rss/-/2/hi/technology/default.stm"/>
+            <outline text="KillerStartups.com - all"
+                title="KillerStartups.com - all" type="rss"
+                xmlUrl="http://feeds.feedburner.com/killerstartups/BkQv" htmlUrl="http://www.killerstartups.com"/>
+            <outline text="NYT > Technology" title="NYT > Technology"
+                type="rss"
+                xmlUrl="http://www.nytimes.com/services/xml/rss/nyt/Technology.xml" htmlUrl="http://www.nytimes.com/pages/technology/index.html?partner=rss"/>
+            <outline text="Slashdot" title="Slashdot" type="rss"
+                xmlUrl="http://rss.slashdot.org/Slashdot/slashdot" htmlUrl="http://slashdot.org/"/>
+            <outline text="TechCrunch" title="TechCrunch" type="rss"
+                xmlUrl="http://feedproxy.google.com/TechCrunch" htmlUrl="http://www.techcrunch.com"/>
+            <outline text="washingtonpost.com - Technology"
+                title="washingtonpost.com - Technology" type="rss"
+                xmlUrl="http://www.washingtonpost.com/wp-dyn/rss/technology/index.xml" htmlUrl="http://www.washingtonpost.com/wp-dyn/content/technology/index.html?nav=rss_technology"/>
+        </outline>
+        <outline title="gaming" text="gaming">
+            <outline text="Giant Bomb" title="Giant Bomb" type="rss"
+                xmlUrl="http://www.giantbomb.com/feed/" htmlUrl="http://www.giantbomb.com"/>
+            <outline text="Kotaku" title="Kotaku" type="rss"
+                xmlUrl="http://www.kotaku.com/index.xml" htmlUrl="http://kotaku.com"/>
+            <outline text="RPGamer" title="RPGamer" type="rss"
+                xmlUrl="http://www.rpgamer.com/index.xml" htmlUrl="http://www.rpgamer.com/"/>
+            <outline text="The Escapist : Zero Punctuation"
+                title="The Escapist : Zero Punctuation" type="rss"
+                xmlUrl="http://www.escapistmagazine.com/rss/articles/editorials/zeropunctuation" htmlUrl="http://www.escapistmagazine.com/videos/view/zero-punctuation"/>
+            <outline text="Xbox Lives Major Nelson"
+                title="Xbox Lives Major Nelson" type="rss"
+                xmlUrl="http://feeds.feedburner.com/MajorNelson" htmlUrl="http://majornelson.com/default.aspx"/>
+        </outline>
+        <outline title="2 - news - u.s." text="2 - news - u.s.">
+            <outline text="NYT > U.S." title="NYT > U.S." type="rss"
+                xmlUrl="http://www.nytimes.com/services/xml/rss/nyt/US.xml" htmlUrl="http://www.nytimes.com/pages/national/index.html?partner=rss"/>
+            <outline
+                text="washingtonpost.com - National News and Headlines"
+                title="washingtonpost.com - National News and Headlines"
+                type="rss"
+                xmlUrl="http://www.washingtonpost.com/wp-dyn/rss/nation/index.xml" htmlUrl="http://www.washingtonpost.com/wp-dyn/content/nation/index.html?nav=rss_nation"/>
+            <outline text="Wired: Politics" title="Wired: Politics"
+                type="rss"
+                xmlUrl="http://feeds.wired.com/wired/politics" htmlUrl="http://www.wired.com/rss/politics.xml"/>
+        </outline>
+        <outline title="good" text="good">
+            <outline text="Complex Diagrams" title="Complex Diagrams"
+                type="rss" xmlUrl="http://complexdiagrams.com/feed/" htmlUrl="http://complexdiagrams.com"/>
+        </outline>
+        <outline title="links" text="links">
+            <outline text="eHub" title="eHub" type="rss"
+                xmlUrl="http://feeds.feedburner.com/eHub" htmlUrl="http://www.emilychang.com/go/ehub/"/>
+            <outline text="Mashable!" title="Mashable!" type="rss"
+                xmlUrl="http://feeds.feedburner.com/Mashable" htmlUrl="http://mashable.com"/>
+        </outline>
+        <outline title="personal" text="personal">
+            <outline text="Consumerist" title="Consumerist" type="rss"
+                xmlUrl="http://consumerist.com/index.xml" htmlUrl="http://consumerist.com"/>
+            <outline text="Lifehacker" title="Lifehacker" type="rss"
+                xmlUrl="http://www.lifehacker.com/index.xml" htmlUrl="http://lifehacker.com"/>
+            <outline text="Oranges" title="Oranges" type="rss"
+                xmlUrl="http://o.rang.es/feed" htmlUrl="http://o.rang.es/"/>
+        </outline>
+        <outline title="gadgets" text="gadgets">
+            <outline text="Engadget" title="Engadget" type="rss"
+                xmlUrl="http://www.engadget.com/rss.xml" htmlUrl="http://www.engadget.com"/>
+            <outline text="Gizmodo" title="Gizmodo" type="rss"
+                xmlUrl="http://gizmodo.com/index.xml" htmlUrl="http://gizmodo.com"/>
+        </outline>
+        <outline title="3 - news - world" text="3 - news - world">
+            <outline text="NYT > World" title="NYT > World" type="rss"
+                xmlUrl="http://www.nytimes.com/services/xml/rss/nyt/World.xml" htmlUrl="http://www.nytimes.com/pages/world/index.html?partner=rss"/>
+            <outline text="washingtonpost.com - World"
+                title="washingtonpost.com - World" type="rss"
+                xmlUrl="http://www.washingtonpost.com/wp-dyn/rss/world/index.xml" htmlUrl="http://www.washingtonpost.com/wp-dyn/content/world/index.html?nav=rss_world"/>
+        </outline>
+        <outline title="hot" text="hot">
+            <outline text="Joel on Software" title="Joel on Software"
+                type="rss"
+                xmlUrl="http://www.joelonsoftware.com/rss.xml" htmlUrl="http://www.joelonsoftware.com"/>
+            <outline text="O'Reilly Radar" title="O'Reilly Radar"
+                type="rss" xmlUrl="http://radar.oreilly.com/atom.xml" htmlUrl="http://radar.oreilly.com/"/>
+            <outline text="Rands In Repose" title="Rands In Repose"
+                type="rss"
+                xmlUrl="http://www.randsinrepose.com/index.xml" htmlUrl="http://www.randsinrepose.com/"/>
+            <outline text="Schneier on Security"
+                title="Schneier on Security" type="rss"
+                xmlUrl="http://www.schneier.com/blog/index.rdf" htmlUrl="http://www.schneier.com/blog/"/>
+            <outline text="Startuply Recent Startup Jobs List"
+                title="Startuply Recent Startup Jobs List" type="rss"
+                xmlUrl="http://www.startuply.com/Rss/HomePage.aspx" htmlUrl="http://www.startuply.com"/>
+            <outline text="Techdirt" title="Techdirt" type="rss"
+                xmlUrl="http://techdirt.com/techdirt_rss.xml" htmlUrl="http://www.techdirt.com/"/>
+        </outline>
+        <outline title="1 - news - biz" text="1 - news - biz">
+            <outline text="BBC News | Business | World Edition"
+                title="BBC News | Business | World Edition" type="rss"
+                xmlUrl="http://newsrss.bbc.co.uk/rss/newsonline_world_edition/business/rss.xml" htmlUrl="http://news.bbc.co.uk/go/rss/-/2/hi/business/default.stm"/>
+            <outline text="NYT > Business" title="NYT > Business"
+                type="rss"
+                xmlUrl="http://www.nytimes.com/services/xml/rss/nyt/Business.xml" htmlUrl="http://www.nytimes.com/pages/business/index.html?partner=rss"/>
+            <outline text="washingtonpost.com - Business"
+                title="washingtonpost.com - Business" type="rss"
+                xmlUrl="http://www.washingtonpost.com/wp-dyn/rss/business/index.xml" htmlUrl="http://www.washingtonpost.com/wp-dyn/content/business/index.html?nav=rss_business"/>
+        </outline>
+        <outline title="prosumer" text="prosumer">
+            <outline text="Cool Tools" title="Cool Tools" type="rss"
+                xmlUrl="http://feeds.feedburner.com/CoolTools" htmlUrl="http://www.kk.org/cooltools/"/>
+            <outline text="NOTCOT.ORG" title="NOTCOT.ORG" type="rss"
+                xmlUrl="http://www.notcot.org/atom.php" htmlUrl="http://www.notcot.org/"/>
+            <outline text="PicoCool" title="PicoCool" type="rss"
+                xmlUrl="http://feeds.feedburner.com/picocool" htmlUrl="http://picocool.com/go/news/index/"/>
+            <outline text="productdose.com" title="productdose.com"
+                type="rss"
+                xmlUrl="http://feeds.productdose.com/productdose/" htmlUrl="http://www.productdose.com/"/>
+            <outline text="The Awesomer" title="The Awesomer" type="rss"
+                xmlUrl="http://feeds.feedburner.com/theawesomer" htmlUrl="http://theawesomer.com"/>
+            <outline text="Uncrate" title="Uncrate" type="rss"
+                xmlUrl="http://feeds.feedburner.com/uncrate" htmlUrl="http://www.uncrate.com/"/>
+        </outline>
+        <outline title="design" text="design">
+            <outline text="A List Apart: A List Apart"
+                title="A List Apart: A List Apart" type="rss"
+                xmlUrl="http://www.alistapart.com/feed/rss.xml" htmlUrl="http://www.alistapart.com/"/>
+        </outline>
+        <outline title="coding" text="coding">
+            <outline text="Basement.org" title="Basement.org" type="rss"
+                xmlUrl="http://feeds.feedburner.com/Basementorg" htmlUrl="http://www.basement.org/"/>
+            <outline
+                text="Data Mining: Text Mining, Visualization and Social Media"
+                title="Data Mining: Text Mining, Visualization and Social Media"
+                type="rss"
+                xmlUrl="http://feeds.feedburner.com/DataMining" htmlUrl="http://datamining.typepad.com/data_mining/"/>
+            <outline
+                text="High Scalability - Building bigger, faster, more reliable websites."
+                title="High Scalability - Building bigger, faster, more reliable websites."
+                type="rss" xmlUrl="http://highscalability.com/rss.xml" htmlUrl="http://highscalability.com"/>
+            <outline text="Joel on Software" title="Joel on Software"
+                type="rss"
+                xmlUrl="http://www.joelonsoftware.com/rss.xml" htmlUrl="http://www.joelonsoftware.com"/>
+            <outline text="Rands In Repose" title="Rands In Repose"
+                type="rss"
+                xmlUrl="http://www.randsinrepose.com/index.xml" htmlUrl="http://www.randsinrepose.com/"/>
+        </outline>
+    </body>
+</opml>

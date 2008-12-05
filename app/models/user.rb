@@ -5,6 +5,8 @@ class User < ActiveRecord::Base
   include Authentication::ByPassword
   include Authentication::ByCookieToken
 
+  # A very important comment.
+
   has_many :feeds, :through => :feed_users
   has_many :clicks
   has_many :reads

@@ -1,0 +1,18 @@
+<h1>Upload your OPML file</h1>
+
+<% if params[:opml_file].nil? %>
+
+<% form_tag( { :controller => :opml, :action => :upload }, :multipart => true) do %>
+<p>
+  <%= label_tag "opml_file", "Your OPML File" %>
+  <%= file_field_tag "opml_file" %>
+</p>
+<p>
+  <%= label_tag "commit", "Submit" %>
+  <%= submit_tag "Upload OPML File" %>
+</p>
+<% end %> 
+
+<% else %>
+<p>Uploaded <%= @opml.feed_uris.size %> feeds</p>
+<% end %>

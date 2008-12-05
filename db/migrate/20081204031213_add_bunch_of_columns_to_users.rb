@@ -20,6 +20,7 @@ class AddBunchOfColumnsToUsers < ActiveRecord::Migration
     remove_column :users, :updated_at
     remove_column :users, :remember_token
     remove_column :users, :remember_token_expires_at
-    remove_index :users, :login
+# kmb: removing the column removes the index
+#    remove_index :users, :login
   end
 end

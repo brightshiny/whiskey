@@ -3,6 +3,7 @@ class OpmlController < ApplicationController
   before_filter :login_required
   
   def show
+    @feeds = current_user.feeds
   end
   
   def upload

@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   include Authentication::ByCookieToken
 
   has_many :feeds, :through => :feed_users
+  has_many :feed_users
   has_many :clicks
   has_many :reads
 

@@ -1,4 +1,4 @@
-quentin:
+nick:
   id:                        1
   nickname:                  nick
   login:                     nick
@@ -9,7 +9,7 @@ quentin:
   remember_token_expires_at: <%= 1.days.from_now.to_s %>
   remember_token:            77de68daecd823babbb58edb1c8e14d7106e83bb
       
-aaron:
+keith:
   id:                        2
   nickname:                  keith
   login:                     keith
@@ -21,7 +21,7 @@ aaron:
   remember_token:            
 
 
-old_password_holder:
+janko:
   id:                        3
   login:                     janko
   nickname:                  janko

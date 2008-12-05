@@ -5,5 +5,7 @@ class AddFeedAttributes < ActiveRecord::Migration
   end
 
   def self.down
+    remove_column :feeds, :title
+    remove_column :feeds, :link
   end
 end

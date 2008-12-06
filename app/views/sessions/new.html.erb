@@ -1,21 +1,20 @@
-<h1>Log In</h1>
+<h2>Log in</h2>
 
 <% form_tag session_path do -%>
-<p><%= label_tag 'login' %><br />
-<%= text_field_tag 'login', @login %></p>
+<div class="grid_8 alpha">
+  <h3>Log in with your OpenID</h3>
+  <p><label for="openid_url">OpenID URL</label> <%= text_field_tag "openid_url" %></p>
+  <p><%= submit_tag 'Log in' %></p>
+  <p><%= link_to "What is OpenId?", "http://openid.net/what/", :target => "_blank" %></p>
+</div>
 
-<p><%= label_tag 'password' %><br/>
-<%= password_field_tag 'password', nil %></p>
+<div class="grid_8 omega">
+  <h3>Log in with your local account</h3>
+  <p><%= label_tag 'login' %> <%= text_field_tag 'login', @login %></p>
+  <p><%= label_tag 'password' %> <%= password_field_tag 'password', nil %></p>
+  <p><%= label_tag 'remember_me', 'Remember me' %> <%= check_box_tag 'remember_me', '1', @remember_me %></p>
+  <p><%= submit_tag 'Log in' %></p>
+  <p>Don't have an account?  <%= link_to "Sign up", signup_path %></p>
+</div>
 
-<!-- Uncomment this if you want this functionality
-<p><%= label_tag 'remember_me', 'Remember me' %>
-<%= check_box_tag 'remember_me', '1', @remember_me %></p>
--->
-
-<p>or...</p>
-
-<p><label for="openid_url">OpenID URL</label><br />
-<%= text_field_tag "openid_url" %></p>
-
-<p><%= submit_tag 'Log in' %></p>
 <% end -%>

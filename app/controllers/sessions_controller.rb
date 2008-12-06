@@ -1,7 +1,7 @@
 # This controller handles the login/logout function of the site.  
 class SessionsController < ApplicationController
-  # Be sure to include AuthenticationSystem in Application Controller instead
-  include AuthenticatedSystem
+  
+  skip_before_filter :make_sure_user_has_nickname, :only => [ :destroy ]
   
   # render new.rhtml
   def new
@@ -28,6 +28,7 @@ class SessionsController < ApplicationController
   def open_id_authentication(openid_url)
     authenticate_with_open_id(openid_url, :required => [:nickname, :email]) do |result, identity_url, registration|
       if result.successful?
+        identity_url = identity_url.split(/\#/).first
         @user = User.find_or_initialize_by_identity_url(identity_url)
         if @user.new_record?
           @user.login = registration['nickname']

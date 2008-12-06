@@ -1,8 +1,12 @@
 class UsersController < ApplicationController
-  # Be sure to include AuthenticationSystem in Application Controller instead
-  include AuthenticatedSystem
-  
 
+  skip_before_filter :make_sure_user_has_nickname, :only => [ :edit, :update ]
+  before_filter :login_required, :except => [ :new, :create ]
+  
+  def index
+    render :action => "show"
+  end
+  
   # render new.rhtml
   def new
     @user = User.new
@@ -13,7 +17,7 @@ class UsersController < ApplicationController
     @user = User.new(params[:user])
     success = @user && @user.save
     if success && @user.errors.empty?
-            # Protects against session fixation attacks, causes request forgery
+      # Protects against session fixation attacks, causes request forgery
       # protection if visitor resubmits an earlier form using back
       # button. Uncomment if you understand the tradeoffs.
       # reset session
@@ -25,4 +29,21 @@ class UsersController < ApplicationController
       render :action => 'new'
     end
   end
+  
+  def edit
+  end
+  
+  def update
+    respond_to do |format|
+      if current_user.update_attributes(params[:user])
+        flash[:notice] = 'Bar was successfully updated.'
+        format.html { redirect_to(current_user) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => "edit" }
+        format.xml  { render :xml => current_user.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+  
 end

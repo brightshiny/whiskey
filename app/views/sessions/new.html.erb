@@ -1,9 +1,5 @@
 <h1>Log In</h1>
 
-<% if current_user %>
-<p>You are: <%= current_user.login %>
-<% end %>
-
 <% form_tag session_path do -%>
 <p><%= label_tag 'login' %><br />
 <%= text_field_tag 'login', @login %></p>

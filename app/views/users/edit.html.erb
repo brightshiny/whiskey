@@ -1,0 +1,18 @@
+<h1>Edit your account</h1>
+
+<% form_for current_user do |f| %>
+  <%= f.error_messages %>
+  
+  <% if current_user.is_not_open_id? %>
+  <p><%= f.label :identity_url, "login" %> <%= login %></p>
+  <% else %>
+  <p><%= f.label :identity_url, "Open ID URL" %> <%= f.text_field :identity_url %></p>
+  <% end %>
+
+  <p><%= f.label :nickname, 'Nickname' %> <%= f.text_field :nickname %></p>
+  <p><%= f.label :email, 'Email Address' %> <%= f.text_field :email %> (Optional)</p>
+  <p><%= f.label :name, 'Full Name' %> <%= f.text_field :name %> (Optional)</p>
+  
+  <p><%= f.submit %></p>
+<% end %>
+

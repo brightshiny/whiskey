@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   def make_sure_user_has_nickname
     if logged_in? && current_user.nickname.nil?
       logger.info "User must have nickname"
-      redirect_to edit_user_path(Base64.encode64(current_user.identity_url)) and return false
+      redirect_to edit_user_path(current_user.token) and return false
     end
   end
 

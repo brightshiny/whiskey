@@ -10,23 +10,41 @@ class User < ActiveRecord::Base
   has_many :clicks
   has_many :reads
 
-  validates_presence_of     :login, :if => :is_not_open_id?
-  validates_length_of       :login,    :within => 3..40, :if => :is_not_open_id?
-  validates_uniqueness_of   :login, :if => :is_not_open_id?
-  validates_format_of       :login,    :with => Authentication.login_regex, :message => Authentication.bad_login_message, :if => :is_not_open_id?
-  validates_format_of       :name,     :with => Authentication.name_regex,  :message => Authentication.bad_name_message, :allow_nil => true, :if => :is_not_open_id?
-  validates_length_of       :name,     :maximum => 100, :if => :is_not_open_id?
-  validates_presence_of     :email, :if => :is_not_open_id?
-  validates_length_of       :email,    :within => 6..100, :if => :is_not_open_id? #r@a.wk
-  validates_uniqueness_of   :email, :if => :is_not_open_id?
-  validates_format_of       :email,    :with => Authentication.email_regex, :message => Authentication.bad_email_message, :if => :is_not_open_id?
-  validates_presence_of     :password,                   :if => :is_not_open_id?
-  validates_presence_of     :password_confirmation,      :if => :is_not_open_id?
-  validates_confirmation_of :password,                   :if => :is_not_open_id?
-  validates_length_of       :password, :within => 6..40, :if => :is_not_open_id?
+  validates_length_of :nickname, :within => 3..40
+  validates_uniqueness_of :nickname
+  validates_format_of :nickname, :with => Authentication.login_regex, :message => Authentication.bad_login_message
   
-  def is_not_open_id?
-    identity_url.nil?
+  validates_presence_of :login, :if => :is_not_open_id?
+  validates_length_of :login, :within => 3..40, :if => :is_not_open_id?
+  validates_uniqueness_of :login, :if => :is_not_open_id?
+  validates_format_of :login, :with => Authentication.login_regex, :message => Authentication.bad_login_message, :if => :is_not_open_id?
+
+  validates_format_of :name, :with => Authentication.name_regex, :message => Authentication.bad_name_message, :allow_nil => true, :if => :is_not_open_id?
+  validates_length_of :name, :maximum => 100, :if => :is_not_open_id?
+
+  validates_presence_of :email, :if => :is_not_open_id?
+  validates_length_of :email, :within => 6..100, :if => :is_not_open_id? #r@a.wk
+  validates_uniqueness_of :email, :if => :is_not_open_id?
+  validates_format_of :email, :with => Authentication.email_regex, :message => Authentication.bad_email_message, :if => :is_not_open_id?
+
+  validates_presence_of :password, :if => :password_is_necessary?
+  validates_presence_of :password_confirmation, :if => :password_is_necessary?
+  validates_confirmation_of :password, :if => :password_is_necessary?
+  validates_length_of :password, :within => 6..40, :if => :password_is_necessary?
+  
+  def password_is_necessary?
+    password_is_necessary = false
+    if password_required? && is_not_open_id?
+      password_is_necessary = true
+    end
+    return password_is_necessary
+  end
+  
+  def is_not_open_id? # named as to fit the formatting of the validates_as syntax
+    (! is_open_id?)
+  end
+  def is_open_id?
+    (! identity_url.nil?)
   end
   
   # HACK HACK HACK -- how to do attr_accessible from here?
@@ -52,6 +70,10 @@ class User < ActiveRecord::Base
 
   def email=(value)
     write_attribute :email, (value ? value.downcase : nil)
+  end
+
+  def token
+    KEY.url_safe_encrypt64(self.id.to_s)
   end
 
   protected

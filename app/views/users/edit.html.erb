@@ -4,7 +4,7 @@
   <%= f.error_messages %>
   
   <% if current_user.is_not_open_id? %>
-  <p><%= f.label :identity_url, "login" %> <%= login %></p>
+  <p><%= f.label :login, "Login" %> <%= current_user.login %></p>
   <% else %>
   <p><%= f.label :identity_url, "Open ID URL" %> <%= f.text_field :identity_url %></p>
   <% end %>

@@ -38,7 +38,7 @@ class UsersController < ApplicationController
   def update
     respond_to do |format|
       if current_user.update_attributes(params[:user])
-        flash[:notice] = 'Bar was successfully updated.'
+        flash[:notice] = 'User information was successfully updated.'
         format.html { redirect_to(user_path(current_user.nickname)) }
         format.xml  { head :ok }
       else

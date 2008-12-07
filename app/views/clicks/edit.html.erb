@@ -1,0 +1,12 @@
+<h1>Editing click</h1>
+
+<% form_for(@click) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @click %> |
+<%= link_to 'Back', clicks_path %>

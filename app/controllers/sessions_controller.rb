@@ -2,14 +2,16 @@
 class SessionsController < ApplicationController
   
   skip_before_filter :make_sure_user_has_nickname, :only => [ :destroy ]
-  
-  # render new.rhtml
+
   def new
   end
 
   def create
     if using_open_id?
-      open_id_authentication(params[:openid_url])
+      if params[:remember_me] == "1"
+        cookies[:set_remember_cookie] = { :value => "1" }
+      end
+      open_id_authentication(params[:openid_url], params[:remember_me])
     else
       password_authentication(params[:login], params[:password])
     end
@@ -25,7 +27,7 @@ class SessionsController < ApplicationController
   
   protected
   
-  def open_id_authentication(openid_url)
+  def open_id_authentication(openid_url, remember_me)
     authenticate_with_open_id(openid_url, :required => [:nickname, :email]) do |result, identity_url, registration|
       if result.successful?
         identity_url = identity_url.split(/\#/).first
@@ -36,6 +38,7 @@ class SessionsController < ApplicationController
           @user.save(false)
         end
         self.current_user = @user
+        params.merge!({:remember_me => remember_me})
         successful_login
       else
         failed_login result.message
@@ -58,9 +61,12 @@ class SessionsController < ApplicationController
   end
   
   def successful_login
-    if params[:remember_me] == "1"
+    if params[:remember_me] == "1" || cookies[:set_remember_cookie] == "1"
       self.current_user.remember_me
       cookies[:auth_token] = { :value => self.current_user.remember_token , :expires => self.current_user.remember_token_expires_at }
+      if cookies[:set_remember_cookie] == "1"
+        cookies[:set_remember_cookie] = { :value => "0", :expires => (Time.now-999) }
+      end
     end
     redirect_back_or_default('/')
     flash[:notice] = "Logged in successfully"

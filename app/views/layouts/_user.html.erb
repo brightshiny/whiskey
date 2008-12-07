@@ -1,6 +1,8 @@
 <div id="user">
   <% if current_user -%>
-  <p>Logged in as <%= link_to (current_user.nickname), user_path(current_user.token) %> (<%= link_to "logout", logout_path %>)</p>
+  <% if ! current_user.nickname.nil? && ! current_user.nickname.empty? -%>
+  <p>Logged in as <%= link_to (current_user.nickname), user_path(current_user.nickname) %> (<%= link_to "logout", logout_path %>)</p>
+  <% end -%>
   <% else -%>
   <p><%= link_to "Sign up", new_user_path %> or <%= link_to "login", login_path %></p>
   <% end -%>

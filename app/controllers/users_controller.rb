@@ -4,10 +4,12 @@ class UsersController < ApplicationController
   before_filter :login_required, :except => [ :new, :create ]
   
   def index
-    render :action => "show"
+    redirect_to :action => "show", :id => current_user.nickname and return false
   end
   
-  # render new.rhtml
+  def show
+  end
+ 
   def new
     @user = User.new
   end
@@ -37,7 +39,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if current_user.update_attributes(params[:user])
         flash[:notice] = 'Bar was successfully updated.'
-        format.html { redirect_to(current_user) }
+        format.html { redirect_to(user_path(current_user.nickname)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

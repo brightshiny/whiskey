@@ -1,5 +1,9 @@
 <h2>Edit your account</h2>
 
+<% if current_user.nickname.nil? -%>
+<p>Thanks for signing up.  Now just give us a nickname so we know what to call you.  Feel free to fill out any extra info while you're here.</p>
+<% end %>
+
 <% form_for current_user do |f| %>
   <%= f.error_messages %>
   
@@ -9,9 +13,9 @@
   <p><%= f.label :identity_url, "Open ID URL" %> <%= f.text_field :identity_url %></p>
   <% end %>
 
-  <p><%= f.label :nickname, 'Nickname' %> <%= f.text_field :nickname %></p>
-  <p><%= f.label :email, 'Email Address' %> <%= f.text_field :email %> (Optional)</p>
-  <p><%= f.label :name, 'Full Name' %> <%= f.text_field :name %> (Optional)</p>
+  <p><%= f.label :nickname, 'Nickname' %> <%= f.text_field :nickname %> Required</p>
+  <p><%= f.label :email, 'Email Address' %> <%= f.text_field :email %></p>
+  <p><%= f.label :name, 'Full Name' %> <%= f.text_field :name %></p>
   
   <p><%= f.submit %></p>
 <% end %>

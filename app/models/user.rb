@@ -10,9 +10,9 @@ class User < ActiveRecord::Base
   has_many :clicks
   has_many :reads
 
-  validates_length_of :nickname, :within => 3..40
-  validates_uniqueness_of :nickname
-  validates_format_of :nickname, :with => Authentication.login_regex, :message => Authentication.bad_login_message
+  validates_length_of :nickname, :within => 3..40, :on => :update
+  validates_uniqueness_of :nickname, :on => :update
+  validates_format_of :nickname, :with => Authentication.login_regex, :message => Authentication.bad_login_message, :on => :update
   
   validates_presence_of :login, :if => :is_not_open_id?
   validates_length_of :login, :within => 3..40, :if => :is_not_open_id?
@@ -53,11 +53,6 @@ class User < ActiveRecord::Base
   attr_accessible :login, :email, :name, :nickname, :password, :password_confirmation, :identity_url
 
   # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
-  #
-  # uff.  this is really an authorization, not authentication routine.  
-  # We really need a Dispatch Chain here or something.
-  # This will also let us return a human error message.
-  #
   def self.authenticate(login, password)
     return nil if login.blank? || password.blank?
     u = find_by_login(login) # need to get the salt

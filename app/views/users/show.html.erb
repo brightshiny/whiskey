@@ -2,4 +2,5 @@
 <ul>
   <li><%= link_to "Upload an OPML file", :controller => :opml, :action => :upload %></li>
   <li><%= link_to "View your subscribed feeds", :controller => :opml, :action => :show %></li>
+  <li><%= link_to "Edit your account information", edit_user_path(current_user.nickname) %></li>
 </ul>

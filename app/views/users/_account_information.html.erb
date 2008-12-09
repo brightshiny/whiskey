@@ -1,0 +1,46 @@
+<h3>Account information</h3>
+<table cellspacing="0" cellpadding="0" style="width: 100%;">
+  <tr>
+    <th>Key</th>
+    <th>Value</th>
+  </tr>
+  <% if user.openid_identifier.blank? %>
+  <tr>
+    <td>Login</td>
+    <td><%=h user.login %></td>
+  </tr>
+  <% else %>
+  <tr>
+    <td>OpenID</td>
+    <td><%=h user.openid_identifier %></td>
+  </tr>
+  <% end %>
+  <tr>
+    <td>Email</td>
+    <td><%=h user.email %></td>
+  </tr>
+  <tr>
+    <td>Login count</td>
+    <td><%=h user.login_count %></td>
+  </tr>
+  <tr>
+    <td>Last request at</td>
+    <td><%=h user.last_request_at %></td>
+  </tr>
+  <tr>
+    <td>Last login at</td>
+    <td><%=h user.last_login_at %></td>
+  </tr>
+  <tr>
+    <td>Current login at</td>
+    <td><%=h user.current_login_at %></td>
+  </tr>
+  <tr>
+    <td>Last login ip</td>
+    <td><%=h user.last_login_ip %></td>
+  </tr>
+  <tr>
+    <td>Current login ip</td>
+    <td><%=h user.current_login_ip %></td>
+  </tr>
+</table>

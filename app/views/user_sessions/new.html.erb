@@ -7,16 +7,17 @@
   <div class="grid_8 alpha" id="openid_container">
     <h3>Login with your OpenID</h3>
     <p><%= f.label :openid_identifier, "OpenID" %> <%= f.text_field :openid_identifier %></p>  
-    <p><%= f.check_box :remember_me %><%= f.label :remember_me %></p>
-    <p><%= f.submit "Login" %></p>
   </div>
 
-  <div class="grid_8 omega" id="login_container"<% unless @user_session.openid_identifier.blank? %> style="display: none;"<% end %>>
+  <div class="grid_8 omega" id="login_container">
     <h3>Login with a local account</h3>
     <p><%= f.label :login %> <%= f.text_field :login %></p>
     <p><%= f.label :password %> <%= f.password_field :password %></p>  
+  </div>
+  
+  <div class="grid_16 alpha omega">
     <p><%= f.check_box :remember_me, :id => "user_session_remember_me_1" %><%= f.label :remember_me_1, "Remember Me" %></p>
     <p><%= f.submit "Login" %></p>
   </div>
-  
+    
 <% end %>

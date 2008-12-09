@@ -10,7 +10,9 @@ class User < ActiveRecord::Base
   
   acts_as_authentic :login_field_validation_options => { :if => :openid_identifier_blank? },
                     :password_field_validation_options => { :if => :openid_identifier_blank? },
-                    :password_field_validates_length_of_options => { :on => :update, :if => :has_no_credentials? }
+                    :password_field_validates_length_of_options => { :on => :update, :if => :has_no_credentials? },
+                    :cypto_provider => Authlogic::CryptoProviders::BCrypt
+
   
   validate :normalize_openid_identifier
   validates_uniqueness_of :openid_identifier, :allow_blank => true

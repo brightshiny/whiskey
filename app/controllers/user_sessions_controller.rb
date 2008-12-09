@@ -7,6 +7,11 @@ class UserSessionsController < ApplicationController
   end
   
   def create
+    
+    if params[:user_session] && params[:user_session][:remember_me] == "1"
+      cookies[:r] = { :value => "1" }
+    end
+    
     @user_session = UserSession.new(params[:user_session])
     @user_session.save do |result|
       if result

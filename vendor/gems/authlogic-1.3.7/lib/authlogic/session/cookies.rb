@@ -25,9 +25,20 @@ module Authlogic
         end
         
         def save_cookie
+          
+          debugger
+          
+          expires = nil
+          if controller.params && controller.params[:user_session] && controller.params[:user_session][:remember_me] && controller.params[:user_session][:remember_me] == "1"
+            expires = Time.now + 3.months
+          elsif controller.cookies && controller.cookies[:r] && controller.cookies[:r] == "1"
+            expires = Time.now + 3.months
+            controller.cookies[:r] = { :value => "1", :expires => (Time.now - 999) }
+          end
+  
           controller.cookies[cookie_key] = {
             :value => record.send(persistence_token_field),
-            :expires => remember_me_until
+            :expires => (expires)
           }
         end
         

@@ -1,6 +1,14 @@
-<h2>Your Page</h2>
-<ul>
-  <li><%= link_to "Upload an OPML file", :controller => :opml, :action => :upload %></li>
-  <li><%= link_to "View your subscribed feeds", :controller => :opml, :action => :show %></li>
-  <li><%= link_to "Edit your account information", edit_user_path(current_user.nickname) %></li>
-</ul>
+<h2><%= current_user.login %></h2>
+
+<div class="grid_8 alpha">
+  <h3>Things to do</h3>
+  <ul>
+    <li><%= link_to "Upload an OPML file", :controller => :opml, :action => :upload %></li>
+    <li><%= link_to "View subscribed feeds", :controller => :opml, :action => :show %> (<%= current_user.feeds.size %>)</li>
+    <li><%= link_to "Edit account information", edit_account_path %></li>
+  </ul>
+</div>
+
+<div class="grid_8 omega">
+  <%= render :partial => "account_information", :locals => { :user => @user } %>
+</div>

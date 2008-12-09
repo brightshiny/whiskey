@@ -1,22 +1,13 @@
-<h2>Edit your account</h2>
+<h2>Edit Account Information</h2>
 
-<% if current_user.nickname.nil? -%>
-<p>Thanks for signing up.  Now just give us a nickname so we know what to call you.  Feel free to fill out any extra info while you're here.</p>
-<% end %>
-
-<% form_for current_user do |f| %>
+<div class="grid_8 alpha">
+<% form_for @user, :url => account_path do |f| %>
   <%= f.error_messages %>
-  
-  <% if current_user.is_not_open_id? %>
-  <p><%= f.label :login, "Login" %> <%= current_user.login %></p>
-  <% else %>
-  <p><%= f.label :identity_url, "Open ID URL" %> <%= f.text_field :identity_url %></p>
-  <% end %>
-
-  <p><%= f.label :nickname, 'Nickname' %> <%= f.text_field :nickname %> Required</p>
-  <p><%= f.label :email, 'Email Address' %> <%= f.text_field :email %></p>
-  <p><%= f.label :name, 'Full Name' %> <%= f.text_field :name %></p>
-  
-  <p><%= f.submit %></p>
+  <%= render :partial => "form", :object => f %>
+  <p><%= label_tag :user_submit, "Submit form" %> <%= f.submit "Update" %></p>
 <% end %>
+</div>
 
+<div class="grid_8 omega">
+  <%= render :partial => "account_information", :locals => { :user => @user } %>
+</div>

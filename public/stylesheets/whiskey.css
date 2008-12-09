@@ -1,8 +1,4 @@
-label {
-  display: block;
+label, input {
+  vertical-align: middle;
 }
-
-
-.errorExplanation, .fieldWithErrors {
-  color: #900;
-}
+.errorExplanation, .fieldWithErrors { color: #900; }

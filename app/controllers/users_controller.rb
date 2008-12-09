@@ -1,50 +1,39 @@
 class UsersController < ApplicationController
-
-  skip_before_filter :make_sure_user_has_nickname, :only => [ :edit, :update ]
-  before_filter :login_required, :except => [ :new, :create ]
   
-  def index
-    redirect_to :action => "show", :id => current_user.nickname and return false
-  end
+  before_filter :require_no_user, :only => [:new, :create]
+  before_filter :require_user, :only => [:show, :edit, :update]
   
-  def show
-  end
- 
   def new
     @user = User.new
   end
- 
+  
   def create
-    logout_keeping_session!
-    @user = User.new(params[:user])
-    success = @user && @user.save
-    if success && @user.errors.empty?
-      # Protects against session fixation attacks, causes request forgery
-      # protection if visitor resubmits an earlier form using back
-      # button. Uncomment if you understand the tradeoffs.
-      # reset session
-      self.current_user = @user # !! now logged in
-      redirect_back_or_default('/')
-      flash[:notice] = "Thanks for signing up!  We're sending you an email with your activation code."
+    @user = User.new
+
+    if @user.signup!(params)
+      @user.deliver_activation_instructions!
+      flash[:notice] = "Your account has been created. Please check your e-mail for your account activation instructions!"
+      redirect_to root_url
     else
-      flash[:error]  = "We couldn't set up that account, sorry.  Please try again, or contact an admin (link is above)."
-      render :action => 'new'
+      render :action => :new
     end
   end
   
+  def show
+    @user = @current_user
+  end
+
   def edit
+    @user = @current_user
   end
   
   def update
-    respond_to do |format|
-      if current_user.update_attributes(params[:user])
-        flash[:notice] = 'User information was successfully updated.'
-        format.html { redirect_to(user_path(current_user.nickname)) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => current_user.errors, :status => :unprocessable_entity }
-      end
+    @user = @current_user # makes our views "cleaner" and more consistent
+    if @user.update_attributes(params[:user])
+      flash[:notice] = "Account updated!"
+      redirect_to account_url
+    else
+      render :action => :edit
     end
   end
   

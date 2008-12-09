@@ -28,6 +28,7 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
   config.gem "ezcrypto", :lit => "ezcrypto"
+  config.gem "authlogic"
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
@@ -76,5 +77,4 @@ Rails::Initializer.run do |config|
 end
 
 require 'ezcrypto_url_safe'
-
 KEY = EzCrypto::Key.with_password "4e3064a5e2e0037812e6b7103fd73091dc29ac7e2cbb3e9a9e3092c4ac48603dd6ff0532bd12bc4ffcf95b36a7f6e7d88633073b28c717ee32c4e59e637dfe1a", "d995ca6318a590fd14df40311ed1b42ef7d96a67548c990e53b77752cd59f4306ee592e0b7010b68229db7fd388250b489111ad90a8e87d14b40576f7625c796", :algorithm=>"aes256"

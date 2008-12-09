@@ -1,76 +1,73 @@
 require 'digest/sha1'
 
 class User < ActiveRecord::Base
-  include Authentication
-  include Authentication::ByPassword
-  include Authentication::ByCookieToken
-
   has_many :feeds, :through => :feed_users
   has_many :feed_users
   has_many :clicks
   has_many :reads
-
-  validates_length_of :nickname, :within => 3..40, :on => :update
-  validates_uniqueness_of :nickname, :on => :update
-  validates_format_of :nickname, :with => Authentication.login_regex, :message => Authentication.bad_login_message, :on => :update
   
-  validates_presence_of :login, :if => :is_not_open_id?
-  validates_length_of :login, :within => 3..40, :if => :is_not_open_id?
-  validates_uniqueness_of :login, :if => :is_not_open_id?
-  validates_format_of :login, :with => Authentication.login_regex, :message => Authentication.bad_login_message, :if => :is_not_open_id?
-
-  validates_format_of :name, :with => Authentication.name_regex, :message => Authentication.bad_name_message, :allow_nil => true, :if => :is_not_open_id?
-  validates_length_of :name, :maximum => 100, :if => :is_not_open_id?
-
-  validates_presence_of :email, :if => :is_not_open_id?
-  validates_length_of :email, :within => 6..100, :if => :is_not_open_id? #r@a.wk
-  validates_uniqueness_of :email, :if => :is_not_open_id?
-  validates_format_of :email, :with => Authentication.email_regex, :message => Authentication.bad_email_message, :if => :is_not_open_id?
-
-  validates_presence_of :password, :if => :password_is_necessary?
-  validates_presence_of :password_confirmation, :if => :password_is_necessary?
-  validates_confirmation_of :password, :if => :password_is_necessary?
-  validates_length_of :password, :within => 6..40, :if => :password_is_necessary?
+  attr_accessible :login, :email, :password, :password_confirmation, :openid_identifier
   
-  def password_is_necessary?
-    password_is_necessary = false
-    if password_required? && is_not_open_id?
-      password_is_necessary = true
-    end
-    return password_is_necessary
+  acts_as_authentic :login_field_validation_options => { :if => :openid_identifier_blank? },
+                    :password_field_validation_options => { :if => :openid_identifier_blank? },
+                    :password_field_validates_length_of_options => { :on => :update, :if => :has_no_credentials? }
+  
+  validate :normalize_openid_identifier
+  validates_uniqueness_of :openid_identifier, :allow_blank => true
+  
+  attr_accessor :foo
+  
+  # User creation/activation
+  def signup!(params)
+    self.login = params[:user][:login]
+    self.email = params[:user][:email]
+    save_without_session_maintenance
   end
   
-  def is_not_open_id? # named as to fit the formatting of the validates_as syntax
-    (! is_open_id?)
-  end
-  def is_open_id?
-    (! identity_url.nil?)
+  def activate!(params)
+    self.active = true
+    self.password = params[:user][:password]
+    self.password_confirmation = params[:user][:password_confirmation]
+    self.openid_identifier = params[:user][:openid_identifier]
+    save
   end
   
-  # HACK HACK HACK -- how to do attr_accessible from here?
-  # prevents a user from submitting a crafted form that bypasses activation
-  # anything else you want your user to change should be added here.
-  attr_accessible :login, :email, :name, :nickname, :password, :password_confirmation, :identity_url
-
-  # Authenticates a user by their login name and unencrypted password.  Returns the user or nil.
-  def self.authenticate(login, password)
-    return nil if login.blank? || password.blank?
-    u = find_by_login(login) # need to get the salt
-    u && u.authenticated?(password) ? u : nil
+  # For acts_as_authentic configuration
+  def openid_identifier_blank?
+    openid_identifier.blank?
   end
-
-  def login=(value)
-    write_attribute :login, (value ? value.downcase : nil)
+  
+  def has_no_credentials?
+    self.crypted_password.blank? && self.openid_identifier.blank?
   end
-
-  def email=(value)
-    write_attribute :email, (value ? value.downcase : nil)
+  
+  # Email notifications
+  def deliver_password_reset_instructions!
+    reset_perishable_token!
+    Notifier.deliver_password_reset_instructions(self)
   end
-
-  def token
-    KEY.url_safe_encrypt64(self.id.to_s)
+  
+  def deliver_activation_instructions!
+    reset_perishable_token!
+    Notifier.deliver_activation_instructions(self)
   end
-
-  protected
-    
+  
+  def deliver_activation_confirmation!
+    reset_perishable_token!
+    Notifier.deliver_activation_confirmation(self)
+  end
+  
+  # Helper methods
+  def active?
+    active
+  end
+  
+  private
+    def normalize_openid_identifier
+      begin
+        self.openid_identifier = OpenIdAuthentication.normalize_url(openid_identifier) if !openid_identifier.blank?
+      rescue OpenIdAuthentication::InvalidOpenId => e
+        errors.add(:openid_identifier, e.message)
+      end
+    end  
 end

@@ -37,7 +37,7 @@ class Gobbler
       return
     end
     
-    @logger.info("Gobbling " + feed.link)
+    @logger.info("Gobbling id=#{feed.id} #{feed.link}")
     rss = nil
     begin
       rss = SimpleRSS.parse open(feed.link)
@@ -47,7 +47,7 @@ class Gobbler
     
     begin
       if feed.title.nil? || feed.title != rss.title
-        feed.title = rss.title
+        feed.title = extract_text(rss.title)
       end
       
       parse_items(feed, rss)
@@ -73,9 +73,9 @@ class Gobbler
         published_at = extract_published_at(item)
         content = extract_content(item)
         
-        if content.nil?
-          @logger.info("Unable to extract content from item, skipping.")
-          pp item
+        if content.nil? || content.length <= 0
+          #@logger.info("Unable to extract content from item [#{item.link}], skipping.")
+          #pp item
           next
         end
         
@@ -89,6 +89,7 @@ class Gobbler
         existing.author = AttrHelper.get_first(item, [:dc_creator])
         existing.published_at = published_at
         existing.content = content
+        existing.title = extract_text(item.title)
         sha1 = Digest::SHA1.new
         sha1 << content
         existing.content_sha1 = sha1.digest
@@ -115,6 +116,7 @@ class Gobbler
   def self.extract_text(content) 
     return nil if content.nil?
     
+    debug_this = false
     state = :text
     prev_state = :text
     entity = ''
@@ -127,8 +129,9 @@ class Gobbler
       next if c.nil?
       
       # entity block
-      if state == :text || state == :entity
-        if c == '&'
+      if state != :pre
+        if c == '&' && state != :entity
+          puts "))) extract_text: entering entity" if debug_this
           prev_state = state
           state = :entity
           entity = ''
@@ -138,20 +141,24 @@ class Gobbler
             entity = m[1].to_i.to_s
           end
           c = @BASIC_ENTITIES[entity] || ' '
+          puts "))) extract_text: exiting entity =[#{entity},#{c}]" if debug_this
           state = prev_state
         elsif state == :entity
           
           # bad news, we ran into a tag
           if c == '<'
+            puts "))) extract_text: there's a tag in my entity =[#{entity}]" if debug_this
             state = prev_state
             text += "&#{entity}"
           else # keep marching on
+            puts "))) extract_text: building entity =[#{entity}]" if debug_this
             entity += c
           end
           
           
           # bad news, our tag goes on way too long
           if entity.length >= 7
+            puts "))) extract_text: my entity is waay toooo large =[#{entity}]" if debug_this
             c = ''
             text += "&#{entity}"
             state = prev_state
@@ -164,20 +171,31 @@ class Gobbler
         if state == :html && c == '>'
           if tag == "pre"
             state = :pre
+            puts "))) extract_text: entering pre block" if debug_this
           else
             state = :text
           end
+          puts "))) extract_text: exiting html tag, give or take pre" if debug_this
         elsif c == '<'
           state = :html
           tag = ''
+          puts "))) extract_text: entering html tag" if debug_this
         elsif state == :html
           tag += c
         elsif state != :html
           text += c
         end
       end
+
+      #puts "))) extract_text: state=#{state.to_s}, prev=#{prev_state.to_s}" if debug_this
+
     end
 
+    if debug_this
+      puts "))) extract_text input: [#{content}]"
+      puts "))) extract_text output: [#{text}]"
+    end
+    
     return text
   end
   
@@ -192,12 +210,15 @@ class Gobbler
     end
     return nil
   end
+
   
-  #  k = User.find(1)
-  #  k.feeds.each do |feed|
-  #    Gobbler.gobble(feed)
-  #  end
-  
-  Gobbler.gobble(Feed.find(17))
+  # kmb: where does this belong?
+  User.find(:all).each do |user|
+    user.feeds.each do |feed|
+      Gobbler.gobble(feed)
+    end
+  end
+    
+#  Gobbler.gobble(Feed.find(3))
   
 end

@@ -213,10 +213,8 @@ class Gobbler
 
   
   # kmb: where does this belong?
-  User.find(:all).each do |user|
-    user.feeds.each do |feed|
-      Gobbler.gobble(feed)
-    end
+  Feed.find(:all).each do |feed|
+    Gobbler.gobble(feed)
   end
     
 #  Gobbler.gobble(Feed.find(3))

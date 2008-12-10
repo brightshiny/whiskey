@@ -26,8 +26,6 @@ module Authlogic
         
         def save_cookie
           
-          debugger
-          
           expires = nil
           if controller.params && controller.params[:user_session] && controller.params[:user_session][:remember_me] && controller.params[:user_session][:remember_me] == "1"
             expires = Time.now + 3.months

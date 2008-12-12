@@ -85,14 +85,14 @@ class Gobbler::GItem
   end
   
   def self.extract_text(content) 
-    text = ''
+    text = []
     return nil if content.nil?
 
     debug_this = false
     state = :text
     prev_state = :text
-    entity = ''
-    tag = ''
+    entity = []
+    tag = []
     
     #kmb: use string scanner.getch
     #content.each_byte do |b|
@@ -110,33 +110,35 @@ class Gobbler::GItem
           puts "))) extract_text: entering entity" if debug_this
           prev_state = state
           state = :entity
-          entity = ''
+          entity = []
         elsif state == :entity && c == ';'
-          m = entity.match(/^\#([x\dA-F]{1,5})/)
+          entity_text = entity.join
+          m = entity_text.match(/^\#([x\dA-F]{1,5})/)
           if !m.nil? && m.size == 2
-            entity = m[1].to_i.to_s
+            entity_text = m[1].to_i.to_s
           end
-          c = BASIC_ENTITIES[entity] || ' '
-          puts "))) extract_text: exiting entity =[#{entity},#{c}]" if debug_this
+          c = BASIC_ENTITIES[entity_text] || ' '
+          puts "))) extract_text: exiting entity =[#{entity_text},#{c}]" if debug_this
           state = prev_state
         elsif state == :entity
           
           # bad news, we ran into a tag
           if c == '<'
-            puts "))) extract_text: there's a tag in my entity =[#{entity}]" if debug_this
+            puts "))) extract_text: there's a tag in my entity =[#{entity.join}]" if debug_this
             state = prev_state
-            text += "&#{entity}"
+            text.push "&", entity.join
           else # keep marching on
-            puts "))) extract_text: building entity =[#{entity}]" if debug_this
-            entity += c
+            puts "))) extract_text: building entity =[#{entity.join}]" if debug_this
+            entity.push c
           end
           
           
           # bad news, our tag goes on way too long
           if entity.length >= 7
-            puts "))) extract_text: my entity is waay toooo large =[#{entity}]" if debug_this
+            entity_text = entity.join
+            puts "))) extract_text: my entity is waay toooo large =[#{entity_text}]" if debug_this
             c = ''
-            text += "&#{entity}"
+            text.push "&", entity_text
             state = prev_state
           end
         end
@@ -145,7 +147,7 @@ class Gobbler::GItem
       # rest of block
       if state != :entity 
         if state == :html && c == '>'
-          if tag == "pre"
+          if tag.join == "pre"
             state = :pre
             puts "))) extract_text: entering pre block" if debug_this
           else
@@ -154,12 +156,12 @@ class Gobbler::GItem
           puts "))) extract_text: exiting html tag, give or take pre" if debug_this
         elsif c == '<'
           state = :html
-          tag = ''
+          tag = []
           puts "))) extract_text: entering html tag" if debug_this
         elsif state == :html
-          tag += c
+          tag.push c
         elsif state != :html
-          text += c
+          text.push c
         end
       end
       
@@ -171,7 +173,7 @@ class Gobbler::GItem
       puts "))) extract_text input: [#{content}]"
       puts "))) extract_text output: [#{text}]"
     end
-    return text
+    return text.join
   end
   
   

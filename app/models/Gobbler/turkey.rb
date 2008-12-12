@@ -3,9 +3,9 @@ require 'open-uri'
 require 'digest/sha1'
 require 'cgi'
 
-class Gobbler < ActiveRecord::BaseWithoutTable
+class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
   def self.gobble
-    gobbler = Gobbler.new
+    gobbler = Gobbler::Turkey.new
     feeds = []
     if !ARGV.nil? && ARGV.size > 0
       ARGV.each {|id| feeds.push Feed.find(id.to_i) }
@@ -33,9 +33,9 @@ class Gobbler < ActiveRecord::BaseWithoutTable
     
     begin
       #kmb: why does this not work?
-      #rss_title = Gobbler::GItem.extract_text(rss.title)
+      rss_title = Gobbler::GItem.extract_text(rss.title)
       
-      rss_title = rss.title
+      #rss_title = rss.title
       if feed.title.nil? || feed.title != rss_title
         feed.title = rss_title
       end

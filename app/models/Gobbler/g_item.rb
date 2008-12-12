@@ -1,3 +1,5 @@
+require 'strscan'
+
 class Gobbler::GItem
   
   BASIC_ENTITIES  = {
@@ -38,7 +40,7 @@ class Gobbler::GItem
     
     # guess where the content is...
     content = Gobbler::AttrHelper.get_first(@rss_item, [:content, :description, :summary])
-    return extract_text(content)
+    return Gobbler::GItem.extract_text(content)
   end  
   
   def extract_published_at
@@ -52,7 +54,7 @@ class Gobbler::GItem
   end
   
   def extract_title
-    extract_text(@rss_item.title)
+    Gobbler::GItem.extract_text(@rss_item.title)
   end
   
   def extract_words
@@ -82,10 +84,10 @@ class Gobbler::GItem
     
   end
   
-  def extract_text(content) 
+  def self.extract_text(content) 
     text = ''
     return nil if content.nil?
-    
+
     debug_this = false
     state = :text
     prev_state = :text
@@ -93,8 +95,11 @@ class Gobbler::GItem
     tag = ''
     
     #kmb: use string scanner.getch
-    content.each_byte do |b|
-      c = b.chr
+    #content.each_byte do |b|
+      
+    scanner = StringScanner.new(content)
+    while !scanner.eos?
+      c = scanner.getch
       
       next if c.nil?
       

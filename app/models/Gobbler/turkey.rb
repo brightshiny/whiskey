@@ -14,7 +14,6 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     end
     
     feeds.each {|f| gobbler.gobble_feed(f) }
-    #  gobbler.extract_words(Item.find(15))
   end
   
   def gobble_feed(feed)
@@ -29,22 +28,22 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       rss = SimpleRSS.parse open(feed.link)
     rescue Exception => e
       logger.error("Could not get feed: " + e)
+      puts "Error trying to download [id=#{feed.id}]: #{e}"
+      return
     end
     
     begin
-      #kmb: why does this not work?
       rss_title = Gobbler::GItem.extract_text(rss.title)
       
-      #rss_title = rss.title
       if feed.title.nil? || feed.title != rss_title
         feed.title = rss_title
       end
       
-      items_processed = parse_items(feed, rss) || 0
+       (items_processed, items_new) = parse_items(feed, rss) || 0
       
       feed.gobbled_at = Time.now
       feed.save
-      puts "Processed #{items_processed} items from [id=#{feed.id}]: #{rss_title}"
+      puts "Processed #{items_processed} (#{items_new} new) items from [id=#{feed.id}]: #{rss_title}"
     rescue Exception => e
       logger.error("Error while processing feed: " + e + "\n" + e.backtrace.join("\n"))  
     end
@@ -57,6 +56,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     end
     
     items_processed = 0
+    items_new = 0
     begin
       rss.items.each do |item|
         gobbler_item = Gobbler::GItem.new(item)
@@ -70,21 +70,29 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
           next
         end
         
-        existing = Item.find(:first, :conditions => ["feed_id = :feed_id and link = :link", {:feed_id => feed.id, :link => item.link}])
-        if existing.nil?
-          existing = Item.new
-          existing.feed_id = feed.id
-          existing.link = item.link
+        db_item = Item.find(:first, :conditions => ["feed_id = :feed_id and link = :link", {:feed_id => feed.id, :link => item.link}])
+        if db_item.nil?
+          db_item = Item.new
+          db_item.feed_id = feed.id
+          db_item.link = item.link
         end
         
-        existing.author = Gobbler::AttrHelper.get_first(item, [:dc_creator])
-        existing.published_at = published_at
-        existing.content = content
-        existing.title = gobbler_item.extract_title
         sha1 = Digest::SHA1.new
         sha1 << content
-        existing.content_sha1 = sha1.digest
-        existing.save
+        digest = sha1.hexdigest
+        
+        if digest != db_item.content_sha1
+          db_item.author = Gobbler::AttrHelper.get_first(item, [:dc_creator])
+          db_item.published_at = published_at
+          db_item.content = content
+          db_item.title = gobbler_item.extract_title
+          db_item.content_sha1 = digest
+          db_item.save
+          # engage parsing magic
+          gobbler_item.parse_words(db_item)
+          items_new += 1
+        end
+        
         items_processed += 1
       end
       
@@ -92,6 +100,6 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     rescue Exception => e
       logger.error("Owie, parsing error: " + e +"\n" + e.backtrace.join("\n"))
     end
-    return items_processed
+    return [items_processed, items_new]
   end
 end

@@ -37,10 +37,8 @@ class Gobbler::GItem
   
   def extract_content
     return nil if @rss_item.nil?
-    
     # guess where the content is...
-    content = Gobbler::AttrHelper.get_first(@rss_item, [:content, :description, :summary])
-    return Gobbler::GItem.extract_text(content)
+    return Gobbler::AttrHelper.get_first(@rss_item, [:content, :description, :summary])
   end  
   
   def extract_published_at
@@ -57,46 +55,73 @@ class Gobbler::GItem
     Gobbler::GItem.extract_text(@rss_item.title)
   end
   
-  def extract_words
+  def parse_words(db_item)
     content_words = {}
-    @rss_item.content.downcase.scan(/[a-z0-9'\-]+/) {|w| content_words[w] == nil ? content_words[w] = 1 : content_words[w] += 1 }
+    content = Gobbler::GItem.extract_text(db_item.content)
+    content.downcase.scan(/[a-z0-9'\-]+/) {|w| content_words[w] == nil ? content_words[w] = 1 : content_words[w] += 1 }
     
-    # create any missing db words
-    existing_words = {}
-    db_words = Word.find(:all, :conditions => ["word in (:words)", {:words => content_words.keys}])
-    
-    if !db_words.nil?
-      db_words.each {|w| existing_words[w.word] = w}
+    # load existing db words
+    db_words = {}
+    existing_words = Word.find(:all, :conditions => ["word in (:words)", {:words => content_words.keys}])
+    if !existing_words.nil?
+      existing_words.each {|w| db_words[w.word] = w}
     end
     
-    content_words.each_key do |content_word|
-      w = nil
-      if existing_words.has_key?(content_word)
-        w = existing_words[content_word]
-      else
-        w = Word.new
-        w.word = content_word
-        w.save
+    # load existing linkages
+    db_item_words = {}
+    existing_item_words = ItemWord.find(:all, :conditions => ['item_id = :item_id', {:item_id => db_item.id}], :include => :word )
+    if !existing_item_words.nil?
+      existing_item_words.each do |iw|
+        db_item_words[iw.word.word] = iw
+      end
+    end
+    
+    # match them all up, create/update/del as needed
+    ItemWord.transaction do
+      content_words.each_key do |word|
+        db_word = nil
+        if db_words.has_key?(word)
+          db_word = db_words[word]
+        else
+          db_word = Word.new
+          db_word.word = word
+          db_word.save
+        end
+        
+        if db_item_words.has_key?(word)
+          iw = db_item_words[word]
+          if iw.count != content_words[word]
+            iw.count = content_words[word]
+            iw.save
+          end
+          db_item_words.delete(word)
+        else
+          iw = ItemWord.new
+          iw.word = db_word
+          iw.item = db_item
+          iw.count = content_words[word]
+          iw.save
+        end
       end
       
-      #kmb: come back later and make this less brute force      
+      # catch stragglers, delete
+      db_item_words.each_key do |word|
+        iw = db_item_words[word]
+        iw.delete
+      end
     end
-    
   end
   
   def self.extract_text(content) 
     text = []
     return nil if content.nil?
-
+    
     debug_this = false
     state = :text
     prev_state = :text
     entity = []
     tag = []
     
-    #kmb: use string scanner.getch
-    #content.each_byte do |b|
-      
     scanner = StringScanner.new(content)
     while !scanner.eos?
       c = scanner.getch
@@ -105,7 +130,6 @@ class Gobbler::GItem
       
       # entity block
       if state != :pre
-        #kmb: check to see if we're in an anchor tag (or html in general?)
         if c == '&' && state != :entity
           puts "))) extract_text: entering entity" if debug_this
           prev_state = state

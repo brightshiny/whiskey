@@ -14,6 +14,16 @@ class User < ActiveRecord::Base
                     :cypto_provider => Authlogic::CryptoProviders::BCrypt
 
   
+  def persistence_token
+    puts "R RT: #{self.remember_token}"
+    self.remember_token
+  end
+  def persistence_token=(value)
+    puts "W RT: #{value}"
+    self.remember_token=value
+    puts "W RT: #{self.remember_token}"
+  end
+  
   validate :normalize_openid_identifier
   validates_uniqueness_of :openid_identifier, :allow_blank => true
   

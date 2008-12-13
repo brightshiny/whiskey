@@ -1,6 +1,7 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 nick:
+  id: 1
   login: MyString
   crypted_password: MyString
   password_salt: MyString
@@ -13,10 +14,11 @@ nick:
   current_login_ip: MyString
 
 keith:
+  id: 2
   login: MyString
   crypted_password: MyString
   password_salt: MyString
-  remember_token: MyString
+  remember_token: MyString2
   login_count: 1
   last_request_at: 2008-11-03 12:13:27
   last_login_at: 2008-11-03 12:13:27
@@ -25,10 +27,11 @@ keith:
   current_login_ip: MyString
 
 janko:
+  id: 3
   login: MyString
   crypted_password: MyString
   password_salt: MyString
-  remember_token: MyString
+  remember_token: MyString3
   login_count: 1
   last_request_at: 2008-11-03 12:13:27
   last_login_at: 2008-11-03 12:13:27

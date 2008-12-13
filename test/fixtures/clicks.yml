@@ -2,23 +2,33 @@ one:
   id: 1
   user_id: 1
   item_id: 1
+  referrer: "http://pnt.me/"
+  ip_address: "127.0.0.1"
 
 two:
   id:      2
   user_id: 2
   item_id: 2
+  referrer: "http://pnt.me/"
+  ip_address: "127.0.0.2"
 
 three:
   id:      3
   user_id: 3
   item_id: 3
+  referrer: "http://pnt.me/"
+  ip_address: "127.0.0.3"
 
 four:
   id:      4
   user_id: 4
   item_id: 4
+  referrer: "http://pnt.me/"
+  ip_address: "127.0.0.4"
 
 five:
   id:      5
   user_id: 5
   item_id: 5
+  referrer: "http://pnt.me/"
+  ip_address: "127.0.0.5"

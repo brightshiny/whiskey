@@ -2,7 +2,9 @@ class ListOfItemsController < ApplicationController
 
   def index
     encrypted_user_id = nil
-    if ! current_user.nil?
+    if params[:u]
+      encrypted_user_id = params[:u]
+    elsif ! current_user.nil?
       encrypted_user_id = KEY.url_safe_encrypt64(current_user.id)
     end
     @items = Item.find :all, :limit=>50, :order=>'published_at DESC'

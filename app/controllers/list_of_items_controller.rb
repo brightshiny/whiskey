@@ -7,4 +7,5 @@ class ListOfItemsController < ApplicationController
       format.atom
     end
   end
+  
 end

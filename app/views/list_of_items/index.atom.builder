@@ -4,7 +4,7 @@ atom_feed do |feed|
   
   @items.each do |item|
     feed.entry(item, :url=>item.link, :published=>item.published_at) do |entry|
-      entry.title(item.title)
+      entry.title(item.feed.title + ': ' + item.title)
       entry.content(item.content, :type => 'html')
       entry.author { |author| author.name(item.author) }
     end

@@ -73,6 +73,10 @@ class User < ActiveRecord::Base
   def active?
     active
   end
+
+  def encrypted_id
+    KEY.url_safe_encrypt64(self.id)
+  end
   
   private
     def normalize_openid_identifier

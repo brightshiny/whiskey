@@ -59,6 +59,10 @@ ActionController::Routing::Routes.draw do |map|
   # map.root :controller => "welcome"
   map.root :controller => "users"
 
+  map.high_priority_feed "/feed/high/:u", :controller => "list_of_items", :action => "index"
+  map.medium_priority_feed "/feed/medium/:u", :controller => "list_of_items", :action => "index"
+  map.low_priority_feed "/feed/low/:u", :controller => "list_of_items", :action => "index"
+
   # See how all your routes lay out with "rake routes"
 
   # Install the default routes as the lowest priority.

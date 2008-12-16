@@ -7,6 +7,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
   def self.gobble
     gobbler = Gobbler::Turkey.new
     feeds = []
+    ARGV.reject!{ |a| a.match(/^\D/) }
     if !ARGV.nil? && ARGV.size > 0
       ARGV.each {|id| feeds.push Feed.find(id.to_i) }
     else

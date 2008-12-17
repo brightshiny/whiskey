@@ -26,7 +26,7 @@ class ListOfItemsController < ApplicationController
       :conditions => ["users.id = ?", @user.id], 
       :joins => "join feeds on (feeds.id = items.feed_id) join feed_users on (feeds.id = feed_users.feed_id) join users on (users.id = feed_users.user_id)", 
       :include => "feed",
-      :limit => 50, 
+      :limit => 500, 
       :order => "published_at desc"
     )
     add_tracking_to_items(@items, @user.encrypted_id)

@@ -23,8 +23,8 @@ class ListOfItemsController < ApplicationController
   
   def index
     num_items_to_send = 50
-    if ! params[:n].nil? && params[:n].to_i != 0
-      num_items_to_send = params[:n]
+    if ! params[:n].nil? && params[:n].to_i != 0 && params[:n].to_i <= 1000
+      num_items_to_send = params[:n].to_i
     end
     @items = Item.find(:all, 
       :conditions => ["users.id = ?", @user.id], 

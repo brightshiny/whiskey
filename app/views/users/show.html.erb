@@ -6,6 +6,7 @@
     <li><%= link_to "Upload an OPML file", :controller => :opml, :action => :upload %></li>
     <li><%= link_to "View subscribed feeds", :controller => :opml, :action => :show %> (<%= current_user.feeds.size %>)</li>
 	  <li><%= link_to "View your high priority feed", high_priority_feed_path( :u => KEY.url_safe_encrypt64(current_user.id)) %>
+	  <li><%= link_to "View your scrolling feed", scroll_path( :u => KEY.url_safe_encrypt64(current_user.id)) %>
     <li><%= link_to "Edit account information", edit_account_path %></li>
   </ul>
 </div>

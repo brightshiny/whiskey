@@ -46,7 +46,8 @@ function addTrackingPixel() {
 }
 
 function doReadTracking() {
-  setTimeout("addTrackingPixel()",3000);
+  clearTimeout(window.readClock);
+  window.readClock = setTimeout("addTrackingPixel()",3000);
 }
 
 function scrollNext() {  

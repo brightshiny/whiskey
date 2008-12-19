@@ -1,6 +1,20 @@
 class ListOfItemsController < ApplicationController
 
   before_filter :get_user, :get_priority
+  layout nil
+    
+  def scroll 
+    num_items_to_send = 20   
+    @items = Item.find(:all, 
+      :conditions => ["users.id = ?", @user.id], 
+      :joins => "join feeds on (feeds.id = items.feed_id) join feed_users on (feeds.id = feed_users.feed_id) join users on (users.id = feed_users.user_id)", 
+      :include => ["feed"],
+      :limit => num_items_to_send, 
+      :order => "published_at desc"
+    )
+    add_tracking_to_items(@items, @user.encrypted_id)
+    @items = ItemForDisplay.convert_items(@items)
+  end
 
   def get_user
     @user = determine_user
@@ -40,7 +54,7 @@ class ListOfItemsController < ApplicationController
   end
 
 private
-  
+
   def add_tracking_to_items(items, encrypted_user_id)
     items.map { |item|
       encrypted_item_id = KEY.url_safe_encrypt64(item.id)

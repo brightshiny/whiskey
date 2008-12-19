@@ -1,0 +1,63 @@
+body {
+  font-family: helvetica, arial, sans-serif;
+  font-size: 14px;
+  background-color: #efefef;
+}
+
+#container {
+  background-color: #fff;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-top: -150px;
+  margin-left: -225px;
+  width: 450px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+}
+
+#slider {
+  position: relative;
+  top: 0;
+  left: 0;
+  height: 300px;
+  width: 9999999px;
+  overflow: hidden;
+}
+
+.item {
+  width: 450px;
+  height: 300px;
+  overflow: hidden;
+  float: left;
+}
+.item .sleeve {
+  padding: 20px;
+}
+.item .active { }
+
+.title {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-decoration: none;
+  color: #000;
+  display: block;
+  padding-bottom: 0.3em;
+}
+
+.description { }
+
+#instructions {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  text-align: center;
+  width: 100%;
+}
+#instructions span {
+  margin: 0 20px;
+}
+#instructions span.small {
+  color: #333;
+  font-size: 0.8em;
+}

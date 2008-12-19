@@ -1,15 +1,21 @@
 body {
   font-family: helvetica, arial, sans-serif;
   font-size: 14px;
-  background-color: #efefef;
+  background-color: #F6F5FF;
+  color: #112;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3.0em;
+  line-height: 1.0em;
 }
 
 #container {
   background-color: #fff;
   position: absolute;
   left: 50%;
-  top: 50%;
-  margin-top: -150px;
+  top: 200px;
   margin-left: -225px;
   width: 450px;
   border: 1px solid #ccc;
@@ -40,24 +46,23 @@ body {
   font-size: 1.5em;
   font-weight: bold;
   text-decoration: none;
-  color: #000;
+  color: #445;
   display: block;
-  padding-bottom: 0.3em;
+  padding-bottom: 0.4em;
 }
 
-.description { }
+.published_at, .feed {
+  font-size: 0.8em;
+  line-height: 1.3em;
+}
+
+.description { 
+  margin-top: 0.4em;
+}
 
 #instructions {
-  position: absolute;
-  bottom: 10px;
-  left: 0;
   text-align: center;
-  width: 100%;
 }
 #instructions span {
   margin: 0 20px;
-}
-#instructions span.small {
-  color: #333;
-  font-size: 0.8em;
 }

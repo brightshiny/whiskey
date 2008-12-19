@@ -8,7 +8,8 @@
 	<script type="text/javascript" src="/javascripts/jquery.easing.1.3.js"></script>
 	<script type="text/javascript" src="/javascripts/application.js"></script>
 	<script type="text/javascript">
-	feed = <%= @items.to_json %>;
+	window.feed = <%= @items.to_json %>;
+	window.encrypted_user_id = "<%= current_user.encrypted_id %>";
 	</script>
 	<script type="text/javascript">
     $(document).ready(function(){
@@ -33,8 +34,9 @@
 </head>
 
 <body>
+  <h1>Whiskey UI Experiment</h1>
+  <p id="instructions"><span>&larr; (b) previous item</span><span>&uarr; (space) open item in new window</span><span>&rarr; (f) next item</span></p>
   <div id="container"><div id="slider"></div></div>
-  <p id="instructions"><span class="small">Want to move around?  Use your keyboard.</span><br /><span>&larr; (b) move to the left</span><span>&rarr; (f) move to the right</span><span>&uarr; (space) open link</span></p>
 </body>
 
 </html>

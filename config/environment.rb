@@ -104,3 +104,5 @@ ActionMailer::Base.smtp_settings = {
 :password => "9aHefafaXath&GAz",
 }
 
+class Gobbler
+end

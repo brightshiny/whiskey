@@ -103,6 +103,3 @@ ActionMailer::Base.smtp_settings = {
 :user_name => "whiskeybrightshinyme@gmail.com",
 :password => "9aHefafaXath&GAz",
 }
-
-class Gobbler
-end

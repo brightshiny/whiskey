@@ -1,8 +1,10 @@
 body {
   font-family: helvetica, arial, sans-serif;
   font-size: 14px;
-  background-color: #F6F5FF;
+  background-color: #efefef;
   color: #112;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
@@ -12,13 +14,10 @@ h1 {
 }
 
 #container {
-  background-color: #fff;
+  background-color: transparent;
   position: absolute;
-  left: 50%;
   top: 200px;
-  margin-left: -225px;
-  width: 450px;
-  border: 1px solid #ccc;
+  width: 100%;
   overflow: hidden;
 }
 
@@ -26,21 +25,25 @@ h1 {
   position: relative;
   top: 0;
   left: 0;
+  margin-left: 50%;
   height: 300px;
   width: 9999999px;
   overflow: hidden;
 }
 
 .item {
-  width: 450px;
+  width: 500px;
+  margin: 0 250px 0 -250px;
   height: 300px;
   overflow: hidden;
   float: left;
 }
 .item .sleeve {
-  padding: 20px;
+  padding: 20px 20px 20px 20px;
 }
-.item .active { }
+.item .active {
+  background-color: #fff;
+}
 
 .title {
   font-size: 1.5em;

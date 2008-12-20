@@ -16,6 +16,7 @@
       buildPage();
       enableKeyPresses();
       highlightActiveItem();
+      scrollNext();
     });
 	  $(document).keypress(function (e) {
 	    if (window.acceptKeyPress == true) {
@@ -36,7 +37,9 @@
 <body>
   <h1>Whiskey UI Experiment</h1>
   <p id="instructions"><span>&larr; (b) previous item</span><span>&uarr; (space) open item in new window</span><span>&rarr; (f) next item</span></p>
-  <div id="container"><div id="slider"></div></div>
+  <div id="container"><div id="slider">
+  <div class="item" id="item"><div class="sleeve"></div></div>
+  </div></div>
 </body>
 
 </html>

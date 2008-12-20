@@ -32,7 +32,7 @@ class ItemForDisplay < ActiveRecord::BaseWithoutTable
   end
   
   def self.clean(text)
-    text = text.slice(0..200)
+    text
   end
   
 end

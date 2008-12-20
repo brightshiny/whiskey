@@ -2,7 +2,7 @@ body {
   font-family: helvetica, arial, sans-serif;
   font-size: 14px;
   background-color: #efefef;
-  color: #112;
+  color: #999;
   margin: 0;
   padding: 0;
 }
@@ -11,6 +11,7 @@ h1 {
   text-align: center;
   font-size: 3.0em;
   line-height: 1.0em;
+  color: #222;
 }
 
 #container {
@@ -39,19 +40,30 @@ h1 {
   float: left;
 }
 .item .sleeve {
-  padding: 20px 20px 20px 20px;
+  padding: 30px;
 }
-.item .active {
-  background-color: #fff;
-}
-
 .title {
   font-size: 1.5em;
   font-weight: bold;
   text-decoration: none;
-  color: #445;
+  color: #999;
   display: block;
   padding-bottom: 0.4em;
+}
+.item a {
+  color: #330000;
+}
+
+
+.item .active {
+  background-color: #fff;
+  color: #222;
+}
+.item .active .title {
+  color: #222;
+}
+.item .active a {
+  color: #990000;
 }
 
 .published_at, .feed {
@@ -65,6 +77,7 @@ h1 {
 
 #instructions {
   text-align: center;
+  color: #222;
 }
 #instructions span {
   margin: 0 20px;

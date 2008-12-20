@@ -1,3 +1,0 @@
-class Gobbler
-end
-

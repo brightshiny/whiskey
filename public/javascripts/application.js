@@ -1,5 +1,5 @@
 function buildPage() {
-  window.item_on_left = -1;
+  window.item_on_left = -1; 
   $.each( window.feed, function(index, item) {
     html = '<div class="item" id="item_' + index + '"><div class="sleeve"><div class="heading"><a target="_blank" class="title" href=""></a></div><div class="feed"><span class="author"></span><a class="feed_name" href="" target="_blank"></a></div><div class="published_at"></div><div class="description"></div></div></div>';
     $("#slider").append(html);
@@ -7,8 +7,8 @@ function buildPage() {
     $("#item_" + index + " a.title").attr({"href" : item.link});
     $("#item_" + index + " .feed a.feed_name").append(document.createTextNode(item.feed_name));
     $("#item_" + index + " .feed a.feed_name").attr({"href" : item.feed_link });
-    $("#item_" + index + " .author").append(document.createTextNode(item.author));
-    if((item.author) && (item.author.length > 0) && (item.author != "null")) {
+    if((item.author) && (item.author.length > 0) && (item.author != null) && (item.author != undefined)) {
+      $("#item_" + index + " .author").append(document.createTextNode(item.author));
       $("#item_" + index + " .author").append(" &middot; ");
     }
     $("#item_" + index + " .published_at").append(document.createTextNode(item.published_at));

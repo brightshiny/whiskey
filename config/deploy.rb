@@ -1,7 +1,7 @@
 require 'net/ssh/proxy/http'
 
 # Configure this appropriately for your present local location
-behind_firewall = true # set me dynamically in the future!
+behind_firewall = false # set me dynamically in the future!
 if behind_firewall
   proxy = Net::SSH::Proxy::HTTP.new( "itgproxy.redmond.corp.microsoft.com", 80 )
   ssh_options[:proxy] = proxy

@@ -55,7 +55,7 @@ class Gobbler::GItem
     Gobbler::GItem.extract_text(@rss_item.title)
   end
   
-  def parse_words(db_item)
+  def self.parse_words(db_item)
     content_words = {}
     content = Gobbler::GItem.extract_text(db_item.content)
     content.downcase.scan(/[a-z0-9'\-]+/) {|w| content_words[w] == nil ? content_words[w] = 1 : content_words[w] += 1 }
@@ -110,6 +110,8 @@ class Gobbler::GItem
         iw.delete
       end
     end
+    
+    puts "Parsed item [id=#{db_item.id}]: #{db_item.title}"
   end
   
   def self.extract_text(content) 

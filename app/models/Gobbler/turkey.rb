@@ -4,7 +4,14 @@ require 'digest/sha1'
 require 'cgi'
 
 class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
-  def self.gobble
+  attr_reader :decoder
+
+  def initialize
+    @decoder = HTMLEntities.new
+    super()
+  end
+  
+  def self.fetch
     gobbler = Gobbler::Turkey.new
     feeds = []
     ARGV.reject!{ |a| a.match(/^\D/) }
@@ -14,7 +21,40 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       feeds = Feed.find(:all)
     end
     
-    feeds.each {|f| gobbler.gobble_feed(f) }
+    pool = Gobbler::FeedBag.new(feeds)
+    
+    threads = (1..1).map do |i|
+      Thread.new("consumer #{i}") do |name|
+        gobbler = Gobbler::Turkey.new
+        while feed = pool.get_next
+          gobbler.gobble_feed(feed)
+        end
+      end
+    end
+    
+    threads.each do |th|
+      begin
+        th.join
+      rescue RuntimeError => e
+        puts "Failed: #{e.message}"
+      end
+    end
+  end
+  
+  def self.parse
+    items = []
+    ARGV.reject!{ |a| a.match(/^\D/) }
+    if !ARGV.nil? && ARGV.size > 0
+      ARGV.each do |id|
+        feed = Feed.find(id.to_i)
+        if !feed.nil?
+          feed.items.each {|i| items.push(i)}
+        end
+      end
+    else
+      items = Item.find(:all, :conditions => ["parsed_at is null"])
+    end
+    items.each {|i| Gobbler::GItem.parse_words(i) }
   end
   
   def gobble_feed(feed)
@@ -34,7 +74,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     end
     
     begin
-      rss_title = Gobbler::GItem.extract_text(rss.title)
+      rss_title = @decoder.decode(rss.title)
       
       if feed.title.nil? || feed.title != rss_title
         feed.title = rss_title
@@ -44,7 +84,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       
       feed.gobbled_at = Time.now
       feed.save
-      puts "Processed #{items_processed} (#{items_new} new) items from [id=#{feed.id}]: #{rss_title}"
+      puts "#{Thread.current.object_id}: Processed #{items_processed} (#{items_new} new) items from [id=#{feed.id}]: #{rss_title}"
     rescue Exception => e
       logger.error("Error while processing feed: " + e + "\n" + e.backtrace.join("\n"))  
     end
@@ -63,7 +103,8 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         gobbler_item = Gobbler::GItem.new(item)
         
         published_at = gobbler_item.extract_published_at
-        content = gobbler_item.extract_content
+        
+        content = @decoder.decode(gobbler_item.extract_content)
         
         if content.nil? || content.length <= 0
           #logger.info("Unable to extract content from item [#{item.link}], skipping.")
@@ -82,15 +123,14 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         sha1 << content
         digest = sha1.hexdigest
         
-        if digest != db_item.content_sha1
+        if true || digest != db_item.content_sha1
           db_item.author = Gobbler::AttrHelper.get_first(item, [:dc_creator])
           db_item.published_at = published_at
           db_item.content = content
           db_item.title = gobbler_item.extract_title
           db_item.content_sha1 = digest
+          db_item.parsed_at = nil
           db_item.save
-          # engage parsing magic
-          gobbler_item.parse_words(db_item)
           items_new += 1
         end
         

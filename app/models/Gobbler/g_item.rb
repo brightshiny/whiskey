@@ -1,6 +1,6 @@
 require 'strscan'
 
-class Gobbler::GItem
+class Gobbler::GItem < ActiveRecord::BaseWithoutTable
   
   BASIC_ENTITIES  = {
     'lt' => '<',
@@ -111,7 +111,9 @@ class Gobbler::GItem
       end
     end
     
-    puts "Parsed item [id=#{db_item.id}]: #{db_item.title}"
+    db_item.parsed_at = Time.now
+    db_item.save
+    logger.info "Parsed item [id=#{db_item.id}]: #{db_item.title}"
   end
   
   def self.extract_text(content) 
@@ -133,7 +135,7 @@ class Gobbler::GItem
       # entity block
       if state != :pre
         if c == '&' && state != :entity
-          puts "))) extract_text: entering entity" if debug_this
+          logger.info "))) extract_text: entering entity" if debug_this
           prev_state = state
           state = :entity
           entity = []
@@ -144,17 +146,17 @@ class Gobbler::GItem
             entity_text = m[1].to_i.to_s
           end
           c = BASIC_ENTITIES[entity_text] || ' '
-          puts "))) extract_text: exiting entity =[#{entity_text},#{c}]" if debug_this
+          logger.info "))) extract_text: exiting entity =[#{entity_text},#{c}]" if debug_this
           state = prev_state
         elsif state == :entity
           
           # bad news, we ran into a tag
           if c == '<'
-            puts "))) extract_text: there's a tag in my entity =[#{entity.join}]" if debug_this
+            logger.info "))) extract_text: there's a tag in my entity =[#{entity.join}]" if debug_this
             state = prev_state
             text.push "&", entity.join
           else # keep marching on
-            puts "))) extract_text: building entity =[#{entity.join}]" if debug_this
+            logger.info "))) extract_text: building entity =[#{entity.join}]" if debug_this
             entity.push c
           end
           
@@ -162,7 +164,7 @@ class Gobbler::GItem
           # bad news, our tag goes on way too long
           if entity.length >= 7
             entity_text = entity.join
-            puts "))) extract_text: my entity is waay toooo large =[#{entity_text}]" if debug_this
+            logger.info "))) extract_text: my entity is waay toooo large =[#{entity_text}]" if debug_this
             c = ''
             text.push "&", entity_text
             state = prev_state
@@ -175,15 +177,15 @@ class Gobbler::GItem
         if state == :html && c == '>'
           if tag.join == "pre"
             state = :pre
-            puts "))) extract_text: entering pre block" if debug_this
+            logger.info "))) extract_text: entering pre block" if debug_this
           else
             state = :text
           end
-          puts "))) extract_text: exiting html tag, give or take pre" if debug_this
+          logger.info "))) extract_text: exiting html tag, give or take pre" if debug_this
         elsif c == '<'
           state = :html
           tag = []
-          puts "))) extract_text: entering html tag" if debug_this
+          logger.info "))) extract_text: entering html tag" if debug_this
         elsif state == :html
           tag.push c
         elsif state != :html
@@ -191,13 +193,13 @@ class Gobbler::GItem
         end
       end
       
-      #puts "))) extract_text: state=#{state.to_s}, prev=#{prev_state.to_s}" if debug_this
+      #logger.info "))) extract_text: state=#{state.to_s}, prev=#{prev_state.to_s}" if debug_this
       
     end
     
     if debug_this
-      puts "))) extract_text input: [#{content}]"
-      puts "))) extract_text output: [#{text}]"
+      logger.info "))) extract_text input: [#{content}]"
+      logger.info "))) extract_text output: [#{text}]"
     end
     return text.join
   end

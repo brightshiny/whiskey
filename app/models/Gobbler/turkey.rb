@@ -23,7 +23,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     
     pool = Gobbler::FeedBag.new(feeds)
     
-    threads = (1..1).map do |i|
+    threads = (1..GOBBLER_THREAD_COUNT).map do |i|
       Thread.new("consumer #{i}") do |name|
         gobbler = Gobbler::Turkey.new
         while feed = pool.get_next
@@ -36,7 +36,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       begin
         th.join
       rescue RuntimeError => e
-        puts "Failed: #{e.message}"
+        logger.error "Fetch thread failed, rejoining: #{e.message}"
       end
     end
   end
@@ -68,8 +68,8 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     begin
       rss = SimpleRSS.parse open(feed.link)
     rescue Exception => e
-      logger.error("Could not get feed: " + e)
-      puts "Error trying to download [id=#{feed.id}]: #{e}"
+      logger.error "Could not get feed: " + e
+      logger.error "Error trying to download [id=#{feed.id}]: #{e}"
       return
     end
     
@@ -84,7 +84,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       
       feed.gobbled_at = Time.now
       feed.save
-      puts "#{Thread.current.object_id}: Processed #{items_processed} (#{items_new} new) items from [id=#{feed.id}]: #{rss_title}"
+      logger.info "#{Thread.current.object_id}: Processed #{items_processed} (#{items_new} new) items from [id=#{feed.id}]: #{rss_title}"
     rescue Exception => e
       logger.error("Error while processing feed: " + e + "\n" + e.backtrace.join("\n"))  
     end

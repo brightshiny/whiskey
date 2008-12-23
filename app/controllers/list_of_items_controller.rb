@@ -1,5 +1,4 @@
 class ListOfItemsController < ApplicationController
-
   before_filter :get_user, :get_priority
   layout nil
     
@@ -40,8 +39,16 @@ class ListOfItemsController < ApplicationController
     if ! params[:n].nil? && params[:n].to_i != 0 && params[:n].to_i <= 1000
       num_items_to_send = params[:n].to_i
     end
+
+    feed_id = KEY.url_safe_decrypt64(params[:f]) unless params[:f].nil?
+    if !feed_id.nil?
+      conditions = ["users.id = ? and feeds.id = ?", @user.id, feed_id]
+    else
+      conditions = ["users.id = ?", @user.id]
+    end
+
     @items = Item.find(:all, 
-      :conditions => ["users.id = ?", @user.id], 
+      :conditions => conditions,
       :joins => "join feeds on (feeds.id = items.feed_id) join feed_users on (feeds.id = feed_users.feed_id) join users on (users.id = feed_users.user_id)", 
       :include => "feed",
       :limit => num_items_to_send, 

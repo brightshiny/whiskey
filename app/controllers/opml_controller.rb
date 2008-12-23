@@ -1,7 +1,13 @@
 class OpmlController < ApplicationController
+  before_filter :require_user
   
   def show
-    @feeds = current_user.feeds
+    @user = current_user
+    @feeds = @user.feeds
+    respond_to do |format|
+      format.html
+      format.xml
+    end
   end
   
   def upload

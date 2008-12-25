@@ -1,4 +1,5 @@
 require 'strscan'
+require 'stemmer'
 include StopWord
 
 class Gobbler::GItem < ActiveRecord::BaseWithoutTable
@@ -59,8 +60,9 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
   def self.parse_words(db_item)
     content_words = {}
     content = Gobbler::GItem.extract_text(db_item.content)
-    content.downcase.scan(/[a-z0-9'\-]+/) do |w|
+    content.downcase.scan(/[a-z0-9]+/) do |w|
       next if is_stop_word?(w)
+      w = w.stem
       if content_words[w] == nil
         content_words[w] = 1
       else

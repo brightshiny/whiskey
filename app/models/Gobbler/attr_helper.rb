@@ -1,4 +1,5 @@
 class Gobbler::AttrHelper
+
   def self.get_first(obj, attrs)
     return nil if obj.nil? || attrs.nil?
     
@@ -8,4 +9,5 @@ class Gobbler::AttrHelper
     end
     return nil
   end
+
 end

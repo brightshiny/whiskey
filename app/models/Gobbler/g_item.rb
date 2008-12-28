@@ -69,7 +69,7 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
         content_words[w] += 1
       end
     end
-    
+    word_count = content_words.length
     # load existing db words
     db_words = {}
     existing_words = Word.find(:all, :conditions => ["word in (:words)", {:words => content_words.keys}])
@@ -122,6 +122,7 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
     end
     
     db_item.parsed_at = Time.now
+    db_item.word_count = word_count
     db_item.save
     logger.info "Parsed item [id=#{db_item.id}]: #{db_item.title}"
   end

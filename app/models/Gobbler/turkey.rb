@@ -123,7 +123,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         sha1 << content
         digest = sha1.hexdigest
         
-        if true || digest != db_item.content_sha1
+        if digest != db_item.content_sha1
           db_item.author = Gobbler::AttrHelper.get_first(item, [:dc_creator])
           db_item.published_at = published_at
           db_item.content = content

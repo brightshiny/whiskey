@@ -10,16 +10,18 @@ class Dewey < ActiveRecord::BaseWithoutTable
   def self.recent_documents_index
     if @@recent_documents_index.nil?
       puts "Index has not been built yet"
-      puts "Building now..."
-      index = Classifier::LSI.new
+      start_time = Time.now
+      puts "Building now... (#{start_time})"
+      index = Classifier::LSI.new :auto_rebuild => false
+      # index = Classifier::LSI.new
       items = Item.recent_items(500)
-      items.each{ |i| index.add_item "#{KEY.url_safe_encrypt64(i.id)} #{i.string_of_contained_words}" }
-      # items.each do |item|
-      #   if ! item.nil? && ! item.string_of_contained_words.nil? && ! item.string_of_contained_words.empty? && item.string_of_contained_words.size > 0
-      #     index.add_item item { |i| i.string_of_contained_words } 
-      #   end
-      # end
-      puts "... done building index"
+      items.each do |i| 
+        index.add_item "#{KEY.url_safe_encrypt64(i.id)} #{i.string_of_contained_words}" 
+      end
+      index.build_index(0.75)
+      end_time = Time.now
+      puts "... done building index (#{end_time})"
+      puts "Index creation took #{end_time - start_time} seconds"
       @@recent_documents_index = index
     end
     return @@recent_documents_index

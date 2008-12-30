@@ -13,7 +13,6 @@ class Dewey < ActiveRecord::BaseWithoutTable
       start_time = Time.now
       puts "Building now... (#{start_time})"
       index = Classifier::LSI.new :auto_rebuild => false
-      # index = Classifier::LSI.new
       items = Item.recent_items(500)
       items.each do |i| 
         index.add_item "#{KEY.url_safe_encrypt64(i.id)} #{i.string_of_contained_words}" 

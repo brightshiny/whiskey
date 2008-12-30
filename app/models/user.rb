@@ -78,6 +78,36 @@ class User < ActiveRecord::Base
     KEY.url_safe_encrypt64(self.id)
   end
   
+  def recently_read_items(number_of_items_to_return = 100)
+    # select i.id, r.created_at from items i join `reads` r on r.item_id = i.id where r.user_id = 1 order by r.created_at desc limit 100
+    Item.find( :all, 
+      :conditions => ["`reads`.user_id = ?", self.id], 
+      :joins => "join `reads` on `reads`.item_id = items.id",
+      :include => [ :words ],
+      :order => "`reads`.created_at desc",
+      :limit => number_of_items_to_return
+    )
+  end
+
+  def recently_clicked_items(number_of_items_to_return = 100)
+    # select i.id, r.created_at from items i join `reads` r on r.item_id = i.id where r.user_id = 1 order by r.created_at desc limit 100
+    Item.find( :all, 
+      :conditions => ["`clicks`.user_id = ?", self.id], 
+      :joins => "join `clicks` on `clicks`.item_id = items.id",
+      :include => [ :words ],
+      :order => "`clicks`.created_at desc",
+      :limit => number_of_items_to_return
+    )
+  end
+  
+  def document_based_on_recently_clicked_items
+    self.recently_clicked_items.map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")   
+  end
+  
+  def document_based_on_recently_read_items
+    self.recently_read_items.map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")    
+  end
+  
   private
     def normalize_openid_identifier
       begin

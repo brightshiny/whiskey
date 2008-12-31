@@ -6,6 +6,7 @@ class Dewey < ActiveRecord::BaseWithoutTable
   # 
 
   @@recent_documents_index = nil
+  @@bayes_recent_documents_index = nil
   
   def self.recent_documents_index(date_of_interest = nil)
     if @@recent_documents_index.nil?
@@ -13,12 +14,11 @@ class Dewey < ActiveRecord::BaseWithoutTable
       start_time = Time.now
       puts "Building now... (#{start_time})"
       index = Classifier::LSI.new :auto_rebuild => false
-      # if date_of_interest.nil?
-      #   items = Item.recent_items(500)
-      # else
-      #   # items = Item.find(:all, :conditions => ["date(created_at) = ?", date_of_interest], :include => [ :words ], :order => "published_at desc", :limit => 1500)
-        items = Item.find_by_sql("select i.* from items i join feeds f on f.id = i.feed_id join feed_users fu on fu.feed_id = f.id where fu.user_id = 1 and date(i.created_at) = '2008-12-20'")
-      # end
+      if date_of_interest.nil?
+        items = Item.recent_items(500)
+      else
+        items = Item.find_by_sql(["select i.* from items i join feeds f on f.id = i.feed_id join feed_users fu on fu.feed_id = f.id where fu.user_id = 1 and date(i.created_at) = ?",date_of_interest])
+      end
       puts "\tAdding #{items.size} documents..."
       items.each do |i| 
         index.add_item "#{KEY.url_safe_encrypt64(i.id)} #{i.string_of_contained_words}" 

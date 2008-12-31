@@ -59,7 +59,7 @@ class ListOfItemsController < ApplicationController
       format.atom
     end
   end
-
+  
 private
 
   def add_tracking_to_items(items, encrypted_user_id)

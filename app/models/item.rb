@@ -30,7 +30,14 @@ class Item < ActiveRecord::Base
   attr_accessor :cached_string_of_contained_words
   def string_of_contained_words
     if self.cached_string_of_contained_words.nil?
-      self.cached_string_of_contained_words = self.words.map{ |w| w.word }.join(" ")
+      # self.cached_string_of_contained_words = self.words.map{ |w| w.word }.join(" ")
+      s = ""
+      self.item_words.each { |iw|
+        iw.count.times do |n| 
+          s += "#{iw.word.word} "
+        end 
+      } 
+      self.cached_string_of_contained_words = s
     end
     return self.cached_string_of_contained_words
   end

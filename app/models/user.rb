@@ -78,7 +78,7 @@ class User < ActiveRecord::Base
     KEY.url_safe_encrypt64(self.id)
   end
   
-  def recently_read_items(number_of_items_to_return = 100)
+  def recently_read_items(number_of_items_to_return = 1000)
     # select i.id, r.created_at from items i join `reads` r on r.item_id = i.id where r.user_id = 1 order by r.created_at desc limit 100
     Item.find( :all, 
       :conditions => ["`reads`.user_id = ?", self.id], 
@@ -89,7 +89,7 @@ class User < ActiveRecord::Base
     )
   end
 
-  def recently_clicked_items(number_of_items_to_return = 100)
+  def recently_clicked_items(number_of_items_to_return = 1000)
     # select i.id, r.created_at from items i join `reads` r on r.item_id = i.id where r.user_id = 1 order by r.created_at desc limit 100
     Item.find( :all, 
       :conditions => ["`clicks`.user_id = ?", self.id], 
@@ -100,12 +100,12 @@ class User < ActiveRecord::Base
     )
   end
   
-  def document_based_on_recently_clicked_items
-    self.recently_clicked_items.map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")   
+  def document_based_on_recently_clicked_items(number_of_items_to_return = 1000)
+    self.recently_clicked_items(number_of_items_to_return).map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")   
   end
   
-  def document_based_on_recently_read_items
-    self.recently_read_items.map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")    
+  def document_based_on_recently_read_items(number_of_items_to_return = 1000)
+    self.recently_read_items(number_of_items_to_return).map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")    
   end
   
   private

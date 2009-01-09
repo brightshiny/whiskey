@@ -14,7 +14,7 @@ a1 = Linalg::DMatrix[
   [0,1,1]
 ]
 
-# m = Linalg::DMatrix[
+# a1 = Linalg::DMatrix[
 #   [4,0],
 #   [3,-5]
 # ]   
@@ -56,6 +56,7 @@ v2 = Linalg::DMatrix.join_columns(cols_for_v2)
 eig2 = Linalg::DMatrix.columns(eigenvectors)
 
 q = Linalg::DMatrix[[0,0,0,0,0,1,0,0,0,1,1]]
+# q = Linalg::DMatrix[[2,1]]
 qEmbed = q * u2 * eig2.inverse
 
 similarity_matrix, count = {}, 1

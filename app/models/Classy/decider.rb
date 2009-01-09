@@ -1,4 +1,4 @@
-require 'matrix'
+require 'linalg'
 
 module Classy
   class Decider
@@ -69,7 +69,7 @@ module Classy
     
     def term_count_matrix
       clean
-      Matrix.columns(@columns)
+      Linalg::DMatrix.columns(@columns)
     end
     
     def tf_idf_matrix
@@ -89,8 +89,7 @@ module Classy
         end
       end
   
-      puts Matrix.columns(tf_idf_columns)
-      puts "@columns[#{@columns.size},#{@next_term_index+1}]"
+      return Linalg::DMatrix.columns(tf_idf_columns)
     end
     
     def number_of_docs_with_term(term_idx)

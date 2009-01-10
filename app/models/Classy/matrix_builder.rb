@@ -78,7 +78,11 @@ module Classy
       term_count = 0
       col.each {|n| term_count += n}
       for term_idx in 0 .. @max_term_index
-        tf = col[term_idx].to_f / term_count.to_f
+        # tf = col[term_idx].to_f / term_count.to_f
+        tf = 0
+        if term_count.to_f != 0
+          tf = col[term_idx].to_f / term_count.to_f
+        end
         idf = @idf_cache[term_idx]
         col[term_idx] = tf*idf
       end
@@ -102,7 +106,10 @@ module Classy
           word_count = @columns[doc_idx][term_idx]
           doc_word_count = 0
           @columns[doc_idx].each {|n| doc_word_count += n}
-          tf = word_count.to_f / doc_word_count.to_f
+          tf = 0
+          if doc_word_count.to_f != 0
+            tf = word_count.to_f / doc_word_count.to_f
+          end
           idf = @idf_cache[term_idx]
           tf_idf_columns[doc_idx][term_idx] = tf*idf
         end

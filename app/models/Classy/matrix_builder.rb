@@ -41,7 +41,7 @@ module Classy
           for doc_idx in 0 .. @columns.size-1
             if @columns[doc_idx][term_idx].nil?
               @columns[doc_idx][term_idx] = 0
-            else
+            elsif @columns[doc_idx][term_idx] > 0
               docs_with_term_count += 1
             end
           end
@@ -51,10 +51,32 @@ module Classy
       end
     end
     
-    def get_q(item)
+    def term_count_row(term)
+      term_idx = get_term_index(term, false)
+      if term_idx == :term_dne
+        return nil
+      else
+        return a_term_count.row(term_idx)
+      end
+    end
+    
+    def tf_idf_row(term)
+      term_idx = get_term_index(term, false)
+      if term_idx == :term_dne
+        return nil
+      else
+        return a_tf_idf.row(term_idx)
+      end
+    end
+    
+    def q_term_count(item)
+      return Linalg::DMatrix.rows([doc_column(item,false)])
+    end
+    
+    def q_tf_idf(item)
       col = doc_column(item, false)
       term_count = 0
-      col.inject{|term_count,n| term_count + n}
+      col.each {|n| term_count += n}
       for term_idx in 0 .. @max_term_index
         tf = col[term_idx].to_f / term_count.to_f
         idf = @idf_cache[term_idx]
@@ -79,7 +101,7 @@ module Classy
           #word = @term_index_hash.index(term_idx)
           word_count = @columns[doc_idx][term_idx]
           doc_word_count = 0
-          @columns[doc_idx].inject{|doc_word_count,n| doc_word_count + n}
+          @columns[doc_idx].each {|n| doc_word_count += n}
           tf = word_count.to_f / doc_word_count.to_f
           idf = @idf_cache[term_idx]
           tf_idf_columns[doc_idx][term_idx] = tf*idf
@@ -109,7 +131,7 @@ module Classy
       return @doc_index_hash.index(idx)
     end
     
-    def get_term_index(term, create_new=true)
+    def get_term_index(term, create_new=false)
       if @term_index_hash.has_key?(term)
         return @term_index_hash.fetch(term)
       elsif create_new

@@ -2,119 +2,57 @@ require 'linalg'
 
 module Classy
   class Decider
+    attr_reader :matrix_builder
+    
+    def initialize
+      super
+      @matrix_builder = MatrixBuilder.new()
+    end
     
     def self.decide
-      d = Classy::Decider.new
-      d.term_doc_matrix()
+      # make us a decider
+      decider = Classy::Decider.new
+      
+      # define the corpus, add to A
+      docs = User.find(3).recently_read_items(5)
+      decider.add_to_a(docs)
+      decider.process_q(docs)
+      
     end
     
-    def term_doc_matrix
+    def process_q(docs)
+      #puts decider.matrix_builder.a_term_count
+      a = @matrix_builder.a_tf_idf
+      u, s, vt = a.singular_value_decomposition
+      vt = vt.transpose
       
-      docs = get_docs(User.find(3))
-      mb = MatrixBuilder.new()
+      u2 = Linalg::DMatrix.join_columns [u.column(0), u.column(1)]
+      v2 = Linalg::DMatrix.join_columns [vt.column(0), vt.column(1)]
+      eig2 = Linalg::DMatrix.columns [s.column(0).to_a.flatten[0,2], s.column(1).to_a.flatten[0,2]]
+            
+      # run through a bunch of Q
       docs.each do |doc|
-        mb.add(doc)
-      end
-      mb.tf_idf_matrix
-      
-    end
-    
-    def get_docs(user)
-      return if user.nil?
-      read_docs(user)
-    end
-    
-    def read_docs(user,count=10)
-      user.recently_read_items(count)
-    end
-  end
-  
-  class MatrixBuilder
-    def initialize()
-      super
-      # columns = array of term count arrays
-      @columns = Array.new
-      @next_term_index = -1
-      @next_doc_index = -1
-      @term_index_hash = Hash.new
-      @doc_index_hash = Hash.new
-      @dirty = false
-    end
-    
-    def add(doc)
-      return unless !doc.nil?
-      
-      @dirty = true
-      doc_idx = get_doc_index(doc.id)
-      
-      @columns[doc_idx] = Array.new
-      doc.item_words.each do |iw|
-        word = iw.word.word
-        term_idx = get_term_index(word)
-        @columns[doc_idx][term_idx] = iw.count
-      end
-    end
-    
-    # make @columns[][] a rectangle and zero out nils
-    def clean
-      if @dirty
-        for doc_idx in 0 .. @columns.size-1
-          for term_idx in 0 .. @next_term_index
-            @columns[doc_idx][term_idx] = 0 unless !@columns[doc_idx][term_idx].nil?
-          end
-        end
-        @dirty = false
-      end
-    end
-    
-    def term_count_matrix
-      clean
-      Linalg::DMatrix.columns(@columns)
-    end
-    
-    def tf_idf_matrix
-      clean
-      # slicing time
-      tf_idf_columns = Array.new
-      for doc_idx in 0 .. @columns.size-1
-        tf_idf_columns[doc_idx] = Array.new
-        for term_idx in 0 .. @next_term_index
-          word = @term_index_hash.index(term_idx)
-          word_count = @columns[doc_idx][term_idx]
-          doc_word_count = 0
-          @columns[doc_idx].inject{|doc_word_count,n| doc_word_count + n}
-          tf = word_count.to_f / doc_word_count.to_f
-          idf = Math.log(@next_doc_index.to_f / number_of_docs_with_term(term_idx))
-          tf_idf_columns[doc_idx][term_idx] = tf*idf
+        puts "Doc: [#{doc.title}] compares to:"
+        q = @matrix_builder.get_q(doc)
+        q_embed = q * u2 * eig2.inverse
+        doc_idx = 0
+        v2.rows.each do |x|
+          cos_sim = (q_embed.transpose.dot(x.transpose)) / (x.norm * q_embed.norm)
+          doc_id = @matrix_builder.doc_idx_to_id(doc_idx)
+          doc = Item.find(doc_id) if !doc_id.nil?
+          title = doc.nil? ? "None?" : doc.title
+          printf "%10.5f %s\n", cos_sim, title
+          doc_idx += 1
         end
       end
-  
-      return Linalg::DMatrix.columns(tf_idf_columns)
     end
     
-    def number_of_docs_with_term(term_idx)
-      count = 0.0
-      for doc_idx in 0 .. @columns.size-1
-        count += 1.0 if @columns[doc_idx][term_idx] > 0
-      end
-      return count
-    end
     
-    def get_doc_index(doc_id)
-      if @doc_index_hash.has_key?(doc_id)
-        return @doc_index_hash.fetch(doc_id)
-      else
-        return @doc_index_hash[doc_id] = @next_doc_index += 1
+    def add_to_a(items)
+      items.each do |i|
+        @matrix_builder.add_to_a(i)
       end
     end
     
-    def get_term_index(term)
-      if @term_index_hash.has_key?(term)
-        return @term_index_hash.fetch(term)
-      else
-        return @term_index_hash[term] = @next_term_index += 1
-      end
-    end
   end
-  
 end

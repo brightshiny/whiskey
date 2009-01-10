@@ -92,7 +92,7 @@ class MatrixBuilderTest < ActiveSupport::TestCase
     for word_idx in 0 .. bare_words.size-1
       assert mb.term_count_row(bare_words[word_idx]) == doc_structure.row(word_idx)
     end
-
+    
     # tf-idf check
     tf_idf = Linalg::DMatrix[
     [0.062540,0.084612,0.000000,0.057536],
@@ -117,13 +117,13 @@ class MatrixBuilderTest < ActiveSupport::TestCase
         ItemWord.new(:item_id => item.id, :word_id => word.id, :count => count).save!
       end
     end
-
+    
     mb_q = mb.q_term_count(item)
     for word_idx in 0 .. bare_words.size-1
       term_idx = mb.get_term_index(bare_words[word_idx])
       assert q[0,word_idx] == mb_q[0,term_idx]
     end
-
+    
     q_tf_idf = Linalg::DMatrix[[0.095894,0.095894,0.000000,0.000000,0.000000,0.000000]]
     mb_q = mb.q_tf_idf(item)
     for word_idx in 0 .. bare_words.size-1
@@ -131,6 +131,26 @@ class MatrixBuilderTest < ActiveSupport::TestCase
       assert q_tf_idf[0,word_idx] >= mb_q[0,term_idx]-EPSILON
       assert q_tf_idf[0,word_idx] <= mb_q[0,term_idx]+EPSILON
     end
+    
+    ##
+    ## the decision section, commented out because order matters and the results will never quite match
+    ##
+    
+    #u,s,vt = mb.a_term_count.singular_value_decomposition
+    #u,s,vt = mb.a_tf_idf.singular_value_decomposition
+    #u2 = Linalg::DMatrix.join_columns [u.column(0), u.column(1)]
+    #v2 = Linalg::DMatrix.join_columns [vt.column(0), vt.column(1)]
+    #eig2 = Linalg::DMatrix.columns [s.column(0).to_a.flatten[0,2], s.column(1).to_a.flatten[0,2]]
+    #qEmbed = q * u2 * eig2.inverse
+    #user_sim, count = {}, 1
+    #v2.rows.each { |x|
+    #  user_sim[count] = (qEmbed.transpose.dot(x.transpose)) / (x.norm * qEmbed.norm)
+    #  count += 1
+    #}
+    #similar_users = user_sim.delete_if {|k,sim| sim < 0.9 }.sort {|a,b| b[1] <=> a[1] }
+    #user_sim.each { |u| printf "%s (ID: %d, Similarity: %0.3f) \n", users[u[0]], u[0], u[1]  }
+ 
 
+    
   end
 end

@@ -133,24 +133,44 @@ class MatrixBuilderTest < ActiveSupport::TestCase
     end
     
     ##
-    ## the decision section, commented out because order matters and the results will never quite match
+    ## the decision section, copied from family_guy.rb
     ##
     
-    #u,s,vt = mb.a_term_count.singular_value_decomposition
-    #u,s,vt = mb.a_tf_idf.singular_value_decomposition
-    #u2 = Linalg::DMatrix.join_columns [u.column(0), u.column(1)]
-    #v2 = Linalg::DMatrix.join_columns [vt.column(0), vt.column(1)]
-    #eig2 = Linalg::DMatrix.columns [s.column(0).to_a.flatten[0,2], s.column(1).to_a.flatten[0,2]]
-    #qEmbed = q * u2 * eig2.inverse
-    #user_sim, count = {}, 1
-    #v2.rows.each { |x|
-    #  user_sim[count] = (qEmbed.transpose.dot(x.transpose)) / (x.norm * qEmbed.norm)
-    #  count += 1
-    #}
-    #similar_users = user_sim.delete_if {|k,sim| sim < 0.9 }.sort {|a,b| b[1] <=> a[1] }
-    #user_sim.each { |u| printf "%s (ID: %d, Similarity: %0.3f) \n", users[u[0]], u[0], u[1]  }
- 
+    #u, s, vt = m.singular_value_decomposition
+    u, s, vt = mb.a_term_count.singular_value_decomposition
+    vt = vt.transpose
+    
+    # Take the 2-rank approximation of the Matrix
+    #   - Take first and second columns of u  (6x2)
+    #   - Take first and second columns of vt (4x2)
+    #   - Take the first two eigen-values (2x2)
+    u2 = Linalg::DMatrix.join_columns [u.column(0), u.column(1)]
+    v2 = Linalg::DMatrix.join_columns [vt.column(0), vt.column(1)]
+    eig2 = Linalg::DMatrix.columns [s.column(0).to_a.flatten[0,2], s.column(1).to_a.flatten[0,2]]
+    
+    # Here comes Bob, our new user
+    bob = mb.q_term_count(item)
+    #bob = Linalg::DMatrix[[5,5,0,0,5,0]]
+    #bob = Linalg::DMatrix[[5.000000,5.000000,0.000000,0.000000,5.000000,0.000000]]
+    bobEmbed = bob * u2 * eig2.inverse
+    
+    # Compute the cosine similarity between Bob and every other User in our 2-D space
+    user_sim, count = {}, 1
+    v2.rows.each { |x|
+      user_sim[count] = (bobEmbed.transpose.dot(x.transpose)) / (x.norm * bobEmbed.norm)
+      count += 1
+    }
+    
+    # Remove all users who fall below the 0.90 cosine similarity cutoff and sort by similarity
+    similar_users = user_sim.delete_if {|k,sim| sim < 0.9 }.sort {|a,b| b[1] <=> a[1] }
 
+    assert similar_users[0][0] == 1 && similar_users[0][1] = 0.987
+    assert similar_users[1][0] == 4 && similar_users[1][1] = 0.955
+
+    #similar_users.each { |u| printf "%s (ID: %d, Similarity: %0.3f) \n", users[u[0]], u[0], u[1]  }
+    
+    
+    
     
   end
 end

@@ -59,7 +59,7 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
   
   def self.parse_words(db_item)
     content_words = {}
-    content = Gobbler::GItem.extract_text(db_item.content)
+    content = "#{Gobbler::GItem.extract_text(db_item.content)} #{Gobbler::GItem.extract_text(db_item.title)}"
     document_word_count = 0
     content.downcase.scan(/[a-z0-9]+/) do |w|
       next if is_stop_word?(w)

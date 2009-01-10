@@ -78,7 +78,6 @@ module Classy
       term_count = 0
       col.each {|n| term_count += n}
       for term_idx in 0 .. @max_term_index
-        # tf = col[term_idx].to_f / term_count.to_f
         tf = 0
         if term_count.to_f != 0
           tf = col[term_idx].to_f / term_count.to_f

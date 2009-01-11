@@ -3,66 +3,110 @@ module Classy
     
     def self.assess_decider  
       
+      overall_start_time = Time.now
+      
+      # Grab a user
       u = User.find(3)
       
+      # Pick some dates that the user has read data
+      #   - First date for "training"
+      #   - Second date for making predictions
       date_containing_items_consumed_data = Date.parse('2008-12-23')
       date_to_make_predictions_about = Date.parse('2008-12-24')
       
-      consumed_docs  = u.items_read_on(date_containing_items_consumed_data)
-      puts "Found #{consumed_docs.size} consumed items (#{date_containing_items_consumed_data})"
+      # Get the items the user actually read on the two dates of interest
+      consumed_docs  = u.items_read_on(date_containing_items_consumed_data) + u.items_clicked_on(date_containing_items_consumed_data)
+      puts "Found #{consumed_docs.size} consumed items on #{date_containing_items_consumed_data}"
+      total_actually_consumed_docs = (u.items_read_on(date_to_make_predictions_about) + u.items_clicked_on(date_to_make_predictions_about)).uniq
       
-      documents_to_make_prediction_from = Item.find(:all, 
+      # Get the pool of documents the user had to pick from to make predictions
+      documents_to_make_predictions_about = Item.find(:all, 
         :conditions => ["date(published_at) = date(?)", date_to_make_predictions_about]
       )
-      puts "Found #{documents_to_make_prediction_from.size} new documents to make predictions about (#{date_to_make_predictions_about})"
-            
-      total_actually_consumed_docs = u.items_read_on(date_to_make_predictions_about)
+      puts "Found #{documents_to_make_predictions_about.size} new documents to make predictions about on #{date_to_make_predictions_about}"
       
-      batch_size = 100
+      # Do some batching 
+      #   - Actually runs in under 10 hours
+      #   - Maybe for eventual parallelism?
+      total_predicted = 0 
+      total_predicted_and_read = 0
+      total_predicted_and_not_read = 0
+      total_not_predicted_and_read = 0 
+      total_documents_in_set = 0
+      total_documents_actually_consumed = 0 
+      sum_of_batch_times = 0
+      batch_size = 20
       batch = 1
-      while documents_to_make_prediction_from.size > 0
-        
-        decider = Classy::Decider.new
+      while documents_to_make_predictions_about.size > 0
         
         start_time = Time.now
-        documents_to_make_prediction_from_this_batch = documents_to_make_prediction_from.shift(batch_size)
         
+        # Break out this batch's documents
+        documents_to_make_predictions_about_this_batch = documents_to_make_predictions_about.shift(batch_size)
+        total_documents_in_set += documents_to_make_predictions_about_this_batch.size
         puts "Processing batch ##{batch} (items #{(batch-1)*batch_size+1} - #{batch*batch_size})"
-        actually_consumed_docs = total_actually_consumed_docs.reject{ |d| (! documents_to_make_prediction_from_this_batch.map{ |p| p.id }.include?(d.id)) }
-        puts "\tActually consumed documents:\t#{actually_consumed_docs.size}"
 
-        decider.add_to_a(documents_to_make_prediction_from_this_batch)      
-      
-        predicted_docs = decider.process_q(consumed_docs)
-
-        puts "\tDocuments in batch:\t\t#{documents_to_make_prediction_from_this_batch.size}"
-        puts "\tSuggested documents:\t\t#{predicted_docs.size}"
-
-        actual_item_ids = actually_consumed_docs.map{ |i| i.id }
-
-        suggested_and_read = 0
-        suggested_and_not_read = 0
-        predicted_and_read = 0
-        predicted_and_not_read = 0
-        predicted_docs.each do |predicted_item|
-          if actual_item_ids.include?(predicted_item.id)
-            predicted_and_read += 1
-          else
-            predicted_and_not_read += 1
-          end
-        end
-        not_predicted_and_read = actual_item_ids.size - predicted_and_read
-
-        puts "\tSuggested and consumed:\t\t#{predicted_and_read}"
-        puts "\tSuggested and not consumed:\t#{predicted_and_not_read}"
-        puts "\tNot suggested and consumed:\t#{not_predicted_and_read}"
+        # Do decider work
+        decider = Classy::Decider.new
+        decider.add_to_a(documents_to_make_predictions_about_this_batch)      
+        predicted_docs = decider.enhanced_process_q(consumed_docs)
         
-        puts "\tTime: #{end_time - start_time} seconds"
+        if ! predicted_docs.empty? # There's a bug somewhere that can crash process_q and return an empty array 
+          total_predicted += predicted_docs.size
+          puts "\tDocuments in batch:\t\t#{documents_to_make_predictions_about_this_batch.size}"
+        
+          # For the sake of analysis, we're not comparing all the actually consumed items at once
+          #   just those that are available in this particular batch of items
+          actually_consumed_docs = total_actually_consumed_docs.reject{ |d| (! documents_to_make_predictions_about_this_batch.map{ |p| p.id }.include?(d.id)) }
+          total_documents_actually_consumed += actually_consumed_docs.size
+          puts "\tActual consumed documents:\t#{actually_consumed_docs.size}"
+          puts "\tPredicted consumed documents:\t#{predicted_docs.size}"
+
+          # Do bin math...
+          actual_item_ids = actually_consumed_docs.map{ |i| i.id }
+          predicted_and_read = 0
+          predicted_and_not_read = 0
+          predicted_docs.each do |predicted_item|
+            if actual_item_ids.include?(predicted_item.id)
+              predicted_and_read += 1
+            else
+              predicted_and_not_read += 1
+            end
+          end
+          not_predicted_and_read = actual_item_ids.size - predicted_and_read
+
+          total_predicted_and_read     += predicted_and_read
+          total_predicted_and_not_read += predicted_and_not_read
+          total_not_predicted_and_read += not_predicted_and_read
+      
+          puts "\tPredicted and consumed:\t\t#{predicted_and_read}"
+          puts "\tPredicted and not consumed:\t#{predicted_and_not_read}"
+          puts "\tNot predicted and consumed:\t#{not_predicted_and_read}"
+        end 
+        
+        end_time = Time.now  
+        batch_time = end_time - start_time
+        puts "\t#{batch_time} seconds"
+        sum_of_batch_times += batch_time
         batch += 1
         
-        puts
-        end_time = Time.now   
+        puts 
       end
+      
+      overall_end_time = Time.now
+      
+      puts "**********"
+      puts "Total documents in set:\t\t\t#{total_documents_in_set}"
+      puts "Total predicted:\t\t\t#{total_predicted}"
+      puts "Total actually consumed:\t\t#{total_documents_actually_consumed}"
+      puts "Total predicted and consumed:\t\t#{total_predicted_and_read}"
+      puts "Total predicted and not consumed:\t#{total_predicted_and_not_read}"
+      puts "Total not predicted and consumed:\t#{total_not_predicted_and_read}"
+      puts "#{overall_end_time - overall_start_time} seconds (overall)"
+      puts "#{sum_of_batch_times.to_f / batch.to_f} seconds (per batch)"
+      puts "**********"
+      
+      puts 
       
     end
     

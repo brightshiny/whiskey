@@ -79,7 +79,6 @@ class User < ActiveRecord::Base
   end
   
   def recently_read_items(number_of_items_to_return = 1000)
-    # select i.id, r.created_at from items i join `reads` r on r.item_id = i.id where r.user_id = 1 order by r.created_at desc limit 100
     Item.find( :all, 
       :conditions => ["`reads`.user_id = ?", self.id], 
       :joins => "join `reads` on `reads`.item_id = items.id",
@@ -90,11 +89,30 @@ class User < ActiveRecord::Base
   end
 
   def recently_clicked_items(number_of_items_to_return = 1000)
-    # select i.id, r.created_at from items i join `reads` r on r.item_id = i.id where r.user_id = 1 order by r.created_at desc limit 100
     Item.find( :all, 
       :conditions => ["`clicks`.user_id = ?", self.id], 
       :joins => "join `clicks` on `clicks`.item_id = items.id",
       :include => [ :words ],
+      :order => "`clicks`.created_at desc",
+      :limit => number_of_items_to_return
+    )
+  end
+  
+  def items_read_on(date, number_of_items_to_return = 1000)
+    Item.find(:all, 
+      :conditions => ["date(`reads`.created_at) = ?", date],
+      :joins => "join `reads` on `reads`.item_id = items.id",
+      :include => [ { :item_words, :word } ],
+      :order => "`reads`.created_at desc",
+      :limit => number_of_items_to_return
+    )
+  end
+  
+  def items_clicked_on(date, number_of_items_to_return = 1000)
+    Item.find(:all, 
+      :conditions => ["date(`clicks`.created_at) = ?", date],
+      :joins => "join `clicks` on `clicks`.item_id = items.id",
+      :include => [ { :item_words, :word } ],
       :order => "`clicks`.created_at desc",
       :limit => number_of_items_to_return
     )

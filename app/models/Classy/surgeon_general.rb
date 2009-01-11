@@ -21,7 +21,8 @@ module Classy
       
       # Get the pool of documents the user had to pick from to make predictions
       documents_to_make_predictions_about = Item.find(:all, 
-        :conditions => ["date(published_at) = date(?)", date_to_make_predictions_about]
+        :conditions => ["date(published_at) = date(?)", date_to_make_predictions_about],
+        :limit => 100
       )
       puts "Found #{documents_to_make_predictions_about.size} new documents to make predictions about on #{date_to_make_predictions_about}"
       
@@ -49,7 +50,8 @@ module Classy
         # Do decider work
         decider = Classy::Decider.new
         decider.add_to_a(documents_to_make_predictions_about_this_batch)      
-        predicted_docs = decider.enhanced_process_q(consumed_docs)
+        # enhanced_process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2)
+        predicted_docs = decider.enhanced_process_q(consumed_docs, 0.999, Math.sqrt(consumed_docs.size / 2.0).floor, 2)
         
         if ! predicted_docs.empty? # There's a bug somewhere that can crash process_q and return an empty array 
           total_predicted += predicted_docs.size
@@ -97,11 +99,11 @@ module Classy
       
       puts "**********"
       puts "Total documents in set:\t\t\t#{total_documents_in_set}"
-      puts "Total predicted:\t\t\t#{total_predicted}"
+      puts "Total predicted:\t\t\t#{total_predicted}\t#{100 - 100 * total_predicted.to_f / total_documents_in_set.to_f}% corpus shrinkage"
       puts "Total actually consumed:\t\t#{total_documents_actually_consumed}"
       puts "Total predicted and consumed:\t\t#{total_predicted_and_read}"
       puts "Total predicted and not consumed:\t#{total_predicted_and_not_read}"
-      puts "Total not predicted and consumed:\t#{total_not_predicted_and_read}"
+      puts "Total not predicted and consumed:\t#{total_not_predicted_and_read}\t#{100 * total_not_predicted_and_read.to_f / total_documents_actually_consumed.to_f}% missed completely"
       puts "#{overall_end_time - overall_start_time} seconds (overall)"
       puts "#{sum_of_batch_times.to_f / batch.to_f} seconds (per batch)"
       puts "**********"

@@ -93,28 +93,31 @@ module Classy
       clean
       Linalg::DMatrix.columns(@columns)
     end
-    
+    attr_accessor :cached_a_tf_idf
     def a_tf_idf
-      clean
-      # slicing time
-      tf_idf_columns = Array.new
-      for doc_idx in 0 .. @columns.size-1
-        tf_idf_columns[doc_idx] = Array.new
-        for term_idx in 0 .. @max_term_index
-          #word = @term_index_hash.index(term_idx)
-          word_count = @columns[doc_idx][term_idx]
-          doc_word_count = 0
-          @columns[doc_idx].each {|n| doc_word_count += n}
-          tf = 0
-          if doc_word_count.to_f != 0
-            tf = word_count.to_f / doc_word_count.to_f
+      # if true
+      if self.cached_a_tf_idf.nil?
+        clean
+        # slicing time
+        tf_idf_columns = Array.new
+        for doc_idx in 0 .. @columns.size-1
+          tf_idf_columns[doc_idx] = Array.new
+          for term_idx in 0 .. @max_term_index
+            #word = @term_index_hash.index(term_idx)
+            word_count = @columns[doc_idx][term_idx]
+            doc_word_count = 0
+            @columns[doc_idx].each {|n| doc_word_count += n}
+            tf = 0
+            if doc_word_count.to_f != 0
+              tf = word_count.to_f / doc_word_count.to_f
+            end
+            idf = @idf_cache[term_idx]
+            tf_idf_columns[doc_idx][term_idx] = tf*idf
           end
-          idf = @idf_cache[term_idx]
-          tf_idf_columns[doc_idx][term_idx] = tf*idf
         end
+        self.cached_a_tf_idf = Linalg::DMatrix.columns(tf_idf_columns)
       end
-      
-      return Linalg::DMatrix.columns(tf_idf_columns)
+      return self.cached_a_tf_idf
     end
     
     def number_of_docs_with_term(term_idx)

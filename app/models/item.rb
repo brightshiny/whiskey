@@ -5,6 +5,8 @@ class Item < ActiveRecord::Base
   has_many :item_words
   belongs_to :feed
 
+  attr_accessor :score
+
   def self.recent_items(number_of_items_to_return = 100)
     find(:all, :include => [ :words ], :order => "published_at desc", :limit => number_of_items_to_return)
   end

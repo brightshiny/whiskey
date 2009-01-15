@@ -64,7 +64,7 @@ module Classy
     end
     
     def enhanced_process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2)
-      begin
+      # begin
         #puts decider.matrix_builder.a_term_count
         a = @matrix_builder.a_tf_idf
         # a = @matrix_builder.a_term_count
@@ -103,11 +103,15 @@ module Classy
             all_matched_documents.sort_by{ |d| d[:score] }.reverse[0..(num_best_matches_to_return-1)].each{ |d| matched_documents.push(d) }
         end
         documents = Item.find(:all, :conditions => ["id in (?)", matched_documents.map{ |d| d[:id] }])
+        documents.each{ |d|
+          d.score = matched_documents.select{ |md| md[:id] == d.id }.first[:score]
+        }
+        documents = documents.sort_by{ |d| d.score }.reverse
         return documents
-      rescue
-        puts "Error in matching Qs"
-        return []
-      end
+      # rescue
+      #   puts "Error in matching Qs"
+      #   return []
+      # end
     end
     
     

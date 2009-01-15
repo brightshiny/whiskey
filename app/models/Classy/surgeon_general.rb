@@ -113,13 +113,15 @@ module Classy
     end
     
     def self.assess_k  
-      
-      nyt_id = 280
-      feed = Feed.find(280)
+      # feed_id = 280 # NYT: US
+      feed_id = 25 # boingboing
+      # feed_id = 277 # kotaku
+      feed = Feed.find(feed_id)
       consumed_docs = Item.find(:all, 
-        :conditions => ["feed_id = ?", nyt_id], 
-        :include => [ { :item_words, :word } ],
-        :limit => 30
+        :conditions => ["feed_id = ?", feed.id], 
+        :include => [ { :item_words, :word } ], 
+        :order => "published_at desc",
+        :limit => 200
       )
       documents_to_make_predictions_about = consumed_docs.clone
 
@@ -128,9 +130,9 @@ module Classy
       
       puts "Analyzing #{consumed_docs.size} documents from #{feed.title}"
             
-      2.upto(100) do |k| 
+      2.upto(15) do |k| 
         
-        File::open("#{RAILS_ROOT}/log/assess_k/f#{nyt_id}_k#{k}_i#{documents_to_make_predictions_about.size}.log", "w") { |f| 
+        File::open("#{RAILS_ROOT}/log/assess_k/f#{feed.id}_k#{k}_i#{documents_to_make_predictions_about.size}.log", "w") { |f| 
         
           start_time = Time.now
         
@@ -142,7 +144,7 @@ module Classy
             STDOUT.print "."
             STDOUT.flush
             s = "\n\t#{doc.title}\n"
-            predicted_docs = decider.enhanced_process_q([doc], 0.9, k, 3)
+            predicted_docs = decider.enhanced_process_q([doc], 0.1, k, 10)
             predicted_docs.each { |pdoc|
               s += "\t\t%1.5f - %s\n" % [pdoc.score, pdoc.title]
             }

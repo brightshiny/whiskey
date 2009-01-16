@@ -1,6 +1,23 @@
 module Classy
   class SurgeonGeneral 
     
+    def self.assuage_keith
+      feed = Feed.find_by_title('NYT > World')
+      docs = Item.find(:all, :conditions => ["feed_id = ?", feed.id], :limit => 100, :order => "id desc")
+      decider = Classy::Decider.new
+      decider.add_to_a(docs)
+      
+      docs = [Item.find(56035)]
+      
+      for k in 2 .. 15 do
+        docs.each do |doc|
+          puts ">> k=#{k} #{doc.title}"
+          predicted_docs = decider.enhanced_process_q([doc], 0.6, k, 10)
+        end
+      end
+    end
+    
+    
     def self.assess_decider  
       
       overall_start_time = Time.now
@@ -21,8 +38,8 @@ module Classy
       
       # Get the pool of documents the user had to pick from to make predictions
       documents_to_make_predictions_about = Item.find(:all, 
-        :conditions => ["date(published_at) = date(?)", date_to_make_predictions_about],
-        :limit => 100
+                                                      :conditions => ["date(published_at) = date(?)", date_to_make_predictions_about],
+      :limit => 100
       )
       puts "Found #{documents_to_make_predictions_about.size} new documents to make predictions about on #{date_to_make_predictions_about}"
       
@@ -46,7 +63,7 @@ module Classy
         documents_to_make_predictions_about_this_batch = documents_to_make_predictions_about.shift(batch_size)
         total_documents_in_set += documents_to_make_predictions_about_this_batch.size
         puts "Processing batch ##{batch} (items #{(batch-1)*batch_size+1} - #{batch*batch_size})"
-
+        
         # Do decider work
         decider = Classy::Decider.new
         decider.add_to_a(documents_to_make_predictions_about_this_batch)      
@@ -56,14 +73,14 @@ module Classy
         if ! predicted_docs.empty? # There's a bug somewhere that can crash process_q and return an empty array 
           total_predicted += predicted_docs.size
           puts "\tDocuments in batch:\t\t#{documents_to_make_predictions_about_this_batch.size}"
-        
+          
           # For the sake of analysis, we're not comparing all the actually consumed items at once
           #   just those that are available in this particular batch of items
           actually_consumed_docs = total_actually_consumed_docs.reject{ |d| (! documents_to_make_predictions_about_this_batch.map{ |p| p.id }.include?(d.id)) }
           total_documents_actually_consumed += actually_consumed_docs.size
           puts "\tActual consumed documents:\t#{actually_consumed_docs.size}"
           puts "\tPredicted consumed documents:\t#{predicted_docs.size}"
-
+          
           # Do bin math...
           actual_item_ids = actually_consumed_docs.map{ |i| i.id }
           predicted_and_read = 0
@@ -76,11 +93,11 @@ module Classy
             end
           end
           not_predicted_and_read = actual_item_ids.size - predicted_and_read
-
+          
           total_predicted_and_read     += predicted_and_read
           total_predicted_and_not_read += predicted_and_not_read
           total_not_predicted_and_read += not_predicted_and_read
-      
+          
           puts "\tPredicted and consumed:\t\t#{predicted_and_read}"
           puts "\tPredicted and not consumed:\t#{predicted_and_not_read}"
           puts "\tNot predicted and consumed:\t#{not_predicted_and_read}"
@@ -114,4 +131,3 @@ module Classy
     
   end
 end
-

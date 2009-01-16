@@ -16,6 +16,7 @@ module Classy
     
     def add_to_a(doc)
       @dirty = true
+      self.cached_a_tf_idf = nil
       doc_idx = get_doc_index(doc.id)
       @columns[doc_idx] = doc_column(doc)
     end

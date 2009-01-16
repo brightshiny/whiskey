@@ -129,5 +129,56 @@ module Classy
       
     end
     
+    def self.assess_k  
+      # feed_id = 280 # NYT: US
+      feed_id = 25 # boingboing
+      # feed_id = 277 # kotaku
+      feed = Feed.find(feed_id)
+      consumed_docs = Item.find(:all, 
+        :conditions => ["feed_id = ?", feed.id], 
+        :include => [ { :item_words, :word } ], 
+        :order => "published_at desc",
+        :limit => 200
+      )
+      documents_to_make_predictions_about = consumed_docs.clone
+
+      decider = Classy::Decider.new
+      decider.add_to_a(documents_to_make_predictions_about)
+      
+      puts "Analyzing #{consumed_docs.size} documents from #{feed.title}"
+            
+      2.upto(15) do |k| 
+        
+        File::open("#{RAILS_ROOT}/log/assess_k/f#{feed.id}_k#{k}_i#{documents_to_make_predictions_about.size}.log", "w") { |f| 
+        
+          start_time = Time.now
+        
+          f.puts 
+          puts "K: #{k} | Items: #{documents_to_make_predictions_about.size}"
+          f.puts "Processing #{documents_to_make_predictions_about.size} items (k = #{k})"
+          
+          consumed_docs.each_with_index { |doc, i| 
+            STDOUT.print "."
+            STDOUT.flush
+            s = "\n\t#{doc.title}\n"
+            predicted_docs = decider.enhanced_process_q([doc], 0.1, k, 10)
+            predicted_docs.each { |pdoc|
+              s += "\t\t%1.5f - %s\n" % [pdoc.score, pdoc.title]
+            }
+            f.puts s
+          }
+          
+          end_time = Time.now  
+          batch_time = end_time - start_time
+          f.puts
+          f.puts "#{batch_time} seconds"
+          STDOUT.print " %5.3f sec\n" % batch_time
+          puts
+        }
+        
+      end
+            
+    end
+    
   end
 end

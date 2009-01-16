@@ -101,7 +101,6 @@ module Classy
               doc_idx += 1
             end
             all_matched_documents.sort_by{ |d| d[:score] }.reverse[0..(num_best_matches_to_return-1)].each{ |d| matched_documents.push(d) }
-            all_matched_documents.sort_by{ |d| d[:score] }.reverse[0..(num_best_matches_to_return-1)].each{ |d| printf "%10.5f (%d) %s \n", d[:score], d[:id], d[:title]}
         end
         documents = Item.find(:all, :conditions => ["id in (?)", matched_documents.map{ |d| d[:id] }])
         documents.each{ |d|

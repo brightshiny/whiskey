@@ -12,7 +12,7 @@ module Classy
       for k in 2 .. 15 do
         docs.each do |doc|
           puts ">> k=#{k} #{doc.title}"
-          predicted_docs = decider.enhanced_process_q([doc], 0.6, k, 10)
+          decider.enhanced_process_q([doc], 0.6, k, 10).each {|d| printf "%10.5f (%d) %s \n", d.score, d.id, d.title}
         end
       end
     end

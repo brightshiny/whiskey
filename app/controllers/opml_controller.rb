@@ -18,6 +18,25 @@ class OpmlController < ApplicationController
     end
   end
   
+  def add_feed 
+    if ! params[:feed_url].nil?
+      @feed = Feed.find(:first, :conditions => ["link = ?", params[:feed_url]])
+      if @feed.nil?
+        @feed = Feed.create({ :link => params[:feed_url] })
+      end
+      @feed_user = FeedUser.find(:first, :conditions => ["feed_id = ? and user_id = ?", @feed.id, current_user.id])
+      if @feed_user.nil?
+        @already_existed = false
+        @feed_user = FeedUser.create({ :feed_id => @feed.id, :user_id => current_user.id })
+      else
+        @already_existed = true
+      end
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+  
   def delete_feed
     if ! params[:feed_id].nil?
       @feed_id = params[:feed_id]

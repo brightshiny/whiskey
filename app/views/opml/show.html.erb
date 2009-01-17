@@ -1,6 +1,11 @@
 <h2>Feeds</h2>
 
-<ul>
+<% form_remote_tag :url => { :controller => "opml", :action => "add_feed" } do %>
+<p><%= label_tag "feed_url", "New feed URL" %> <%= text_field_tag 'feed_url' %><%= submit_tag "Add Feed" %></p>
+<% end %>
+
+
+<ul id="list_of_feeds">
   <% for feed in @feeds -%>
   <li id="feed_<%= feed.id %>"><%= feed.link %> (<%= link_to_remote "-", :url => { :controller => :opml, :action => :delete_feed, :feed_id => feed.id } %>)</li>
   <% end -%>

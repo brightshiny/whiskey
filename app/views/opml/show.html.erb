@@ -2,6 +2,6 @@
 
 <ul>
   <% for feed in @feeds -%>
-  <li><%= feed.link %></li>
+  <li id="feed_<%= feed.id %>"><%= feed.link %> (<%= link_to_remote "-", :url => { :controller => :opml, :action => :delete_feed, :feed_id => feed.id } %>)</li>
   <% end -%>
 </ul>

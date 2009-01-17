@@ -18,4 +18,17 @@ class OpmlController < ApplicationController
     end
   end
   
+  def delete_feed
+    if ! params[:feed_id].nil?
+      @feed_id = params[:feed_id]
+      feed_user = FeedUser.find(:first, :conditions => ["feed_id = ? and user_id = ?", params[:feed_id], current_user.id])
+      if ! feed_user.nil?
+        feed_user.destroy
+      end
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+  
 end

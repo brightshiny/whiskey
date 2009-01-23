@@ -126,6 +126,16 @@ class User < ActiveRecord::Base
     self.recently_read_items(number_of_items_to_return).map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")    
   end
   
+  def recent_documents_from_feeds(number_of_items_to_return = 1000)
+    # This needs an index someplace
+    Item.find(:all, 
+      :joins => "join feed_users fu on (fu.feed_id = items.feed_id)",
+      :conditions => ["fu.user_id = ?", self.id],
+      :order => "items.published_at desc",
+      :limit => number_of_items_to_return
+    ) 
+  end
+  
   private
     def normalize_openid_identifier
       begin

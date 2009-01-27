@@ -3,7 +3,6 @@ class Run < ActiveRecord::Base
   has_many :items, :through => :item_relationships
   
   def self.on_your_mark_get_set_go
-    
     if ARGV.size != 0 && ARGV.size != 4
       puts "You must call 'on_your_marks_get_set_go' thusly: "
       puts "\nscript/runner Run.on_your_marks_get_set_go 1 2 3 4"

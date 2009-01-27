@@ -4,6 +4,8 @@ class Item < ActiveRecord::Base
   has_many :words, :through => :item_words
   has_many :item_words
   belongs_to :feed
+  has_many :item_relationships
+  has_many :related_items, :through => :item_relationships
 
   attr_accessor :score
 

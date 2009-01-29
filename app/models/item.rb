@@ -6,6 +6,7 @@ class Item < ActiveRecord::Base
   belongs_to :feed
   has_many :item_relationships
   has_many :related_items, :through => :item_relationships
+  has_many :memes
 
   attr_accessor :score
 

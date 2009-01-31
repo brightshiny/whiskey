@@ -1,0 +1,30 @@
+<h1>Meme <%= @meme.id %></h1>
+
+<h2>Details</h2>
+<ul>
+  <li><%= link_to "Run #{@meme.run_id}", :controller => :runs, :action => :show, :id => @meme.run_id %></li>
+  <li>Meme Head: <%= link_to @meme.item.title, @meme.item.link %></li>
+</ul>
+
+<h2>Related Items</h2>
+<ul>
+  <% for item in @meme.items %>
+  <li><%= link_to item.title, item.link %> [<%= item.id %>]</li>
+  <% end %>
+</ul>
+
+<h2>Connections</h2>
+<table>
+  <tr>
+    <th>Item ID</th>
+    <th>Related Item ID</th>
+    <th>Cosine Similarity</th>
+  </tr>
+  <% for ir in @meme.item_relationships.sort_by{ |r| r.cosine_similarity }.reverse %>
+  <tr>
+    <td><%= ir.item_id %></td>
+    <td><%= ir.related_item_id %></td>
+    <td><%= ir.cosine_similarity %></td>
+  </tr>
+  <% end %>
+</ul>

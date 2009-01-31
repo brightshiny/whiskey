@@ -1,0 +1,11 @@
+<h1>Runs</h1>
+<ul>
+  <% for run in @runs -%>
+  <li><%= link_to "View run #{run.id}", :action => "show", :id => run.id %>
+    <ul>
+      <li><%= run.memes.size %> memes</li>
+      <li>Created at <%= run.created_at %></li>
+    </ul>
+  </li>
+  <% end -%>
+</ul>

@@ -1,9 +1,21 @@
 class Meme < ActiveRecord::Base
   belongs_to :item
   belongs_to :run
-  has_many :item_relationships, :through => :meme_item
+  has_many :item_relationships, :through => :meme_items
+  has_many :meme_items
   
-  def self.memes_from_item_relationship_map (run, ir_map)
+  def self.memes_from_item_relationship_map (run, ir_map, override_memes_in_db = false)
+    
+    if override_memes_in_db == true && ! Meme.find(:first, :conditions => ["run_id = ?", run.id]).nil?
+      puts "Cleaning run #{run.id} (destroying existing memes and associated meme_items)..."
+      Run.transaction do 
+        run.memes.each { |m|
+          m.meme_items.destroy_all
+        }
+        run.memes.destroy_all
+      end      
+      puts "... done cleaning (#{run.id})"
+    end
     
     while ir_map.keys.size > 0
       Meme.transaction do
@@ -17,7 +29,8 @@ class Meme < ActiveRecord::Base
         
         # generate an ir_map, a hash[item_id] of arrays[item_relationships]
         meme_ir_map = meme_from_map(lead_item_id, ir_map)
-        Run.take_photo(run, meme_ir_map, "#{lead_item.id}-#{meme_ir_map.keys.size}-nodes")
+        # Run.take_photo(run, meme_ir_map, "#{lead_item.id}-#{meme_ir_map.keys.size}-nodes")
+        Run.take_flash_photo(run, meme_ir_map, "#{lead_item.id}-#{meme_ir_map.keys.size}-nodes")
         
         # generate meme items
         meme_ir_map.each do |item_id, item_relationships|
@@ -66,6 +79,19 @@ class Meme < ActiveRecord::Base
         go_deeper_into_the_rabbit_hole(deeper_ir, source_map, meme_map, traversed_map)
       end
     end
+  end
+  
+  attr_accessor :cached_items
+  def items
+    if self.cached_items.nil?
+      items = []
+      self.item_relationships.each do |ir|
+        items.push ir.item
+      end
+      items.uniq!
+      self.cached_items = items
+    end
+    return self.cached_items
   end
   
 end

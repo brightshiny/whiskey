@@ -1,0 +1,12 @@
+<h1>Run <%= @run.id %></h1>
+<h2>Memes from run <%= @run.id %></h2>
+<ul>
+  <% for meme in @run.memes -%>
+  <li><%= link_to meme.item.title, :controller => :meme, :action => :show, :id => meme.id %>
+    <ul>
+      <li><%= meme.items.size %> items</li>
+      <li><%= meme.item_relationships.size %> connections</li>
+    </ul>
+  </li>
+  <% end -%>
+</ul>

@@ -10,7 +10,7 @@
     <node id="<%= node.id %>"><data key="link"><%= node.link %></data><data key="name"><%= node.title %></data><data key="item_id"><%= node.id %></data></node>
 <% end -%>
 <% for edge in @meme.item_relationships -%>
-    <edge source="<%= edge.item_id %>" target="<%= edge.related_item_id %>"><data key="d1"><%= 1.0 / (edge.cosine_similarity ** 2) %></data></edge>
+    <edge source="<%= edge.item_id %>" target="<%= edge.related_item_id %>"><data key="d1"><%= 1.0 / (edge.cosine_similarity ** 3) %></data></edge>
 <% end -%>
   </graph>
 </graphml>

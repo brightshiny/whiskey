@@ -7,7 +7,7 @@
 </ul>
 
 <h2>Molotov</h2>
-<embed src="/flash/Molotov.swf" flashvars="meme_id=<%= @meme.id %>" id="Molotov" quality="high" bgcolor="#ffffff" name="Molotov" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="400" width="1000">
+<embed src="/flash/Molotov.swf" flashvars="meme_id=<%= @meme.id %>" id="Molotov" quality="high" bgcolor="#ffffff" name="Molotov" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="400" width="600" />
 
 <h2>Related Items (Nodes)</h2>
 <table>
@@ -30,7 +30,7 @@
     <th>Related Item ID</th>
     <th>Cosine Similarity</th>
   </tr>
-  <% for ir in @meme.item_relationships.sort_by{ |r| r.cosine_similarity }.reverse %>
+  <% for ir in @meme.item_relationships.sort_by{ |r| "#{r.item_id} #{r.related_item_id}" } %>
   <tr>
     <td><%= ir.item_id %></td>
     <td><%= ir.related_item_id %></td>

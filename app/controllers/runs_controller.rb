@@ -5,7 +5,8 @@ class RunsController < ApplicationController
   end
   
   def show
-    @run = Run.find(params[:id], :include => [ :memes => :item_relationships ])
+    @run = Run.find(params[:id])
+    @memes = Meme.find(:all, :conditions => ["run_id = ?", @run.id], :include => [ :meme_items ])
   end
   
 end

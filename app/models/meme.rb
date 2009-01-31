@@ -1,8 +1,8 @@
 class Meme < ActiveRecord::Base
   belongs_to :item
   belongs_to :run
-  has_many :item_relationships, :through => :meme_items
   has_many :meme_items
+  has_many :item_relationships, :through => :meme_items
   
   def self.memes_from_item_relationship_map (run, ir_map, override_memes_in_db = false)
     

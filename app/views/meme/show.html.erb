@@ -6,14 +6,24 @@
   <li>Meme Head: <%= link_to @meme.item.title, @meme.item.link %></li>
 </ul>
 
-<h2>Related Items</h2>
-<ul>
-  <% for item in @meme.items %>
-  <li><%= link_to item.title, item.link %> [<%= item.id %>]</li>
-  <% end %>
-</ul>
+<h2>Molotov</h2>
+<embed src="/flash/Molotov.swf" flashvars="meme_id=<%= @meme.id %>" id="Molotov" quality="high" bgcolor="#ffffff" name="Molotov" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="400" width="1000">
 
-<h2>Connections</h2>
+<h2>Related Items (Nodes)</h2>
+<table>
+  <tr>
+    <th>Item ID</th>
+    <th>Title</th>
+  </tr>
+  <% for item in @meme.items.sort_by{ |i| i.id } %>
+  <tr>
+    <td><%= item.id %></td>
+    <td><%= link_to item.title, item.link %></td>
+  </tr>
+  <% end %>
+</table>
+
+<h2>Connections (Edges)</h2>
 <table>
   <tr>
     <th>Item ID</th>
@@ -28,3 +38,4 @@
   </tr>
   <% end %>
 </ul>
+

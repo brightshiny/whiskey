@@ -102,7 +102,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       rss.items.each do |item|
         gobbler_item = Gobbler::GItem.new(item)
         
-        published_at = gobbler_item.extract_published_at
+        published_at = gobbler_item.extract_published_at || feed.gobbled_at
         
         content = @decoder.decode(gobbler_item.extract_content)
         

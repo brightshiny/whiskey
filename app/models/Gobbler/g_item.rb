@@ -46,7 +46,7 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
   def extract_published_at
     return nil if @rss_item.nil?
     
-    published_at = Gobbler::AttrHelper.get_first(@rss_item, [:published, :pubDate])
+    published_at = Gobbler::AttrHelper.get_first(@rss_item, [:published, :pubDate, :dc_date])
     if !published_at.nil?
       return DateTime.parse(published_at.to_s)
     end

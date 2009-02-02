@@ -23,7 +23,7 @@ package
 	 * good luck 
 	 */
 	
-	[SWF(width="1000", height="400", backgroundColor="#ffffff", frameRate="30")]
+	[SWF(width="600", height="400", backgroundColor="#ffffff", frameRate="30")]
 	public class Molotov extends Sprite
 	{
 		
@@ -128,7 +128,6 @@ package
 			fdl.layoutBounds = new Rectangle(30, 30, w-30, h-30);
 			fdl.layoutAnchor = new Point(w/2,h/2);
 			vis.continuousUpdates = false;
-			vis.update();
 			
 //			vis.marks.x = 0;
 //			vis.marks.y = 0;
@@ -145,6 +144,8 @@ package
 			vis.operators.add(fdl);
 			
 			addChild(vis);
+			vis.update();
+			
 										
 			
 		}

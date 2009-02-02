@@ -1,6 +1,5 @@
 package 
 {
-// test
 	import flare.data.DataSet;
 	import flare.display.TextSprite;
 	import flare.util.Filter;
@@ -10,16 +9,12 @@ package
 	import flare.vis.data.Data;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
-	import flare.vis.operator.layout.ForceDirectedLayout;
-	import flare.vis.operator.layout.CircleLayout;
-	import flare.vis.operator.distortion.BifocalDistortion;
-	
-	import flare.animate.Transitioner;
-	import flash.geom.Point;
+	import flare.vis.operator.layout.RadialTreeLayout;
 	
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.net.*;
 	import flash.text.TextFormat;
@@ -33,7 +28,6 @@ package
 	{
 		
 	 
-		private var distort:flare.vis.operator.distortion.Distortion;
 		private var vis:Visualization;
 				
 		public function Molotov() {
@@ -117,21 +111,33 @@ package
 				}
 			});
 			
-			vis.marks.x = w / 2;
-			vis.marks.y = h / 2;
-			var fdl:ForceDirectedLayout = new ForceDirectedLayout();	
-			fdl.restLength = function(es:EdgeSprite):Number {
-				var minEdgeLength:int = 50;
-				var maxEdgeLength:int = 300;
-				return minEdgeLength + (maxEdgeLength - minEdgeLength) * (es.data.weight - minWeight)/(maxWeight - minWeight) ;
-			}					
+//			vis.marks.x = w / 2;
+//			vis.marks.y = h / 2;
+//			var fdl:ForceDirectedLayout = new ForceDirectedLayout();	
+//			fdl.restLength = function(es:EdgeSprite):Number {
+//				var minEdgeLength:int = 50;
+//				var maxEdgeLength:int = 300;
+//				return minEdgeLength + (maxEdgeLength - minEdgeLength) * (es.data.weight - minWeight)/(maxWeight - minWeight) ;
+//			}	
+//			vis.continuousUpdates = true;				
 
+			vis.marks.x = 0;
+			vis.marks.y = 0;
+			var fdl:RadialTreeLayout = new RadialTreeLayout();
+			fdl.autoScale = true;
+			fdl.layoutBounds = new Rectangle(30, 30, w-30, h-30);
+			fdl.layoutAnchor = new Point(w/2,h/2);
+			vis.continuousUpdates = false;
+			vis.update();
+			
 //			vis.marks.x = 0;
 //			vis.marks.y = 0;
 //			var fdl:CircleLayout = new CircleLayout();
 //			fdl.startRadius = 400;
 //			fdl.startRadiusFraction = 1;
 //			fdl.treeLayout = true;
+//			vis.continuousUpdates = false;
+//			vis.update();
 			
 			vis.controls.add(new DragControl(Filter.typeChecker(NodeSprite)));
 			vis.controls.add(new PanZoomControl());
@@ -139,8 +145,7 @@ package
 			vis.operators.add(fdl);
 			
 			addChild(vis);
-			
-			vis.continuousUpdates = true;							
+										
 			
 		}
 	

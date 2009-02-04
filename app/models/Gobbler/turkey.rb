@@ -106,8 +106,8 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         
         content = @decoder.decode(gobbler_item.extract_content)
         
-        if content.nil? || content.length <= 0
-          #logger.info("Unable to extract content from item [#{item.link}], skipping.")
+        if content.nil? || content.length <= 0 || item.link.nil?
+          #logger.info("Unable to extract content or link from item [#{item.link}], skipping.")
           #pp item
           next
         end
@@ -120,7 +120,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         end
         
         sha1 = Digest::SHA1.new
-        sha1 << content
+        sha1 << content.downcase
         digest = sha1.hexdigest
         
         if digest != db_item.content_sha1

@@ -135,6 +135,7 @@ class Run < ActiveRecord::Base
   end
   
   def self.on_your_mark_get_set_go
+    ARGV.reject!{ |a| a.match(/^ENV/) } # stupid ENV params
     if ARGV.size != 0 && ARGV.size != 4
       puts "You must call 'on_your_marks_get_set_go' thusly: "
       puts "\nscript/runner Run.on_your_marks_get_set_go 1 2 3 4"

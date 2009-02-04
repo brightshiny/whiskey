@@ -6,6 +6,7 @@ class Run < ActiveRecord::Base
   has_many :memes
   
   def self.photo_finish
+    ARGV.reject!{ |a| a.match(/^(ENV|\-)/) } # stupid ENV params                                                                                                                 
     if ARGV.size != 1
       puts "I need one run id, please."
       return -1

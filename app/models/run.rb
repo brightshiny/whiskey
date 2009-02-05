@@ -27,30 +27,7 @@ class Run < ActiveRecord::Base
       relationship_map[r.item_id].push(r)
     end
     
-    # take_photo(run, relationship_map, "0-panorama")
-    take_flash_photo(run, relationship_map, "0-panorama")
     Meme.memes_from_item_relationship_map(run, relationship_map, true)    
-  end
-  
-  def self.take_photo(run, relationship_map, name)
-    base_dir="tmp/photo_finish/#{run.id}"
-    FileUtils.makedirs(base_dir)
-    # make overall (panorama) png
-    base_file="#{base_dir}/#{run.id}"
-    panorama_file="#{base_file}-#{name}"
-    File.open("#{panorama_file}.dot", "w") do |dot|
-      dot.puts %Q[digraph "run-#{run.id}-photo" {]
-      relationship_map.each do |item_id, relations|
-        item = Item.find(item_id)
-        dot.puts %Q("#{item_id}" [label="#{item_id}:#{item.title.gsub(/\W/,'')}"];)
-        relations.each do |r|
-          dot.puts %Q(  "#{r.item_id}" -> "#{r.related_item_id}" [label="#{sprintf('%.2f', r.cosine_similarity)}"];)
-        end
-      end
-      dot.puts "}"
-    end
-    puts "Generating #{panorama_file}.png"
-    `dot -Tpng "#{panorama_file}.dot" > "#{panorama_file}.png"`
   end
   
   # def self.take_flash_photo(run, relationship_map, name)

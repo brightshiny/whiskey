@@ -1,8 +1,59 @@
+require 'optparse'
+
 class Meme < ActiveRecord::Base
   belongs_to :item
   belongs_to :run
   has_many :meme_items
   has_many :item_relationships, :through => :meme_items
+  
+  def self.to_graphviz
+    meme_id = nil
+    opts = OptionParser.new
+    opts.on("-iMEME_ID", "--id=MEME_ID") {|val| meme_id = val}
+    rest = opts.parse(ARGV)
+    if meme_id.nil?
+      puts "I didn't understand: " + rest.join(', ') if !rest.nil?
+      puts opts.to_s
+      return
+    end
+    
+    meme = Meme.find(meme_id)
+    meme.to_graphviz
+  end
+  
+  def to_graphviz
+    known_items = Hash.new
+    
+    # how many nodes?
+    node_count = 0
+    item_relationships.each do |ir|
+      known_items[ir.item_id] = true
+      known_items[ir.related_item_id] = true
+    end
+    node_count = known_items.keys.size
+    
+    # clear known_items
+    known_items = Hash.new
+    
+    base_dir="tmp/photo_finish/#{run.id}"
+    FileUtils.makedirs(base_dir)
+    base_file="#{base_dir}/#{run.id}"
+    base_file="#{base_file}-#{self.id}-#{node_count}-nodes"
+    File.open("#{base_file}.dot", "w") do |dot|
+      dot.puts %Q[digraph "run-#{run.id}-photo" {]
+      item_relationships.each do |ir|
+        item = ir.item
+        if !known_items.has_key?(item.id)
+          dot.puts %Q("#{item.id}" [label="#{item.id}:#{item.title}"];)
+          known_items[item.id] = true
+        end
+        dot.puts %Q(  "#{ir.item_id}" -> "#{ir.related_item_id}" [label="#{sprintf('%.2f', ir.cosine_similarity)}"];)
+      end
+      dot.puts "}"
+    end
+    puts "Generating #{base_file}.png"
+    `dot -Tpng "#{base_file}.dot" > "#{base_file}.png"`
+  end
   
   def self.memes_from_item_relationship_map (run, ir_map, override_memes_in_db = false)
     
@@ -29,8 +80,8 @@ class Meme < ActiveRecord::Base
         
         # generate an ir_map, a hash[item_id] of arrays[item_relationships]
         meme_ir_map = meme_from_map(lead_item_id, ir_map)
-        # Run.take_photo(run, meme_ir_map, "#{lead_item.id}-#{meme_ir_map.keys.size}-nodes")
-        Run.take_flash_photo(run, meme_ir_map, "#{lead_item.id}-#{meme_ir_map.keys.size}-nodes")
+
+        #Run.take_flash_photo(run, meme_ir_map, "#{lead_item.id}-#{meme_ir_map.keys.size}-nodes")
         
         # generate meme items
         meme_ir_map.each do |item_id, item_relationships|

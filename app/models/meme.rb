@@ -97,6 +97,8 @@ class Meme < ActiveRecord::Base
         meme_ir_map.keys.each do |k|
           ir_map.delete(k)
         end
+        
+        #meme.to_graphviz
       end
     end
   end

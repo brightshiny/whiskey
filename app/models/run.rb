@@ -14,12 +14,13 @@ class Run < ActiveRecord::Base
     maximum_matches_per_query_vector: #{self.maximum_matches_per_query_vector}"
   end
   
-  def self.on_your_mark_get_set_go
+  def self.go
     # defaults
     number_of_documents_for_a = 200
     k=30
     minimum_cosine_similarity = 0.9
     maximum_matches_per_query_vector = 100
+    skip_single_terms = false
 
     # spiffy option parsing
     opts = OptionParser.new
@@ -27,25 +28,29 @@ class Run < ActiveRecord::Base
     opts.on("-k[K]", "--k=[K]", "defaults to 30", Integer) {|val| k=val}
     opts.on("-c[COS]", "--minimum-cosine-similarity=[COS]", "defaults to 0.9", Float) {|val| minimum_cosine_similarity = val}
     opts.on("-m[MATCHES]", "--maximum-matches-per-query-vector=[MATCHES]", "defaults to 20", Integer) {|val| maximum_matches_per_query_vector = val}
+    opts.on("-s", "--skip-single-terms") {|val| skip_single_terms = true }
     opts.parse(ARGV)
     
     puts "Starting run with the following settings: "
-    run = Run.create({ :k => k, :n => number_of_documents_for_a, :maximum_matches_per_query_vector => maximum_matches_per_query_vector, :minimum_cosine_similarity => minimum_cosine_similarity })
+    run = Run.create({ :k => k, :n => number_of_documents_for_a, :maximum_matches_per_query_vector => maximum_matches_per_query_vector, :minimum_cosine_similarity => minimum_cosine_similarity, :skip_single_terms => skip_single_terms })
     puts run.to_s
     puts
     
     user = User.find(5) # user named "clone"
     
-    consumed_docs = user.recent_documents_from_feeds(number_of_documents_for_a)
+    consumed_docs = user.recent_documents_from_feeds(run.n)
+    run.started_at = Time.now
     decider = Classy::Decider.new
     decider.add_to_a(consumed_docs)
+    run.distinct_term_count = decider.matrix_builder.max_term_index
+    run.save
     
-    # generate magic in-memory data structure for processing
+    # magic in-memory data structure for meme processing
     relationship_map = {}
     
     consumed_docs.each_with_index { |doc, i| 
       puts "\n#{doc.title}\n"    
-      predicted_docs = decider.enhanced_process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector)
+      predicted_docs = decider.enhanced_process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
       total_score = 0
       predicted_docs.each { |pdoc|
         puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]          
@@ -57,7 +62,9 @@ class Run < ActiveRecord::Base
       puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)"
     }
     # generate memes!
-    Meme.memes_from_item_relationship_map(run, relationship_map, true)    
+    Meme.memes_from_item_relationship_map(run, relationship_map, true)
+    run.ended_at = Time.now
+    run.save
   end
   
 end

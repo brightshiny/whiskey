@@ -97,8 +97,7 @@ module Classy
       Linalg::DMatrix.columns(@columns)
     end
     attr_accessor :cached_a_tf_idf
-    def a_tf_idf
-      # if true
+    def a_tf_idf(skip_single_terms=false)
       if self.cached_a_tf_idf.nil?
         clean
         # slicing time
@@ -108,9 +107,13 @@ module Classy
           for term_idx in 0 .. @max_term_index
             #word = @term_index_hash.index(term_idx)
             term_count = @columns[doc_idx][term_idx]
-            doc_term_count = @doc_term_count_cache[doc_idx]
-            tf = doc_term_count > 0.0 ? (term_count / doc_term_count) : 0.0
-            idf = @idf_cache[term_idx]
+            if skip_single_terms && term_count <= 1
+              tf = idf = 0
+            elsif
+              doc_term_count = @doc_term_count_cache[doc_idx]
+              tf = doc_term_count > 0.0 ? (term_count / doc_term_count) : 0.0
+              idf = @idf_cache[term_idx]
+            end
             tf_idf_columns[doc_idx][term_idx] = tf*idf
           end
         end

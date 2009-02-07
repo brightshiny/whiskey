@@ -20,5 +20,13 @@ module Classy
       return @matrix.get_term_index(term, create_new)
     end
 
+    def max_term_index
+      return @matrix.max_term_index
+    end
+
+    def doc_idx_to_id(idx)
+      return @matrix.doc_index_hash.index(idx)
+    end
+    
   end
 end

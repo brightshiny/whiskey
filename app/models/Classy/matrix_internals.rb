@@ -2,7 +2,7 @@ require 'linalg'
 
 module Classy
   class MatrixInternals
-    attr_reader :max_term_index, :max_doc_index, :doc_term_count_cache, :idf_cache
+    attr_reader :max_term_index, :max_doc_index, :doc_term_count_cache, :idf_cache, :doc_index_hash
     
     def initialize()
       super
@@ -74,10 +74,6 @@ module Classy
       else
         return @doc_index_hash[doc_id] = @max_doc_index += 1
       end
-    end
-    
-    def doc_idx_to_id(idx)
-      return @doc_index_hash.index(idx)
     end
     
     def get_term_index(term, create_new=false)

@@ -13,6 +13,24 @@ class Run < ActiveRecord::Base
            minimum_cosine_similarity: #{self.minimum_cosine_similarity}
     maximum_matches_per_query_vector: #{self.maximum_matches_per_query_vector}"
   end
+
+  def self.to_graphviz
+    run_id = nil
+    opts = OptionParser.new
+    opts.on("-iRUN_ID", "--id=RUN_ID") {|val| run_id = val}
+    rest = opts.parse(ARGV)
+    if run_id.nil?
+      puts "I didn't understand: " + rest.join(', ') if !rest.nil?
+      puts opts.to_s
+      return
+    end
+    
+    run = Run.find(run_id)
+    run.memes.each do |meme|
+      meme.to_graphviz    
+    end
+    
+  end
   
   def self.go
     # defaults
@@ -41,8 +59,8 @@ class Run < ActiveRecord::Base
     consumed_docs = user.recent_documents_from_feeds(run.n)
     run.started_at = Time.now
     decider = Classy::Decider.new
-    decider.add_to_a(consumed_docs)
-    run.distinct_term_count = decider.matrix_builder.max_term_index
+    decider.matrix.add_to_a(consumed_docs)
+    run.distinct_term_count = decider.matrix.max_term_index
     run.save
     
     # magic in-memory data structure for meme processing
@@ -50,7 +68,7 @@ class Run < ActiveRecord::Base
     
     consumed_docs.each_with_index { |doc, i| 
       puts "\n#{doc.title}\n"    
-      predicted_docs = decider.enhanced_process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
+      predicted_docs = decider.process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
       total_score = 0
       predicted_docs.each { |pdoc|
         puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]          

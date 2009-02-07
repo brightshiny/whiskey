@@ -82,15 +82,17 @@ class MatrixBuilderTest < ActiveSupport::TestCase
     ## Begin matrix builder checks
     ##
     
-    mb = Classy::MatrixBuilder.new()
+    tf_idf_matrix = Classy::TfIdfMatrix.new()
+    term_count_matrix = Classy::TermCountMatrix.new()
     for item_idx in 0 .. titles.size-1
       item = Item.find(:first, :conditions => ["title = ?", titles[item_idx]])
-      mb.add_to_a(item)
+      tf_idf_matrix.add_to_a(item)
+      term_count_matrix.add_to_a(item)
     end
     
     # now for the truth -- must match rows (or columns) individually, specific row/column order not guaranteed
     for word_idx in 0 .. bare_words.size-1
-      assert mb.term_count_row(bare_words[word_idx]) == doc_structure.row(word_idx)
+      assert term_count_matrix.get_row(bare_words[word_idx]) == doc_structure.row(word_idx)
     end
     
     # tf-idf check
@@ -103,7 +105,7 @@ class MatrixBuilderTest < ActiveSupport::TestCase
     [0.000000,0.000000,0.000000,0.000000],
     ]
     for word_idx in 0 .. bare_words.size-1
-      assert mb.tf_idf_row(bare_words[word_idx]).within(EPSILON, tf_idf.row(word_idx))
+      assert tf_idf_matrix.get_row(bare_words[word_idx]).within(EPSILON, tf_idf.row(word_idx))
     end
     
     # q test
@@ -118,16 +120,16 @@ class MatrixBuilderTest < ActiveSupport::TestCase
       end
     end
     
-    mb_q = mb.q_term_count(item)
+    mb_q = term_count_matrix.get_q(item)
     for word_idx in 0 .. bare_words.size-1
-      term_idx = mb.get_term_index(bare_words[word_idx])
+      term_idx = term_count_matrix.get_term_index(bare_words[word_idx])
       assert q[0,word_idx] == mb_q[0,term_idx]
     end
     
     q_tf_idf = Linalg::DMatrix[[0.095894,0.095894,0.000000,0.000000,0.000000,0.000000]]
-    mb_q = mb.q_tf_idf(item)
+    mb_q = tf_idf_matrix.get_q(item)
     for word_idx in 0 .. bare_words.size-1
-      term_idx = mb.get_term_index(bare_words[word_idx])
+      term_idx = tf_idf_matrix.get_term_index(bare_words[word_idx])
       assert q_tf_idf[0,word_idx] >= mb_q[0,term_idx]-EPSILON
       assert q_tf_idf[0,word_idx] <= mb_q[0,term_idx]+EPSILON
     end
@@ -137,7 +139,7 @@ class MatrixBuilderTest < ActiveSupport::TestCase
     ##
     
     #u, s, vt = m.singular_value_decomposition
-    u, s, vt = mb.a_term_count.singular_value_decomposition
+    u, s, vt = term_count_matrix.get_a.singular_value_decomposition
     vt = vt.transpose
     
     # Take the 2-rank approximation of the Matrix
@@ -149,7 +151,7 @@ class MatrixBuilderTest < ActiveSupport::TestCase
     eig2 = Linalg::DMatrix.columns [s.column(0).to_a.flatten[0,2], s.column(1).to_a.flatten[0,2]]
     
     # Here comes Bob, our new user
-    bob = mb.q_term_count(item)
+    bob = term_count_matrix.get_q(item)
     #bob = Linalg::DMatrix[[5,5,0,0,5,0]]
     #bob = Linalg::DMatrix[[5.000000,5.000000,0.000000,0.000000,5.000000,0.000000]]
     bobEmbed = bob * u2 * eig2.inverse

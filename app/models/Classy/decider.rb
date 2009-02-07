@@ -69,14 +69,6 @@ module Classy
       #   puts "Error in matching Qs"
       #   return []
       # end
-    end
-    
-    
-    def add_to_a(items)
-      items.each do |i|
-        @matrix_builder.add_to_a(i)
-      end
-    end
-    
+    end    
   end
 end

@@ -1,6 +1,8 @@
+require 'linalg'
+
 module Classy
-  class MatrixBuilder
-    attr_reader :max_term_index, :max_doc_index
+  class MatrixInternals
+    attr_reader :max_term_index, :max_doc_index, :doc_term_count_cache, :idf_cache
     
     def initialize()
       super
@@ -12,12 +14,12 @@ module Classy
       @doc_index_hash = Hash.new
       @doc_term_count_cache = Hash.new
       @idf_cache = nil
-      @dirty = false
+      @dirty = false      
     end
     
+    # add another doc to a
     def add_to_a(doc)
       @dirty = true
-      self.cached_a_tf_idf = nil
       doc_idx = get_doc_index(doc.id)
       @columns[doc_idx], @doc_term_count_cache[doc_idx] = doc_column(doc)
     end
@@ -58,70 +60,6 @@ module Classy
       end
     end
     
-    def term_count_row(term)
-      term_idx = get_term_index(term, false)
-      if term_idx == :term_dne
-        return nil
-      else
-        return a_term_count.row(term_idx)
-      end
-    end
-    
-    def tf_idf_row(term)
-      term_idx = get_term_index(term, false)
-      if term_idx == :term_dne
-        return nil
-      else
-        return a_tf_idf.row(term_idx)
-      end
-    end
-    
-    def q_term_count(item)
-      col, doc_term_count = doc_column(item, false)
-      return Linalg::DMatrix.rows([col])
-    end
-    
-    def q_tf_idf(item)
-      col, term_count = doc_column(item, false)
-      for term_idx in 0 .. @max_term_index
-        tf = term_count > 0.0 ? col[term_idx] / term_count : 0.0
-        idf = @idf_cache[term_idx]
-        col[term_idx] = tf*idf
-      end
-      
-      return Linalg::DMatrix.rows([col])
-    end
-    
-    def a_term_count
-      clean
-      Linalg::DMatrix.columns(@columns)
-    end
-    attr_accessor :cached_a_tf_idf
-    def a_tf_idf(skip_single_terms=false)
-      if self.cached_a_tf_idf.nil?
-        clean
-        # slicing time
-        tf_idf_columns = Array.new
-        for doc_idx in 0 .. @columns.size-1
-          tf_idf_columns[doc_idx] = Array.new
-          for term_idx in 0 .. @max_term_index
-            #word = @term_index_hash.index(term_idx)
-            term_count = @columns[doc_idx][term_idx]
-            if skip_single_terms && term_count <= 1
-              tf = idf = 0
-            elsif
-              doc_term_count = @doc_term_count_cache[doc_idx]
-              tf = doc_term_count > 0.0 ? (term_count / doc_term_count) : 0.0
-              idf = @idf_cache[term_idx]
-            end
-            tf_idf_columns[doc_idx][term_idx] = tf*idf
-          end
-        end
-        self.cached_a_tf_idf = Linalg::DMatrix.columns(tf_idf_columns)
-      end
-      return self.cached_a_tf_idf
-    end
-    
     def number_of_docs_with_term(term_idx)
       count = 0.0
       for doc_idx in 0 .. @columns.size-1
@@ -151,5 +89,11 @@ module Classy
         return :term_dne
       end
     end
+    
+    def get_a
+      clean
+      Linalg::DMatrix.columns(@columns)
+    end
+    
   end
 end

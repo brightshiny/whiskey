@@ -1,11 +1,20 @@
 require 'linalg'
 
 module Classy
-  # subclasses should implement get_a, get_q, and get_row
+  
   class BaseMatrix
+    # subclasses should implement get_a, get_q, and get_row
     
-    def initialize()
-      @matrix = MatrixInternals.new
+    # usage:
+    #
+    #      @matrix = TfIdfMatrix.new({skip_single_terms => true})
+    #      @matrix.add_to_a(docs)
+    #      a = @matrix.get_a
+    #      q = @matrix.get_q(doc)
+    #      
+    
+    def initialize(opts={})
+      @matrix = MatrixInternals.new(opts)
     end
     
     def add_to_a(items)
@@ -19,11 +28,11 @@ module Classy
     def get_term_index(term, create_new=false)
       return @matrix.get_term_index(term, create_new)
     end
-
+    
     def max_term_index
       return @matrix.max_term_index
     end
-
+    
     def doc_idx_to_id(idx)
       return @matrix.doc_index_hash.index(idx)
     end

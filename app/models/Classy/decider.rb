@@ -4,9 +4,8 @@ module Classy
   class Decider
     attr_reader :matrix
     
-    def initialize
-      super
-      @matrix = TfIdfMatrix.new()
+    def initialize(opts={})
+      @matrix = TfIdfMatrix.new(opts)
     end
     
     def process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)

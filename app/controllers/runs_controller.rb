@@ -7,6 +7,13 @@ class RunsController < ApplicationController
   def show
     @run = Run.find(params[:id])
     @memes = Meme.find(:all, :conditions => ["run_id = ?", @run.id], :include => [ :meme_items ])
+    @items = []
+    @memes.each { |meme| 
+      meme.items.each { |item|
+        @items.push(item)
+      }
+    }
+    # @items = @items.sort_by{ |i| i.title.size }
   end
   
 end

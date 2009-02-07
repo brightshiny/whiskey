@@ -1,5 +1,8 @@
 <h1>Run <%= @run.id %></h1>
 <p><%= link_to "&laquo; back to all runs", :controller => :runs, :action => :index %>
+<h2>Graph</h2>
+<embed src="/flash/Dependency.swf" flashvars="run_id=<%= @run.id %>" id="Dependency" quality="high" bgcolor="#efefef" name="Dependency" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="1000" width="1000" />
+
 <h2>Memes from run <%= @run.id %></h2>
 <ul>
   <% for meme in @memes -%>

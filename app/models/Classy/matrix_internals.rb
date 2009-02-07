@@ -2,10 +2,9 @@ require 'linalg'
 
 module Classy
   class MatrixInternals
-    attr_reader :max_term_index, :max_doc_index, :doc_term_count_cache, :idf_cache, :doc_index_hash
+    attr_reader :max_term_index, :max_doc_index, :doc_term_count_cache, :idf_cache, :doc_index_hash, :skip_single_terms
     
-    def initialize()
-      super
+    def initialize(opts={})
       # columns = array of term count arrays
       @columns = Array.new
       @max_term_index = -1
@@ -14,7 +13,8 @@ module Classy
       @doc_index_hash = Hash.new
       @doc_term_count_cache = Hash.new
       @idf_cache = nil
-      @dirty = false      
+      @dirty = false
+      @skip_single_terms = opts[:skip_single_terms]
     end
     
     # add another doc to a
@@ -29,15 +29,30 @@ module Classy
     def doc_column(doc, create_new=true)
       col = Array.new(@max_term_index+1, 0.0)
       doc_term_count = 0.0
+      terms_skipped_count = 0
+      total_terms_count = 0
       doc.item_words.each do |iw|
+        count = iw.count.to_f
+        total_terms_count += 1
+        if count <= 1 && @skip_single_terms
+          terms_skipped_count += 1
+          next
+        end
         word = iw.word.word
         term_idx = get_term_index(word,create_new)
         if term_idx != :term_dne
-          count = iw.count.to_f
           col[term_idx] = count
           doc_term_count += count
         end
       end
+      
+      if @skip_single_terms && total_terms_count > 0
+        ratio_skipped = terms_skipped_count.to_f / total_terms_count.to_f
+        if ratio_skipped > 0.33
+          puts "Warning: skipped #{sprintf("%0.2f", ratio_skipped*100.0)}% of the terms in document #{doc.id}.  Maybe you should disable skip_single_terms."
+          end
+      end
+      
       return [col, doc_term_count]
     end
     

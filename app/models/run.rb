@@ -58,7 +58,7 @@ class Run < ActiveRecord::Base
     
     consumed_docs = user.recent_documents_from_feeds(run.n)
     run.started_at = Time.now
-    decider = Classy::Decider.new
+    decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
     decider.matrix.add_to_a(consumed_docs)
     run.distinct_term_count = decider.matrix.max_term_index
     run.save

@@ -1,5 +1,7 @@
 class RunsController < ApplicationController
-  
+
+  before_filter :require_user
+
   def index
     @runs = Run.find(:all)
   end

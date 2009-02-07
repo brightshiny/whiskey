@@ -14,6 +14,7 @@ class RunsController < ApplicationController
       }
     }
     # @items = @items.sort_by{ |i| i.title.size }
+    @items = @items.sort_by{ |i| i.item_relationships.map{ |ir| ir.cosine_similarity }.sum }
   end
   
 end

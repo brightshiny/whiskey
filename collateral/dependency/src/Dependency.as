@@ -1,19 +1,15 @@
 package
 {
-	import com.adobe.serialization.json.JSON;
-	
+	import flare.data.DataSet;
 	import flare.display.DirtySprite;
 	import flare.display.TextSprite;
-	import flare.query.methods.div;
 	import flare.query.methods.eq;
 	import flare.vis.Visualization;
 	import flare.vis.data.Data;
-	import flare.data.DataSet;
 	import flare.vis.data.DataSprite;
 	import flare.vis.data.EdgeSprite;
 	import flare.vis.data.NodeSprite;
 	import flare.vis.data.Tree;
-	import flare.vis.events.SelectionEvent;
 	import flare.vis.legend.Legend;
 	import flare.vis.operator.label.RadialLabeler;
 	import flare.vis.operator.layout.BundledEdgeRouter;
@@ -21,13 +17,11 @@ package
 	import flare.widgets.ProgressBar;
 	
 	import flash.display.Sprite;
-	import flash.filters.DropShadowFilter;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 	import flash.net.URLLoader;
 	import flash.net.URLRequest;
 	import flash.text.TextFormat;
-	import flash.utils.Dictionary;
 	
 	[SWF(width="1000", height="1000", backgroundColor="#ffffff", frameRate="30")]
 	public class Dependency extends Sprite 
@@ -35,8 +29,6 @@ package
 		/** We will be rotating text, so we embed the font. */
 		[Embed(systemFont="Helvetica", fontName="Helvetica", advancedAntiAliasing="true", mimeType="application/x-font")]
 		private static var _font:Class;
-		
-		private var _url:String = "http://flare.prefuse.org/data/flare.json.txt";
 			
 		private var _vis:Visualization;
 		private var _detail:TextSprite;
@@ -50,8 +42,15 @@ package
 		public function Dependency() {
 		{	
 			var gmr:GraphMLReader = new GraphMLReader(visualize);
-			var run_id:String = root.loaderInfo.parameters.run_id;
-			var url:String = "http://localhost:3000/runs/show/" + run_id + ".xml";
+			var url:String = "";
+			if (root.loaderInfo.parameters.run_id) {
+			    var run_id:String = root.loaderInfo.parameters.run_id;
+			    url = "http://localhost:3000/runs/show/" + run_id + ".xml";
+			} else if (root.loaderInfo.parameters.meme_id) {
+				var meme_id:String = root.loaderInfo.parameters.meme_id;
+			    url = "http://localhost:3000/meme/show/" + meme_id + ".xml";
+			}
+			trace(url);
 			gmr.read(url);
   		}
   		

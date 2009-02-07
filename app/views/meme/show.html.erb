@@ -1,23 +1,41 @@
+<p><%= link_to "&laquo; back to run #{@meme.run.id}", :controller => :runs, :action => :show, :id => @meme.run.id %></p>
+
 <h1>Meme <%= @meme.id %></h1>
 
 <h2>Details</h2>
-<ul>
-  <li><%= link_to "Run #{@meme.run_id}", :controller => :runs, :action => :show, :id => @meme.run_id %></li>
-  <li>Meme Head: <%= link_to @meme.item.title, @meme.item.link %></li>
+<p>Meme Head: <%= link_to @meme.item.title, @meme.item.link %></p>
 </ul>
-
-<h2>Molotov</h2>
-<embed src="/flash/Molotov.swf" flashvars="meme_id=<%= @meme.id %>" id="Molotov" quality="high" bgcolor="#ffffff" name="Molotov" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="400" width="600" />
+<h3>Run <%= @meme.run_id %></h3>
+<table>
+  <tr>
+    <th>k</th>
+    <th>n</th>
+    <th>Minimum COS Similarity</th>
+    <th>Maximum # Matches</th>
+    <th>Date</th>
+  </tr>
+  <tr>
+    <td><%= @meme.run.k %></td>
+    <td><%= @meme.run.n %></td>
+    <td><%= @meme.run.minimum_cosine_similarity %></td>
+    <td><%= @meme.run.maximum_matches_per_query_vector %></td>
+    <td><%= @meme.run.created_at %></td>
+  </tr>
+</table>
 
 <h2>Related Items (Nodes)</h2>
 <table>
   <tr>
     <th>Item ID</th>
+    <th>Total Cosine Similarity</th>
+    <th>Average Cosine Similarity</th>
     <th>Title</th>
   </tr>
   <% for item in @meme.items.sort_by{ |i| i.id } %>
   <tr>
     <td><%= item.id %></td>
+    <td><%= number_with_precision(item.total_cosine_similarity(@meme.run),9) %></td>
+    <td><%= number_with_precision(item.average_cosine_similarity(@meme.run),9) %></td>
     <td><%= link_to item.title, item.link %></td>
   </tr>
   <% end %>
@@ -37,5 +55,10 @@
     <td><%= ir.cosine_similarity %></td>
   </tr>
   <% end %>
-</ul>
+</table>
 
+<h2>Graph</h2>
+<!-- <embed src="/flash/Molotov.swf" flashvars="meme_id=<%= @meme.id %>" id="Molotov" quality="high" bgcolor="#ffffff" name="Molotov" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="400" width="600" /> -->
+<embed src="/flash/Dependency.swf" flashvars="meme_id=<%= @meme.id %>" id="Dependency" quality="high" bgcolor="#efefef" name="Dependency" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="1000" width="1000" />
+
+<p><br /><%= link_to "&laquo; back to run #{@meme.run.id}", :controller => :runs, :action => :show, :id => @meme.run.id %></p>

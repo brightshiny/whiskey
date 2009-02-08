@@ -1,6 +1,6 @@
 class RunsController < ApplicationController
 
-  before_filter :require_user
+  before_filter :require_user, :except => :show
 
   def index
     @runs = Run.find(:all)

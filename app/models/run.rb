@@ -13,7 +13,7 @@ class Run < ActiveRecord::Base
            minimum_cosine_similarity: #{self.minimum_cosine_similarity}
     maximum_matches_per_query_vector: #{self.maximum_matches_per_query_vector}"
   end
-
+  
   def self.to_graphviz
     run_id = nil
     opts = OptionParser.new
@@ -39,7 +39,7 @@ class Run < ActiveRecord::Base
     minimum_cosine_similarity = 0.9
     maximum_matches_per_query_vector = 100
     skip_single_terms = false
-
+    
     # spiffy option parsing
     opts = OptionParser.new
     opts.on("-n[SIZE_OF_A]", "--number-of-documents-for-a=[SIZE_OF_A]" "defaults to 100", Integer) {|val| number_of_documents_for_a = val}
@@ -71,11 +71,15 @@ class Run < ActiveRecord::Base
       predicted_docs = decider.process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
       total_score = 0
       predicted_docs.each { |pdoc|
-        puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]          
-        ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
-        relationship_map[ir.item_id] = Array.new unless relationship_map.has_key?(ir.item_id)
-        relationship_map[ir.item_id].push(ir)
-        total_score += pdoc.score
+        if doc.id == pdoc.id
+          puts "\t(skipped) %1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]
+        else
+          puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]
+          ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
+          relationship_map[ir.item_id] = Array.new unless relationship_map.has_key?(ir.item_id)
+          relationship_map[ir.item_id].push(ir)
+          total_score += pdoc.score
+        end
       }
       puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)"
     }

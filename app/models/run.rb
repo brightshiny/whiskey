@@ -1,10 +1,10 @@
-require 'fileutils'
 require 'optparse'
 
 class Run < ActiveRecord::Base
   has_many :item_relationships
   has_many :items, :through => :item_relationships
   has_many :memes
+  include Classy::Graphviz
   
   def to_s
     "                               db id: #{self.id}
@@ -16,20 +16,32 @@ class Run < ActiveRecord::Base
   
   def self.to_graphviz
     run_id = nil
+    source = "memes"
     opts = OptionParser.new
     opts.on("-iRUN_ID", "--id=RUN_ID") {|val| run_id = val}
+    opts.on("-sSOURCE", "--source=SOURCE", "source in [memes,item_relationships], default=memes") { |val| source=val}
     rest = opts.parse(ARGV)
+    
     if run_id.nil?
       puts "I didn't understand: " + rest.join(', ') if !rest.nil?
       puts opts.to_s
       return
     end
     
-    run = Run.find(run_id)
-    run.memes.each do |meme|
-      meme.to_graphviz    
+    if !source || (source != "memes" && source != "item_relationships")
+      puts "Weird source."
+      puts opts.to_s
     end
     
+    run = Run.find(run_id)
+    
+    if source == "memes"
+      run.memes.each do |meme|
+        meme.to_graphviz    
+      end
+    else
+      run.to_graphviz
+    end
   end
   
   def self.go
@@ -49,44 +61,61 @@ class Run < ActiveRecord::Base
     opts.on("-s", "--skip-single-terms") {|val| skip_single_terms = true }
     opts.parse(ARGV)
     
+    user = User.find(5) # user named "clone"
+    
     puts "Starting run with the following settings: "
     run = Run.create({ :k => k, :n => number_of_documents_for_a, :maximum_matches_per_query_vector => maximum_matches_per_query_vector, :minimum_cosine_similarity => minimum_cosine_similarity, :skip_single_terms => skip_single_terms })
     puts run.to_s
     puts
     
-    user = User.find(5) # user named "clone"
     
-    consumed_docs = user.recent_documents_from_feeds(run.n)
+    docs = user.recent_documents_from_feeds(run.n)
     run.started_at = Time.now
-    decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
-    decider.matrix.add_to_a(consumed_docs)
-    run.distinct_term_count = decider.matrix.max_term_index
     run.save
     
-    # magic in-memory data structure for meme processing
-    relationship_map = {}
-    
-    consumed_docs.each_with_index { |doc, i| 
-      puts "\n#{doc.title}\n"    
-      predicted_docs = decider.process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
-      total_score = 0
-      predicted_docs.each { |pdoc|
-        if doc.id == pdoc.id
-          puts "\t(skipped) %1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]
-        else
-          puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]
-          ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
-          relationship_map[ir.item_id] = Array.new unless relationship_map.has_key?(ir.item_id)
-          relationship_map[ir.item_id].push(ir)
-          total_score += pdoc.score
-        end
-      }
-      puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)"
-    }
-    # generate memes!
-    Meme.memes_from_item_relationship_map(run, relationship_map, true)
+    puts "Firing up the classy decider."
+    decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
+    puts "Getting initial memes from a."
+    decider.memes({:run => run, :a => docs, :q => docs, :verbose => false})
     run.ended_at = Time.now
     run.save
+    
+    # kmb: this is a shortcut for the above run
+    # run = Run.find(38)
+    
+    # puts creating a2
+    interesting_docs = {}
+    run.memes.each do |meme|
+      meme.meme_items.each do |meme_item|
+        doc = meme_item.item_relationship.item
+        interesting_docs[doc.id] = doc unless interesting_docs.has_key?(doc.id)
+        related_doc = meme_item.item_relationship.related_item
+        interesting_docs[related_doc.id] = related_doc unless interesting_docs.has_key?(related_doc.id)
+      end
+    end
+    
+    # add more interesting docs
+    puts "Adding interesting memes/docs to a."
+    # kmb: to do
+    
+    # kmb: here and below is broken
+    puts "Processing recent history"    
+    # need a new run...
+    n = interesting_docs.length
+    k = k >= n ? n-1 : k
+    q = user.recent_documents_from_feeds(50)
+    run2 = Run.create({ :k => k, :n => n, :maximum_matches_per_query_vector => maximum_matches_per_query_vector, :minimum_cosine_similarity => minimum_cosine_similarity, :skip_single_terms => skip_single_terms })
+    puts run2
+    puts
+    decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
+    run2.started_at = Time.now
+    run2.save
+    decider.memes({:run => run2, :a => interesting_docs.values, :q => q, :verbose => true})
+    run2.ended_at = Time.now
+    run2.save
+    
   end
+  
+  
   
 end

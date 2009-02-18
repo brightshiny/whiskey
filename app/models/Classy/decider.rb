@@ -8,6 +8,54 @@ module Classy
       @matrix = TfIdfMatrix.new(opts)
     end
     
+    def memes(opts={})
+      q = opts[:q]
+      a = opts[:a]
+      run = opts[:run]
+      verbose = opts[:verbose] || false
+      spinner = verbose ? nil : Spinner.new
+      
+      if !q || !a || !run
+        puts "Hey! Missing important args in decider.memes_from_a. Goodbye."
+        return
+      end
+      
+      @matrix.add_to_a(a)
+      run.distinct_term_count = @matrix.max_term_index
+      run.save
+      
+      # magic in-memory data structure for meme processing
+      relationship_map = {}
+      
+      q.each { |doc|
+        
+        if verbose
+          puts "\n#{doc.title} (#{doc.id})\n"
+        else
+          spinner.spin
+        end
+        
+        predicted_docs = process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
+        total_score = 0
+        predicted_docs.each { |pdoc|
+          if doc.id == pdoc.id
+            puts "\t(skipped) %1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id] if verbose
+          else
+            puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id] if verbose
+            ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
+            relationship_map[ir.item_id] = Array.new unless relationship_map.has_key?(ir.item_id)
+            relationship_map[ir.item_id].push(ir)
+            total_score += pdoc.score
+          end
+        }
+        puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)" if verbose
+      }
+      
+      # generate memes!
+      #Meme.memes_from_item_relationship_map(run, relationship_map, true)
+      run.generate_memes
+    end
+    
     def process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)
       #puts @matrix.get_a
       a = @matrix.get_a
@@ -18,7 +66,7 @@ module Classy
       cols_for_u2 = []
       cols_for_v2 = []
       eigenvectors = []
-      k = required_k
+      k = required_k > vt.hsize ? vt.hsize : required_k
       k.times do |n|
         cols_for_u2.push(u.column(n))
         cols_for_v2.push(vt.column(n))

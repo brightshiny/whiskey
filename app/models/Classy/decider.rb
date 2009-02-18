@@ -52,8 +52,7 @@ module Classy
       }
       
       # generate memes!
-      #Meme.memes_from_item_relationship_map(run, relationship_map, true)
-      run.generate_memes
+      Meme.memes_from_item_relationship_map(run, relationship_map, true)
     end
     
     def process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)

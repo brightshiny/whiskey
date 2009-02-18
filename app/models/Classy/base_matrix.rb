@@ -18,6 +18,7 @@ module Classy
     end
     
     def add_to_a(items)
+      return if !items
       if items.kind_of? Enumerable
         items.each {|i| @matrix.add_to_a(i) }
       else

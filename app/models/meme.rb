@@ -115,4 +115,16 @@ class Meme < ActiveRecord::Base
     return self.cached_items
   end
   
+  attr_accessor :cached_strength
+  def strength
+    if self.cached_strength.nil?
+      strength = 0
+      self.item_relationships.each do |ir|
+        strength += ir.cosine_similarity
+      end
+      self.cached_strength = strength
+    end
+    return self.cached_strength
+  end
+  
 end

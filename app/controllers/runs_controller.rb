@@ -19,4 +19,10 @@ class RunsController < ApplicationController
     @items = @items.sort_by{ |i| i.item_relationships.map{ |ir| ir.cosine_similarity }.sum }
   end
   
+  def view
+    @run = Run.find(params[:id])
+    @memes = Meme.find(:all, :conditions => ["run_id = ?", @run.id], :include => [ :meme_items ])
+    @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
+  end
+  
 end

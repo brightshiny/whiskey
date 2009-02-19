@@ -2,7 +2,7 @@ module Classy
   class Spinner
     @@chars = %w{ | / - \\ }
     
-    def initialize()
+    def initialize
       @count = 0
       print ' '
     end

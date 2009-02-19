@@ -26,7 +26,8 @@ module Classy
       
       # magic in-memory data structure for meme processing
       relationship_map = {}
-      
+ 
+      # kmb: check for Enumerable in q
       q.each { |doc|
         
         if verbose

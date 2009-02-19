@@ -97,10 +97,10 @@ class Run < ActiveRecord::Base
       meme.meme_items.each do |meme_item|
         doc = meme_item.item_relationship.item
         a2[doc.id] = doc unless a2.has_key?(doc.id)
-        q.delete(doc.id)
+        #q.delete(doc.id)
         related_doc = meme_item.item_relationship.related_item
         a2[related_doc.id] = related_doc unless a2.has_key?(related_doc.id)
-        q.delete(related_doc.id)
+        #q.delete(related_doc.id)
       end
     end
     

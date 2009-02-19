@@ -6,6 +6,7 @@ class Item < ActiveRecord::Base
   belongs_to :feed
   has_many :item_relationships
   has_many :related_items, :through => :item_relationships
+  has_many :memes
 
   attr_accessor :score
 
@@ -36,6 +37,26 @@ class Item < ActiveRecord::Base
       items_as_collections_of_words.push(i.words.map{ |w| w.word }.flatten.join(" "))
     end
     return items_as_collections_of_words
+  end
+
+  def total_cosine_similarity(run)
+    total_cosine_similarity = 0
+    self.item_relationships.each { |ir| 
+      if ir.run_id == run.id
+        total_cosine_similarity += ir.cosine_similarity
+      end
+    }
+    return total_cosine_similarity
+  end
+
+  def average_cosine_similarity(run)
+    num_item_relationships_in_run = 0
+    self.item_relationships.each { |ir| 
+      if ir.run_id == run.id
+        num_item_relationships_in_run += 1
+      end
+    }
+    self.total_cosine_similarity(run) / num_item_relationships_in_run.to_f
   end
   
 end

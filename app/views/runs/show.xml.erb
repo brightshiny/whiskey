@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE graphml SYSTEM "http://www.graphdrawing.org/dtds/graphml.dtd">
+<graphml>
+  <key id="d1" for="edge" attr.name="weight" attr.type="double"/>
+  <key id="name" for="node" attr.name="name" attr.type="string"/>
+  <key id="link" for="node" attr.name="link" attr.type="string"/>
+  <key id="item_id" for="node" attr.name="item_id" attr.type="integer"/>
+  <graph id="animalValues-05" edgedefault="undirected" clipContent="false">
+<% for meme in @memes -%>
+<% for node in meme.items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse -%>
+    <node id="<%= node.id %>"><data key="link"><%= node.link %></data><data key="name"><%= node.title %></data><data key="item_id"><%= node.id %></data></node>
+<% end -%><% end -%>
+<% for meme in @memes -%>
+<% for edge in meme.item_relationships -%>
+    <edge source="<%= edge.item_id %>" target="<%= edge.related_item_id %>"><data key="d1"><%= 1.0 / (edge.cosine_similarity ** 3) %></data></edge>
+<% end -%><% end -%>
+  </graph>
+</graphml>

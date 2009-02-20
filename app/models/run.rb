@@ -62,23 +62,13 @@ class Run < ActiveRecord::Base
     opts.parse(ARGV)
     
     user = User.find(5) # user named "clone"
-    
-    puts "Starting run with the following settings: "
-    run = Run.create({ :k => k, :n => number_of_documents_for_a, :maximum_matches_per_query_vector => maximum_matches_per_query_vector, :minimum_cosine_similarity => minimum_cosine_similarity, :skip_single_terms => skip_single_terms })
-    puts run.to_s
-    puts
-    
-    
     docs = user.recent_documents_from_feeds(run.n)
-    run.started_at = Time.now
-    run.save
-    
-    puts "Firing up the classy decider."
     decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
-    puts "Getting initial memes from a."
-    decider.memes({:run => run, :a => docs, :q => docs, :verbose => false})
-    run.ended_at = Time.now
-    run.save
+    decider.memes({:k => k, :n => number_of_documents_for_a,
+      :maximum_matches_per_query_vector => maximum_matches_per_query_vector, 
+      :minimum_cosine_similarity => minimum_cosine_similarity, 
+      :skip_single_terms => skip_single_terms, 
+      :a => docs, :q => docs, :verbose => false})
   end
   
   def self.plan_a
@@ -111,20 +101,71 @@ class Run < ActiveRecord::Base
     puts "Processing recent history"
     # need a new run...
     
-    r2 = Run.create({ :k => 30, :n => a2.size, :maximum_matches_per_query_vector => r1.maximum_matches_per_query_vector, :minimum_cosine_similarity => r1.minimum_cosine_similarity, :skip_single_terms => r1.skip_single_terms })
-    puts r2
-    puts
     decider = Classy::Decider.new(:skip_single_terms => r1.skip_single_terms)
-    r2.started_at = Time.now
-    r2.save
-    decider.memes({:run => r2, :a => a2.values, :q => q, :verbose => true})
-    r2.ended_at = Time.now
-    r2.save
+    decider.memes({ :k => 30, :n => a2.size, 
+      :maximum_matches_per_query_vector => r1.maximum_matches_per_query_vector,
+      :minimum_cosine_similarity => r1.minimum_cosine_similarity, 
+      :skip_single_terms => r1.skip_single_terms, 
+      :a => a2.values, :q => q, :verbose => true})
     
     # lastly, copy item relationships from initial run over to r2 -- they should overlay with r2's items relationships
     r1.item_relationships.each do |ir|
       ItemRelationship.create({:run => r2, :item => ir.item, :related_item => ir.related_item, :cosine_similarity => ir.cosine_similarity})
     end
+  end
+  
+  def self.plan_b
+    # 1-4 are same as plan_a
+    # 1) R1 = 100 items (A1)  -- this is run.id = 4
+    # 2) Create M's from R1 items (A1) -- also run.id = 4
+    # 3) A2 = Combine items from M's in A1 made via R1.
+    # 4) R2 = next 50 items as q against A2
+    # 5) A3 = item relationships from R1 and R2
+    # 6) R3 = standard run where (A3=Q)
+    
+    # create q: all the items from run 6 (n=200), which includes 100 items from run 4 (n=100)
+    q = User.find(5).recent_documents_from_feeds(200)
+    
+    r1 = Run.find(4)
+    # creating a2
+    a2 = {}
+    r1.memes.each do |meme|
+      meme.meme_items.each do |meme_item|
+        doc = meme_item.item_relationship.item
+        a2[doc.id] = doc unless a2.has_key?(doc.id)
+        related_doc = meme_item.item_relationship.related_item
+        a2[related_doc.id] = related_doc unless a2.has_key?(related_doc.id)
+      end
+    end
+    
+    # add more interesting docs to a2
+    # kmb: to do
+    
+    # kmb: here and below is broken
+    puts "Processing recent history"
+    # need a new run...
+    
+    decider = Classy::Decider.new(:skip_single_terms => r1.skip_single_terms)
+    r2 = decider.memes({:k => 30, :n => a2.size, :maximum_matches_per_query_vector => r1.maximum_matches_per_query_vector, :minimum_cosine_similarity => r1.minimum_cosine_similarity, :a => a2.values, :q => q, :verbose => false})
+    
+    # copy item relationships from initial run over to r2 -- they should overlay with r2's items relationships
+    r1.item_relationships.each do |ir|
+      ItemRelationship.create({:run => r2, :item => ir.item, :related_item => ir.related_item, :cosine_similarity => ir.cosine_similarity})
+    end
+    
+    # create a3 as items from r1 and r2.  r2 contains item_relationships from r1, so we'll just look at r2
+    docs = Item.find(:all, 
+                     :conditions => ["irs.run_id = ?", r2.id], 
+    :joins => "join item_relationships irs on (irs.related_item_id = `items`.id or irs.item_id = `items`.id)"
+    )
+    
+    a3 = {}
+    docs.each {|d| a3[d.id] = d unless a3.has_key?(d.id) }
+    
+    
+    decider = Classy::Decider.new(:skip_single_terms => r1.skip_single_terms)
+    # r3 = 
+    decider.memes({:k => r1.k, :n => a3.size, :maximum_matches_per_query_vector => r1.maximum_matches_per_query_vector, :minimum_cosine_similarity => r1.minimum_cosine_similarity, :skip_single_terms => r1.skip_single_terms, :a => a3.values, :q => a3.values, :verbose => false})
   end
   
 end

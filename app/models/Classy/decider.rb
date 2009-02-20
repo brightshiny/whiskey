@@ -11,14 +11,24 @@ module Classy
     def memes(opts={})
       q = opts[:q]
       a = opts[:a]
-      run = opts[:run]
       verbose = opts[:verbose] || false
       spinner = verbose ? nil : Spinner.new
       
-      if !q || !a || !run
+      if !q || !a
         puts "Hey! Missing important args in decider.memes_from_a. Goodbye."
         return
       end
+      
+      n = a.kind_of?(Enumerable) ? a.size : 1
+      run = Run.create({ :k => opts[:k], :n => n,
+        :maximum_matches_per_query_vector => opts[:maximum_matches_per_query_vector], 
+        :minimum_cosine_similarity => opts[:minimum_cosine_similarity],
+        :skip_single_terms => opts[:skip_single_terms] })
+      
+      puts "\n==> Run Details:\n#{run.to_s}\n"
+
+      run.started_at = Time.now
+      run.save
       
       @matrix.add_to_a(a)
       run.distinct_term_count = @matrix.max_term_index
@@ -26,7 +36,7 @@ module Classy
       
       # magic in-memory data structure for meme processing
       relationship_map = {}
- 
+      
       # kmb: check for Enumerable in q
       q.each { |doc|
         
@@ -54,6 +64,9 @@ module Classy
       
       # generate memes!
       Meme.memes_from_item_relationship_map(run, relationship_map, true)
+      run.ended_at = Time.now
+      run.save
+      return run
     end
     
     def process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)

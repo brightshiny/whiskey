@@ -1,0 +1,29 @@
+<table>
+  <tr>
+    <th>DOY</th>
+    <th>Date</th>
+    <th>Time</th>
+    <th>ID</th>
+    <th>Title</th>
+  </tr>
+<% count = 0 %>
+<% old_doy = 0 %>
+<% for item in @items -%>
+<% if old_doy != item.published_at.strftime('%j') %>
+  <% if old_doy != 0 %>
+  <tr><td colspan="4" style="font-weight: bold;"><%= count %> items</td></tr>  
+  <tr><td colspan="4">&nbsp;</td></tr>  
+  <% count = 0 %>
+  <% end %>
+  <% old_doy = item.published_at.strftime('%j') %>
+<% end %>
+  <tr>
+    <td><%= item.published_at.strftime('%j') %></td>
+    <td><%= item.published_at.month %>/<%= item.published_at.day %>/<%= item.published_at.year %></td>
+    <td><%= item.published_at.strftime('%H:%M:%S') %></td>
+    <td><%= item.id %></td>
+    <td><%= item.title %></td>
+  </tr>
+  <% count += 1%>
+<% end -%>
+</table>

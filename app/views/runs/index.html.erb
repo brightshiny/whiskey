@@ -1,11 +1,32 @@
 <h1>Runs</h1>
-<ul>
-  <% for run in @runs -%>
-  <li><%= link_to "View run #{run.id}", :action => "show", :id => run.id %>
-    <ul>
-      <li><%= run.memes.size %> memes</li>
-      <li>Created at <%= run.created_at %></li>
-    </ul>
-  </li>
-  <% end -%>
-</ul>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>K</th>
+    <th>N</th>
+    <th>Max Mtch</th>
+    <th>Min Cos</th>
+    <th>Dist Terms</th>
+    <th>Skip Single</th>
+    <th># Memes</th>
+    <th>First Item</th>
+    <th>Last Item</th>
+    <th>&nbsp;</th>
+  </tr>
+  <% for run in @runs %>
+  <tr>
+    <td><%= run.id %></td>
+    <td><%= run.k %></td>
+    <td><%= run.n %></td>
+    <td><%= run.maximum_matches_per_query_vector %></td>
+    <td><%= run.minimum_cosine_similarity %></td>
+    <td><%= run.distinct_term_count %></td>
+    <td><%= run.skip_single_terms %></td>
+    <td><%= run.memes.size %></td>
+    <td><% if ! run.memes.map{ |m| m.items.map{ |i| i.published_at }.min }.min.nil? %><%= run.memes.map{ |m| m.items.map{ |i| i.published_at }.min }.min.strftime('%a %Y-%m-%d %H:%M:%S') %><% end %></td>
+    <td><% if ! run.memes.map{ |m| m.items.map{ |i| i.published_at }.max }.max.nil? %><%= run.memes.map{ |m| m.items.map{ |i| i.published_at }.max }.max.strftime('%a %Y-%m-%d %H:%M:%S') %><% end %></td>
+    <td><%= link_to "view", :controller => :runs, :action => :show, :id => run.id %></td>
+  </tr>
+  <% end %>
+</table>

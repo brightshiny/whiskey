@@ -1,6 +1,7 @@
 <p><%= link_to "&laquo; back to all runs", :controller => :runs, :action => :index %></p>
 
 <h1>Run <%= @run.id %></h1>
+<p><%= link_to "view this run", :controller => :runs, :action => :view, :id => @run.id %></p>
 <h2>Details</h2>
 <table>
   <tr>

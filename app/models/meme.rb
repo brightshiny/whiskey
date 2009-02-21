@@ -1,7 +1,7 @@
 require 'optparse'
 
 class Meme < ActiveRecord::Base
-  belongs_to :head_item
+  belongs_to :item
   belongs_to :run
   has_many :meme_items
   has_many :item_relationships, :through => :meme_items

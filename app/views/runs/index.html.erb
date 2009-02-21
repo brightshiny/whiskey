@@ -10,6 +10,7 @@
     <th>Dist Terms</th>
     <th>Skip Single</th>
     <th># Memes</th>
+    <th>Duration</th>
     <th>First Item</th>
     <th>Last Item</th>
     <th>&nbsp;</th>
@@ -24,9 +25,13 @@
     <td><%= run.distinct_term_count %></td>
     <td><%= run.skip_single_terms %></td>
     <td><%= run.memes.size %></td>
-    <td><% if ! run.memes.map{ |m| m.items.map{ |i| i.published_at }.min }.min.nil? %><%= run.memes.map{ |m| m.items.map{ |i| i.published_at }.min }.min.strftime('%a %Y-%m-%d %H:%M:%S') %><% end %></td>
-    <td><% if ! run.memes.map{ |m| m.items.map{ |i| i.published_at }.max }.max.nil? %><%= run.memes.map{ |m| m.items.map{ |i| i.published_at }.max }.max.strftime('%a %Y-%m-%d %H:%M:%S') %><% end %></td>
-    <td><%= link_to "view", :controller => :runs, :action => :show, :id => run.id %></td>
+    <td><% if run.ended_at.nil? %>-<% else %><%= (run.ended_at - run.started_at) %>s<% end %></td>
+    <td><% if ! run.memes.map{ |m| @item_hash[m.id].map{ |i| i.published_at }.min }.min.nil? %><%= run.memes.map{ |m| @item_hash[m.id].map{ |i| i.published_at }.min }.min.strftime('%y-%m-%d %H:%M') %><% end %></td>
+    <td><% if ! run.memes.map{ |m| @item_hash[m.id].map{ |i| i.published_at }.max }.max.nil? %><%= run.memes.map{ |m| @item_hash[m.id].map{ |i| i.published_at }.max }.max.strftime('%y-%m-%d %H:%M') %><% end %></td>
+    <td>
+      <%= link_to "show", :controller => :runs, :action => :show, :id => run.id %> &middot;
+      <%= link_to "view", :controller => :runs, :action => :view, :id => run.id %>
+    </td>
   </tr>
   <% end %>
 </table>

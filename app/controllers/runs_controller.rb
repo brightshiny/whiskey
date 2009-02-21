@@ -7,7 +7,15 @@ class RunsController < ApplicationController
   end
 
   def index
-    @runs = Run.find(:all)
+    @runs = Run.find(:all, :include => [ :memes => :meme_items ] )
+    @item_hash = {}
+    for run in @runs
+      for meme in run.memes
+        meme_item_ids = meme.meme_items.map{ |mi| mi.id }
+        items = Item.find(:all, :conditions => ["id in (?)", meme_item_ids])
+        @item_hash[meme.id] = items
+      end
+    end
   end
   
   def show

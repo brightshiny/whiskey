@@ -41,20 +41,18 @@ class Item < ActiveRecord::Base
 
   def total_cosine_similarity(run)
     total_cosine_similarity = 0
-    self.item_relationships.each { |ir| 
-      if ir.run_id == run.id
-        total_cosine_similarity += ir.cosine_similarity
-      end
+    item_relationships = ItemRelationship.find(:all, :conditions => ["item_id = ? and run_id = ?", self.id, run.id])
+    item_relationships.each { |ir| 
+      total_cosine_similarity += ir.cosine_similarity
     }
     return total_cosine_similarity
   end
 
   def average_cosine_similarity(run)
     num_item_relationships_in_run = 0
-    self.item_relationships.each { |ir| 
-      if ir.run_id == run.id
-        num_item_relationships_in_run += 1
-      end
+    item_relationships = ItemRelationship.find(:all, :conditions => ["item_id = ? and run_id = ?", self.id, run.id])
+    item_relationships.each { |ir| 
+      num_item_relationships_in_run += 1
     }
     self.total_cosine_similarity(run) / num_item_relationships_in_run.to_f
   end

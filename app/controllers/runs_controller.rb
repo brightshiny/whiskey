@@ -7,15 +7,12 @@ class RunsController < ApplicationController
   end
 
   def index
-    @runs = Run.find(:all, :include => [ :memes => :meme_items ] )
-    @item_hash = {}
-    for run in @runs
-      for meme in run.memes
-        meme_item_ids = meme.meme_items.map{ |mi| mi.id }
-        items = Item.find(:all, :conditions => ["id in (?)", meme_item_ids])
-        @item_hash[meme.id] = items
-      end
-    end
+    @runs = Run.paginate(
+      :page => params[:page], 
+      :include => :memes, 
+      :per_page => 30,
+      :order => "id"
+    )
   end
   
   def show
@@ -35,7 +32,7 @@ class RunsController < ApplicationController
     @run = Run.find(params[:id])
     @memes = Meme.find(:all, 
       :conditions => ["run_id = ?", @run.id], 
-      :include => [ :meme_items ]).sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
+      :include => [ :meme_items => :item_relationship ]).sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
   end
   
 end

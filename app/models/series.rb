@@ -13,13 +13,13 @@ class Series < ActiveRecord::BaseWithoutTable
     user = User.find(5) # user named "clone"
     
     time = user.recent_documents_from_feeds(1).first.published_at + 10.seconds
-    1.upto(10) do |n|    
+    1.upto(168) do |n|    
       end_time = time
-      start_time = end_time - 6.hours
+      start_time = end_time - 12.hours
       
       consumed_docs = user.documents_from_feeds_by_date_range(start_time, end_time) 
       
-      k = (Math.sqrt(consumed_docs.size) * 2).floor
+      k = (Math.sqrt(consumed_docs.size).ceil * 2)
       
       puts
       puts "******************************************"

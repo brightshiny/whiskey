@@ -2,14 +2,13 @@
 
 <% for meme in @memes %>
 <% meme.items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse.each_with_index do |item, c| %>
-
-<% if c == 0 %>
-  <h3><%= link_to item.title, item.link %></h3>
-  <p><%= excerpt(item.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %></p>
-<% else %>
-  <% if c == 1 %><p><% end -%>
-  <%= link_to item.title, item.link %><% if c != meme.items.size-1 %>, <% else %></p><% end -%>
-<% end %>
+  <% if c == 0 %>
+    <h3><%= link_to item.title, item.link %> (strength <%= number_with_precision(meme.strength, 2) %>)</h3>
+    <p><%= excerpt(item.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %></p>
+  <% else %>
+    <% if c == 1 %><p><% end -%>
+    <%= link_to "#{item.title} (#{item.id})", item.link %><% if c != meme.items.size-1 %>, <% else %></p><% end -%>
+  <% end %>
 
 <% end %>
 <hr />

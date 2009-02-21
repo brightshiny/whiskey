@@ -1,7 +1,7 @@
 require 'optparse'
 
 class Meme < ActiveRecord::Base
-  belongs_to :item
+  belongs_to :head_item
   belongs_to :run
   has_many :meme_items
   has_many :item_relationships, :through => :meme_items
@@ -105,11 +105,7 @@ class Meme < ActiveRecord::Base
   attr_accessor :cached_items
   def items
     if self.cached_items.nil?
-      items = []
-      self.item_relationships.each do |ir|
-        items.push ir.item
-      end
-      items.uniq!
+      items = Item.find_by_sql(["select distinct i.* from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id join items i on i.id = ir.item_id where m.id = ?", self.id])
       self.cached_items = items
     end
     return self.cached_items
@@ -119,7 +115,8 @@ class Meme < ActiveRecord::Base
   def strength
     if self.cached_strength.nil?
       strength = 0
-      self.item_relationships.each do |ir|
+      item_relationships = items = ItemRelationship.find_by_sql(["select ir.* from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id where m.id = ?", self.id])
+      item_relationships.each do |ir|
         strength += ir.cosine_similarity
       end
       self.cached_strength = strength

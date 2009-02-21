@@ -62,7 +62,7 @@ class Run < ActiveRecord::Base
     opts.parse(ARGV)
     
     user = User.find(5) # user named "clone"
-    docs = user.recent_documents_from_feeds(run.n)
+    docs = user.recent_documents_from_feeds(number_of_documents_for_a)
     decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
     decider.memes({:k => k, :n => number_of_documents_for_a,
       :maximum_matches_per_query_vector => maximum_matches_per_query_vector, 

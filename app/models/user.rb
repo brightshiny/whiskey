@@ -126,13 +126,24 @@ class User < ActiveRecord::Base
     self.recently_read_items(number_of_items_to_return).map{ |i| i.words.map{ |w| w.word } }.flatten.join(" ")    
   end
   
-  def recent_documents_from_feeds(number_of_items_to_return = 1000)
+  def recent_documents_from_feeds(number_of_items_to_return = 1000, max_date = nil)
     # This needs an index someplace
+    if max_date.nil?
+      max_date = Time.now
+    end
     Item.find(:all, 
       :joins => "join feed_users fu on (fu.feed_id = items.feed_id)",
-      :conditions => ["fu.user_id = ?", self.id],
+      :conditions => ["fu.user_id = ? and items.published_at < ?", self.id, max_date],
       :order => "items.published_at desc",
       :limit => number_of_items_to_return
+    ) 
+  end
+  
+  def documents_from_feeds_by_date_range(start_date, end_date)
+    Item.find(:all, 
+      :joins => "join feed_users fu on (fu.feed_id = items.feed_id)",
+      :conditions => ["fu.user_id = ? and items.published_at <= ? and items.published_at >= ?", self.id, end_date, start_date],
+      :order => "items.published_at desc"
     ) 
   end
   

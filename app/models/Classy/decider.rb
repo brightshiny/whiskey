@@ -70,24 +70,10 @@ module Classy
     end
     
     def process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)
+      t1 = Time.now
       #puts @matrix.get_a
-      a = @matrix.get_a
       
-      u, s, vt = a.singular_value_decomposition
-      vt = vt.transpose
-      
-      cols_for_u2 = []
-      cols_for_v2 = []
-      eigenvectors = []
-      k = required_k > vt.hsize ? vt.hsize : required_k
-      k.times do |n|
-        cols_for_u2.push(u.column(n))
-        cols_for_v2.push(vt.column(n))
-        eigenvectors.push(s.column(n).to_a.flatten[0,k])
-      end
-      u2 = Linalg::DMatrix.join_columns(cols_for_u2)
-      v2 = Linalg::DMatrix.join_columns(cols_for_v2)
-      eig2 = Linalg::DMatrix.columns(eigenvectors)
+      u2, v2, eig2 = @matrix.process_svd(required_k)
       
       matched_documents = []
       docs.each do |doc|
@@ -112,6 +98,8 @@ module Classy
         d.score = matched_documents.select{ |md| md[:id] == d.id }.first[:score]
       }
       documents = documents.sort_by{ |d| d.score }.reverse
+      t2 = Time.now
+      puts "Time: #{t2 - t1} seconds"
       return documents
       # rescue
       #   puts "Error in matching Qs"

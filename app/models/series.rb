@@ -67,4 +67,67 @@ class Series < ActiveRecord::BaseWithoutTable
     
   end
   
+  def self.go_wiggle_k
+    
+    # defaults
+    minimum_cosine_similarity = 0.9
+    maximum_matches_per_query_vector = 50
+    skip_single_terms = false
+    
+    # Run 183 starts the experiment (I think)
+    # Run 283 starts the next experiment
+    #  Use through 330 (k=48) 
+    #  Then pick up again w/run 334 (k=49)
+    #  Then skip 349 and 350 (k=64, 65)
+    #  And pick up 
+    
+    # get the user
+    user = User.find(5) # user named "clone"
+    
+    99.upto(100) do |k|    
+      
+      consumed_docs = user.recent_documents_from_feeds(1000)
+            
+      puts
+      puts "******************************************"
+      run = Run.create({ :k => k, :n => consumed_docs.size, :maximum_matches_per_query_vector => maximum_matches_per_query_vector, :minimum_cosine_similarity => minimum_cosine_similarity, :skip_single_terms => skip_single_terms })
+      puts "Starting run with the following settings: "
+      puts run.to_s
+      puts
+      
+      run.started_at = Time.now
+      decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
+      decider.matrix.add_to_a(consumed_docs)
+      run.distinct_term_count = decider.matrix.max_term_index
+      run.save
+      
+      # magic in-memory data structure for meme processing
+      relationship_map = {}
+    
+      consumed_docs.each_with_index { |doc, i| 
+        puts "\n#{doc.title}\n"    
+        predicted_docs = decider.process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
+        total_score = 0
+        predicted_docs.each { |pdoc|
+          if doc.id == pdoc.id
+            puts "\t(skipped) %1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]
+          else
+            puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id]
+            ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
+            relationship_map[ir.item_id] = Array.new unless relationship_map.has_key?(ir.item_id)
+            relationship_map[ir.item_id].push(ir)
+            total_score += pdoc.score
+          end
+        }
+        puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)"
+      }
+      # generate memes!
+      Meme.memes_from_item_relationship_map(run, relationship_map, true)
+      run.ended_at = Time.now
+      run.save  
+      
+    end
+    
+  end
+  
 end

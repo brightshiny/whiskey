@@ -63,6 +63,7 @@ class Run < ActiveRecord::Base
     opts.on("-k", "--k=[K]", "defaults to 30", Integer) {|val| k=val}
     opts.on("-c", "--minimum-cosine-similarity=[COS]", "defaults to 0.9", Float) {|val| minimum_cosine_similarity = val}
     opts.on("-m", "--max-matches-per-q=[MAX]", "defaults to #{max_matches_per_q}", Integer) {|val| max_matches_per_q = val}
+    opts.on("-e", "--environment=[ENV]", "hack for ./script/runner")
     opts.on("-s", "--skip-single-terms") {|val| skip_single_terms = true }
     opts.parse(ARGV)
     

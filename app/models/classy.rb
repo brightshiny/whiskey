@@ -1,2 +1,1 @@
-class Classy
-end
+class Classy; end;

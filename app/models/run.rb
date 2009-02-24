@@ -78,7 +78,7 @@ class Run < ActiveRecord::Base
     if ! most_recent_doc.nil?
       start_date = most_recent_doc.published_at
     end
-    docs = user.documents_from_feeds_by_date_range(start_date-24.hours, start_date, max_docs_for_a)
+    docs = user.documents_from_feeds_by_date_range(start_date-hours_to_scan.hours, start_date, max_docs_for_a)
     decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
     decider.memes({:user => user, :k => k, :n => max_docs_for_a,
       :maximum_matches_per_query_vector => max_matches_per_q, 

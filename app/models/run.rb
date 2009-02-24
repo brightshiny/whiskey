@@ -5,7 +5,7 @@ class Run < ActiveRecord::Base
   has_many :item_relationships
   has_many :items, :through => :item_relationships
   has_many :memes
-  include Classy::Graphviz
+  include Graphviz
   
   def to_s
     "                               db id: #{self.id}

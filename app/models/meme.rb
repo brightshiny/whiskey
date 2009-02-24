@@ -5,7 +5,7 @@ class Meme < ActiveRecord::Base
   belongs_to :run
   has_many :meme_items
   has_many :item_relationships, :through => :meme_items
-  include Classy::Graphviz
+  include Graphviz
   
   def self.to_graphviz
     meme_id = nil

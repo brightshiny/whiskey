@@ -13,6 +13,7 @@ module Classy
       a = opts[:a]
       verbose = opts[:verbose] || false
       spinner = verbose ? nil : Spinner.new
+      user_id = opts[:user].id if opts[:user]
       
       if !q || !a
         puts "Hey! Missing important args in decider.memes_from_a. Goodbye."
@@ -23,7 +24,8 @@ module Classy
       run = Run.create({ :k => opts[:k], :n => n,
         :maximum_matches_per_query_vector => opts[:maximum_matches_per_query_vector], 
         :minimum_cosine_similarity => opts[:minimum_cosine_similarity],
-        :skip_single_terms => opts[:skip_single_terms] })
+        :skip_single_terms => opts[:skip_single_terms],
+        :user_id => user_id})
       
       puts "\n==> Run Details:\n#{run.to_s}\n"
 
@@ -70,9 +72,6 @@ module Classy
     end
     
     def process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)
-      t1 = Time.now
-      #puts @matrix.get_a
-      
       u2, v2, eig2 = @matrix.process_svd(required_k)
       
       matched_documents = []
@@ -98,8 +97,6 @@ module Classy
         d.score = matched_documents.select{ |md| md[:id] == d.id }.first[:score]
       }
       documents = documents.sort_by{ |d| d.score }.reverse
-      t2 = Time.now
-      puts "Time: #{t2 - t1} seconds"
       return documents
       # rescue
       #   puts "Error in matching Qs"

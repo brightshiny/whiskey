@@ -5,6 +5,7 @@ class User < ActiveRecord::Base
   has_many :feed_users
   has_many :clicks
   has_many :reads
+  has_many :runs
   
   attr_accessible :login, :email, :password, :password_confirmation, :openid_identifier
   

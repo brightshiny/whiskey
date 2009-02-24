@@ -8,11 +8,13 @@ class SiteController < ApplicationController
       :conditions => ["user_id = ? and ended_at is not null", user.id],
       :order => "id desc"
     )
-    @memes = Meme.find(:all, 
-      :conditions => ["run_id = ?", @run.id], 
-      :include => [ :meme_items => :item_relationship ]
-    )
-    @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
+    if ! @run.nil?
+      @memes = Meme.find(:all, 
+        :conditions => ["run_id = ?", @run.id], 
+        :include => [ :meme_items => :item_relationship ]
+      )
+      @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
+    end
   end
   
 end

@@ -2,6 +2,7 @@ require 'linalg'
 
 module Classy
   class Decider
+    @@K_MULTIPLIER = 2.25
     attr_reader :matrix
     
     def initialize(opts={})
@@ -21,14 +22,20 @@ module Classy
       end
       
       n = a.kind_of?(Enumerable) ? a.size : 1
-      run = Run.create({ :k => opts[:k], :n => n,
+      if opts[:k]
+        k = opts[:k]
+      else
+        k = @@K_MULTIPLIER*Math.sqrt(n).ceil
+      end
+      
+      run = Run.create({ :k => k, :n => n,
         :maximum_matches_per_query_vector => opts[:maximum_matches_per_query_vector], 
         :minimum_cosine_similarity => opts[:minimum_cosine_similarity],
         :skip_single_terms => opts[:skip_single_terms],
         :user_id => user_id})
       
       puts "\n==> Run Details:\n#{run.to_s}\n"
-
+      
       run.started_at = Time.now
       run.save
       
@@ -38,6 +45,8 @@ module Classy
       
       # magic in-memory data structure for meme processing
       relationship_map = {}
+      
+      puts " " if !verbose # spinner needs space to grow
       
       # kmb: check for Enumerable in q
       q.each { |doc|

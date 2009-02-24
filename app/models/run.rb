@@ -49,7 +49,7 @@ class Run < ActiveRecord::Base
     # defaults
     max_docs_for_a = 500
     hours_to_scan = 24
-    k=55
+    k=nil
     minimum_cosine_similarity = 0.9
     max_matches_per_q = 100
     skip_single_terms = false
@@ -60,7 +60,7 @@ class Run < ActiveRecord::Base
     opts.on("-u", "--user-id=USER_ID", "required", Integer) {|val| user_id = val }
     opts.on("-t", "--hours-to-scan=[HOURS]", "defaults to #{hours_to_scan}", Integer) {|val| hours_to_scan = val }
     opts.on("-n", "--max-docs-for-a=[MAX]" "defaults to #{max_docs_for_a}", Integer) {|val| max_docs_for_a = val}
-    opts.on("-k", "--k=[K]", "defaults to 30", Integer) {|val| k=val}
+    opts.on("-k", "--k=[K]", "defaults to 2.25 * sqrt(a.size)", Integer) {|val| k=val}
     opts.on("-c", "--minimum-cosine-similarity=[COS]", "defaults to 0.9", Float) {|val| minimum_cosine_similarity = val}
     opts.on("-m", "--max-matches-per-q=[MAX]", "defaults to #{max_matches_per_q}", Integer) {|val| max_matches_per_q = val}
     opts.on("-e", "--environment=[ENV]", "hack for ./script/runner")

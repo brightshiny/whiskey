@@ -6,7 +6,7 @@ class SiteController < ApplicationController
     user = User.find(5)
     @run = Run.find(:first, 
       :conditions => ["user_id = ? and ended_at is not null", user.id],
-      :order => "id desc"
+      :order => "ended_at desc, id desc"
     )
     if ! @run.nil?
       @memes = Meme.find(:all, 

@@ -72,8 +72,13 @@ class Run < ActiveRecord::Base
       puts "Valid user id required.\n\n#{opts.to_s}"
       return
     end
-
-    docs = user.recent_documents_from_feeds(max_docs_for_a, Time.now-(60*60*hours_to_scan))
+    
+    start_date = Time.now
+    most_recent_doc = user.recent_documents_from_feeds(1).first
+    if ! most_recent_doc.nil?
+      start_date = most_recent_doc.published_at
+    end
+    docs = user.documents_from_feeds_by_date_range(start_date-24.hours, start_date, max_docs_for_a)
     decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
     decider.memes({:user => user, :k => k, :n => max_docs_for_a,
       :maximum_matches_per_query_vector => max_matches_per_q, 

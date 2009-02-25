@@ -1,6 +1,11 @@
 <h2><%= current_user.login %></h2>
 
 <div class="grid_8 alpha">
+  <h3>Public Versions of the Site</h3>
+  <ul>
+    <li><%= link_to "Just turned it on", :controller => :site, :action => :index %></li>
+    <li><%= link_to "Grids #1", :controller => :site, :action => :pretty %></li>
+  </ul>
   <h3>Things to do</h3>
   <ul>
     <li><%= link_to "Upload an OPML file", :controller => :opml, :action => :upload %></li>

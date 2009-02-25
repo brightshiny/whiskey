@@ -86,5 +86,28 @@ class Run < ActiveRecord::Base
       :skip_single_terms => skip_single_terms, 
       :a => docs, :q => docs, :verbose => false})
   end
+
+  attr_accessor :cached_average_meme_strength
+  def average_meme_strength
+    if ! self.ended_at.nil? && ! self.memes.empty? 
+      self.cached_average_meme_strength = (self.memes.map{ |m| m.strength }.sum / self.memes.size).to_f
+    else 
+      return 0
+    end
+    return self.cached_average_meme_strength
+  end
+  
+  attr_accessor :cached_standard_deviation_meme_strength
+  def standard_deviation_meme_strength
+    if ! self.ended_at.nil? && ! self.memes.empty? 
+      total_sq_deviation = self.memes.map{ |m| (self.average_meme_strength - m.strength)**2 }.sum
+      self.cached_standard_deviation_meme_strength = (Math.sqrt(total_sq_deviation / self.memes.size)).to_f
+    else 
+      return 0
+    end
+    return self.cached_standard_deviation_meme_strength
+  end
     
 end
+
+

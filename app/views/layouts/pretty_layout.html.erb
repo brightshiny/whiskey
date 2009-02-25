@@ -9,7 +9,7 @@
 <body>
 
 <div class="container_16">  
-  <h1>refinr</h1>
+  <h1 id="logo">refinr<% if defined?(@run) && !@run.nil? %> <span class="faded"> / updated <%= time_ago_in_words(@run.ended_at) %> ago<% end %></span></h1>
   <%= yield :layout %>
 </div>
 

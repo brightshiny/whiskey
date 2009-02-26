@@ -1,0 +1,39 @@
+body {
+  font-family: "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  line-height: 1.4em;
+  color: #444;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: georgia, serif;
+  font-weight: normal;
+  line-height: 1.05em;
+  margin-bottom: 0.1em;
+  padding-bottom: 0px;
+}
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  color: #900;
+  text-decoration: none;
+}
+
+h1#logo {
+  margin: 1.6em 0 1.3em 0;
+  padding: 0;
+  line-height: 1.0em;
+}
+
+strong {
+  color: #222;
+}
+
+.byline a {
+  color: #222;
+  text-decoration: none;
+}
+
+.item {
+  padding-bottom: 1.0em;
+}
+
+.faded {
+  color: #ccc;
+}

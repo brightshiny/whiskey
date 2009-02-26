@@ -1,0 +1,38 @@
+<% if ! @run.nil? %>
+
+<% handle_meme_column_assignment %>
+  
+<% for meme in @memes %>
+    
+  <% meme.items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse.each_with_index do |item, c| %>
+
+
+    <% if c == 0 %>
+
+      <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha %> alpha<% end %><% if meme.break_afterwards %> omega<% end %>">
+        <div class="item">
+          <h3 style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>40%;"><%= link_to item.title, item.link %></h3>
+          <p>
+            <strong class="byline"><% if ! item.author.nil? %><%= item.author %> &middot; <% end %><%= link_to item.feed.title, item.feed.link %></strong> 
+            <%= excerpt(item.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>
+          </p>
+        </div>
+      </div>
+  
+      <% if meme.break_afterwards == true %>
+      <div class="clear"></div>
+      <% end %>
+      
+    <% end %>
+
+  <% end %>
+  
+<% end %>
+
+<% else %>
+<p>refinr is offline and will return shortly.</p>
+<% end %>
+
+<br style="clear: both;" />
+
+<p>Run #<%= @run.id %></p>

@@ -7,6 +7,8 @@ class Meme < ActiveRecord::Base
   has_many :item_relationships, :through => :meme_items
   include Graphviz
   
+  attr_accessor :number_of_columns, :break_afterwards, :is_alpha
+  
   def self.to_graphviz
     meme_id = nil
     opts = OptionParser.new
@@ -124,4 +126,7 @@ class Meme < ActiveRecord::Base
     return self.cached_strength
   end
   
+  def z_score_strength
+    self.strength / self.run.standard_deviation_meme_strength
+  end
 end

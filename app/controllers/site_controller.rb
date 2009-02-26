@@ -13,8 +13,10 @@ class SiteController < ApplicationController
       @flight = Flight.find(params[:flight])
     end
     load_run
-    unless read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
+    if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
       load_memes
+    else
+      logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end
     render :action => "index", :layout => "layouts/pretty_layout"
   end

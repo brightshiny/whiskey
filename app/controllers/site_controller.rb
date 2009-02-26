@@ -4,7 +4,6 @@ class SiteController < ApplicationController
   layout "default" 
   
   def index
-    load_run_and_memes
     if params[:flight].nil?
       @flight = Flight.find(:first, 
         :conditions => ["controller_name = ? and action_name = ?", controller_name, action_name], 
@@ -12,6 +11,12 @@ class SiteController < ApplicationController
       )
     else
       @flight = Flight.find(params[:flight])
+    end
+    load_run
+    if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
+      load_memes
+    else
+      logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end
     render :action => "index", :layout => "layouts/pretty_layout"
   end
@@ -21,7 +26,7 @@ class SiteController < ApplicationController
     render :action => "info", :layout => "layouts/default"
   end
 
-  def load_run_and_memes
+  def load_run
     if params[:id].nil?
       user = User.find(5)
       @run = Run.find(:first, 
@@ -31,6 +36,9 @@ class SiteController < ApplicationController
     else
       @run = Run.find(params[:id])
     end
+  end
+
+  def load_memes
     if ! @run.nil?
       @memes = Meme.find(:all, 
         :conditions => ["run_id = ?", @run.id], 
@@ -38,7 +46,7 @@ class SiteController < ApplicationController
       )
       @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
     end
-  end
+  end  
   
 end
 

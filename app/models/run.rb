@@ -89,10 +89,8 @@ class Run < ActiveRecord::Base
 
   attr_accessor :cached_average_meme_strength
   def average_meme_strength
-    if ! self.ended_at.nil? && ! self.memes.empty? 
+    if ! self.ended_at.nil? && ! self.memes.empty? && self.cached_average_meme_strength.nil?
       self.cached_average_meme_strength = (self.memes.map{ |m| m.strength }.sum / self.memes.size).to_f
-    else 
-      return 0
     end
     return self.cached_average_meme_strength
   end

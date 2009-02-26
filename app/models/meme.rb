@@ -109,6 +109,9 @@ class Meme < ActiveRecord::Base
     if self.cached_items.nil?
       items = Item.find_by_sql(["select distinct i.* from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id join items i on i.id = ir.item_id where m.id = ?", self.id])
       self.cached_items = items
+      # logger.info "*** I: NOT CACHE"
+    else
+      # logger.info "*** I: CACHE"
     end
     return self.cached_items
   end
@@ -121,12 +124,23 @@ class Meme < ActiveRecord::Base
       item_relationships.each do |ir|
         strength += ir.cosine_similarity
       end
+      # logger.info "*** S: NOT CACHE"
       self.cached_strength = strength
+    else
+      # logger.info "*** S: CACHE"
     end
     return self.cached_strength
   end
-  
+
+  attr_accessor :cached_z_score_strength  
   def z_score_strength
-    self.strength / self.run.standard_deviation_meme_strength
+    if self.cached_z_score_strength.nil?
+      self.cached_z_score_strength = self.strength / self.run.standard_deviation_meme_strength
+      # logger.info "*** Z: NOT CACHE"
+    else
+      # logger.info "*** Z: CACHE"
+    end
+    return self.cached_z_score_strength
   end
+  
 end

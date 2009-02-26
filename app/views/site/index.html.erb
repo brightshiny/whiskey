@@ -1,14 +1,9 @@
 <% if ! @run.nil? %>
-<h2>Run <%= @run.id %></h2>
 
-<%= render :partial => "runs/partials/details", :locals => { :run => @run } %>
-
-<% for meme in @memes %>
-  <%= render :partial => "meme/partials/main_headline_plus_related_headlines", :locals => { :meme => meme } %>  
-  <p><%= link_to "View meme details &raquo;", :controller => :meme, :action => :show, :id => meme.id %></p>
-  <hr />
-<% end %>
+<%= render :partial => "site/partials/flights/#{@flight.partial_name}" %>
 
 <% else %>
-<p>No runs. :(</p>
+<h1 id="logo">refinr</h1>
+<p>refinr is offline and will return shortly.</p>
 <% end %>
+

@@ -31,7 +31,9 @@ module Classy
       doc_term_count = 0.0
       terms_skipped_count = 0
       total_terms_count = 0
-      doc.item_words.each do |iw|
+      
+      item_words = ItemWord.find(:all, :conditions => ["item_id = ?", doc.id], :include => [:word])
+      item_words.each do |iw|
         count = iw.count.to_f
         total_terms_count += 1
         if count <= 1 && @skip_single_terms

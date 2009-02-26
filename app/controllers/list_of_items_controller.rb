@@ -41,19 +41,17 @@ class ListOfItemsController < ApplicationController
     end
 
     feed_id = KEY.url_safe_decrypt64(params[:f]) unless params[:f].nil?
+    
     if !feed_id.nil?
-      conditions = ["users.id = ? and feeds.id = ?", @user.id, feed_id]
+      where_clause = "feed_users.user_id = ? and feed_users.feed_id = ?"
+      params = [@user.id, feed_id]
     else
-      conditions = ["users.id = ?", @user.id]
+      where_clause = "feed_users.user_id = ?"
+      params = [@user.id]
     end
 
-    @items = Item.find(:all, 
-      :conditions => conditions,
-      :joins => "join feeds on (feeds.id = items.feed_id) join feed_users on (feeds.id = feed_users.feed_id) join users on (users.id = feed_users.user_id)", 
-      :include => "feed",
-      :limit => num_items_to_send, 
-      :order => "published_at desc"
-    )
+      @items = Item.find_by_sql(["select STRAIGHT_JOIN `items`.* FROM `items` join feed_users on (items.feed_id = feed_users.feed_id) WHERE (#{where_clause}) ORDER BY published_at asc LIMIT 50", params].flatten)
+    
     add_tracking_to_items(@items, @user.encrypted_id)
     respond_to do |format|
       format.atom

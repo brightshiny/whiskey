@@ -1,5 +1,7 @@
 <% if ! @run.nil? %>
 
+<h1 id="logo">refinr <span class="faded"> / updated <%= time_ago_in_words(@run.ended_at) %> ago</span></h1>
+
 <% cache(:action => "index", :run => @run.id, :flight => @flight.id) do %>
 <%= render :partial => "site/partials/flights/#{@flight.partial_name}" %>
 <% end # cache %>

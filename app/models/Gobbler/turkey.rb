@@ -106,7 +106,9 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         
         content = @decoder.decode(gobbler_item.extract_content)
         
-        if content.nil? || content.length <= 0 || item.link.nil?
+        # about the length > 255 check:  current varchar size is 255 -- we'll never find anything longer
+        # and when we try, we don't use an index and, instead, table scan
+        if content.nil? || content.length <= 0 || item.link.nil? || item.link.length > 255
           #logger.info("Unable to extract content or link from item [#{item.link}], skipping.")
           #pp item
           next

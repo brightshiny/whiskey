@@ -4,6 +4,24 @@ class SiteController < ApplicationController
   layout "default" 
   
   def index
+    load_run_and_memes
+    if params[:flight].nil?
+      @flight = Flight.find(:first, 
+        :conditions => ["controller_name = ? and action_name = ?", controller_name, action_name], 
+        :order => "id desc"
+      )
+    else
+      @flight = Flight.find(params[:flight])
+    end
+    render :action => "index", :layout => "layouts/pretty_layout"
+  end
+  
+  def info
+    load_run_and_memes
+    render :action => "info", :layout => "layouts/default"
+  end
+
+  def load_run_and_memes
     if params[:id].nil?
       user = User.find(5)
       @run = Run.find(:first, 
@@ -22,9 +40,5 @@ class SiteController < ApplicationController
     end
   end
   
-  def pretty
-    index
-    render :action => "pretty", :layout => "layouts/pretty_layout"
-  end
-  
 end
+

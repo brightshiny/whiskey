@@ -1,0 +1,14 @@
+<% if ! @run.nil? %>
+<h2>Run <%= @run.id %></h2>
+
+<%= render :partial => "runs/partials/details", :locals => { :run => @run } %>
+
+<% for meme in @memes %>
+  <%= render :partial => "meme/partials/main_headline_plus_related_headlines", :locals => { :meme => meme } %>  
+  <p><%= link_to "View meme details &raquo;", :controller => :meme, :action => :show, :id => meme.id %></p>
+  <hr />
+<% end %>
+
+<% else %>
+<p>No runs. :(</p>
+<% end %>

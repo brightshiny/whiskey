@@ -77,6 +77,7 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
+  config.cache_store = :file_store, RAILS_ROOT + "/cache"
 end
 
 # UserSession.configure do |config|
@@ -96,10 +97,10 @@ ActionMailer::Base.perform_deliveries = true
 ActionMailer::Base.raise_delivery_errors = true
 ActionMailer::Base.default_charset = "utf-8"
 ActionMailer::Base.smtp_settings = {
-:address => "smtp.gmail.com",
-:port => 587,
-:domain => "gmail.com",
-:authentication => :login,
-:user_name => "whiskeybrightshinyme@gmail.com",
-:password => "9aHefafaXath&GAz",
+  :address => "smtp.gmail.com",
+  :port => 587,
+  :domain => "gmail.com",
+  :authentication => :login,
+  :user_name => "whiskeybrightshinyme@gmail.com",
+  :password => "9aHefafaXath&GAz"
 }

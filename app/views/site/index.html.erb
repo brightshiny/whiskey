@@ -1,6 +1,8 @@
 <% if ! @run.nil? %>
 
+<% cache(:action => "index", :run => @run.id, :flight => @flight.id) do %>
 <%= render :partial => "site/partials/flights/#{@flight.partial_name}" %>
+<% end # cache %>
 
 <% else %>
 <h1 id="logo">refinr</h1>

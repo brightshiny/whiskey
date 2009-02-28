@@ -25,7 +25,8 @@ class SiteController < ApplicationController
     for meme in @memes
       items = []
       meme.items.each { |item|
-        if items.empty? || items.select{ |i| i.title == item.title }.empty?
+        item_title = item.title.gsub(/\W/,'')
+        if items.empty? || items.select{ |i| i.title.gsub(/\W/,'') == item_title }.empty?
           items.push(item)
         end
       }

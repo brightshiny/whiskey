@@ -67,6 +67,7 @@ ul.alternate_sources li a {
 }
 ul.alternate_sources li strong,
 ul.alternate_sources li strong a {
+  font-weight: normal;
   color: #444;
 }
 

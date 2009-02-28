@@ -7,11 +7,11 @@
         <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>20%;">
           <%= link_to @items_by_meme[meme.id].first.title, @items_by_meme[meme.id].first.link %>
         </h3>
-        <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength == @memes.first.z_score_strength  %> grid_10 alpha<% end %>">
+        <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1  %> grid_10 alpha<% end %>">
           <strong class="byline"><% if ! @items_by_meme[meme.id].first.author.nil? %><%= @items_by_meme[meme.id].first.author %> &middot; <% end %><%= link_to @items_by_meme[meme.id].first.feed.title, @items_by_meme[meme.id].first.link %></strong> 
           <%= excerpt(@items_by_meme[meme.id].first.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>
         </div>
-        <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength == @memes.first.z_score_strength %>
+        <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1 %>
         <div class="alternate_sources grid_6 omega">
           <h4>Read More</h4>
           <% @items_by_meme[meme.id][1..4].each_with_index do |item, c| %>

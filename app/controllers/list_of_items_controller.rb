@@ -35,27 +35,28 @@ class ListOfItemsController < ApplicationController
   end
   
   def index
-    num_items_to_send = 50
-    if ! params[:n].nil? && params[:n].to_i != 0 && params[:n].to_i <= 1000
-      num_items_to_send = params[:n].to_i
-    end
-
-    feed_id = KEY.url_safe_decrypt64(params[:f]) unless params[:f].nil?
-    
-    if !feed_id.nil?
-      where_clause = "feed_users.user_id = ? and feed_users.feed_id = ?"
-      params = [@user.id, feed_id]
-    else
-      where_clause = "feed_users.user_id = ?"
-      params = [@user.id]
-    end
-
-      @items = Item.find_by_sql(["select STRAIGHT_JOIN `items`.* FROM `items` join feed_users on (items.feed_id = feed_users.feed_id) WHERE (#{where_clause}) ORDER BY published_at asc LIMIT 50", params].flatten)
-    
-    add_tracking_to_items(@items, @user.encrypted_id)
-    respond_to do |format|
-      format.atom
-    end
+    render :text => ""
+    # num_items_to_send = 50
+    # if ! params[:n].nil? && params[:n].to_i != 0 && params[:n].to_i <= 1000
+    #   num_items_to_send = params[:n].to_i
+    # end
+    # 
+    # feed_id = KEY.url_safe_decrypt64(params[:f]) unless params[:f].nil?
+    # 
+    # if !feed_id.nil?
+    #   where_clause = "feed_users.user_id = ? and feed_users.feed_id = ?"
+    #   params = [@user.id, feed_id]
+    # else
+    #   where_clause = "feed_users.user_id = ?"
+    #   params = [@user.id]
+    # end
+    # 
+    #   @items = Item.find_by_sql(["select STRAIGHT_JOIN `items`.* FROM `items` join feed_users on (items.feed_id = feed_users.feed_id) WHERE (#{where_clause}) ORDER BY published_at asc LIMIT 50", params].flatten)
+    # 
+    # add_tracking_to_items(@items, @user.encrypted_id)
+    # respond_to do |format|
+    #   format.atom
+    # end
   end
   
 private

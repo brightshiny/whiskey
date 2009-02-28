@@ -3,7 +3,7 @@
 <h1>Meme <%= @meme.id %></h1>
 
 <h2>Details</h2>
-<p>Meme Head: <%= link_to @meme.item.title, @meme.item.link %></p>
+<p>Meme Head: (<%= @meme.item.id %>) <%= link_to @meme.item.title, @meme.item.link %></p>
 </ul>
 <h3>Run <%= @meme.run_id %></h3>
 <table>
@@ -32,11 +32,12 @@
 	<th>Feed</th>
     <th>Title</th>
   </tr>
-  <% for item in @meme.items.sort_by{ |i| i.id } %>
+  <% for meme_item in @distinct_meme_items.sort_by{ |i| i.total_cosine_similarity }.reverse %>
+  <% item = meme_item.item_relationship.item %>
   <tr>
     <td><%= item.id %></td>
-    <td><%= number_with_precision(item.total_cosine_similarity(@meme.run),3) %></td>
-    <td><%= number_with_precision(item.average_cosine_similarity(@meme.run),3) %></td>
+    <td><%= number_with_precision(meme_item.total_cosine_similarity, :precision => 3) %></td>
+    <td><%= number_with_precision(meme_item.avg_cosine_similarity, :precision => 3) %></td>
 	<td><%= item.feed.title %>
     <td><%= link_to item.title, item.link %></td>
   </tr>

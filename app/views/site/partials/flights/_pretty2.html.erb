@@ -4,13 +4,13 @@
     
     <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha %> alpha<% end %><% if meme.break_afterwards %> omega<% end %>">
       <div class="item">
-        <h3 style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>20%;">
+        <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>20%;">
           <%= link_to @items_by_meme[meme.id].first.title, @items_by_meme[meme.id].first.link %>
         </h3>
-        <p class="excerpt">
+        <div class="excerpt">
           <strong class="byline"><% if ! @items_by_meme[meme.id].first.author.nil? %><%= @items_by_meme[meme.id].first.author %> &middot; <% end %><%= link_to @items_by_meme[meme.id].first.feed.title, @items_by_meme[meme.id].first.link %></strong> 
           <%= excerpt(@items_by_meme[meme.id].first.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>
-        </p>
+        </div>
         <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR) %>
         <div class="alternate_sources">
           <% for item in @items_by_meme[meme.id][1..2] %>

@@ -1,6 +1,6 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 1.0em;
+  font-size: 0.9em;
   line-height: 1.4em;
   background-color: #fff;
   color: #444;
@@ -9,7 +9,7 @@ h1, h2, h3, h4, h5, h6 {
   font-family: georgia, serif;
   font-weight: normal;
   line-height: 1.05em;
-  margin-bottom: 0.1em;
+  margin-bottom: 0.2em;
   padding-bottom: 0px;
 }
 a {
@@ -37,13 +37,16 @@ h1#logo a {
 }
 
 .grid_16 {
-  margin-bottom: 0.5em;
+  margin-bottom: 0.7em;
 }
-.grid_8 {
-  font-size: 90%;
+
+.grid_16 .excerpt, 
+.grid_16 .alternate_sources {
+  width: 50%;
+  float: left;
 }
-.grid_4 {
-  font-size: 90%;
+.grid_8 .headline a {
+  font-style: italic;
 }
 .grid_4 a {
   font-family: Helvetica, Arial, sans-serif;
@@ -52,21 +55,13 @@ h1#logo a {
 .alpha .item {}
 .omega .item {}
 
-p.excerpt {
-  margin: 0;
-  padding: 0;
-}
-strong.byline {
-  color: #222;
-}
-
+strong.byline,
 .byline a {
-  color: #222;
+  color: #555;
   text-decoration: none;
 }
 
 .alternate_sources {
-  margin-top: 0.5em;
 }
 .alternate_sources a {
   color: #2549B2;
@@ -75,7 +70,7 @@ strong.byline {
 }
 .alternate_sources strong,
 .alternate_sources strong a {
-  color: #888;
+  color: #555;
 }
 
 .faded {

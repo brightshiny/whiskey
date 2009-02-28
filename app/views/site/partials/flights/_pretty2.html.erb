@@ -7,9 +7,9 @@
         <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>00%;">
           <%= link_to @items_by_meme[meme.id].first.title.gsub(/\[(.*?)\]/,''), @items_by_meme[meme.id].first.link %>
         </h3>
-        <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1  %> grid_8 alpha<% end %>">          
+        <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1  %> grid_8 alpha<% end %>">
           <% if @items_by_meme[meme.id].first.content.match(/http\:\/\/(.*?).jpg/) %>
-          <img src="<%= @items_by_meme[meme.id].first.content.match(/http\:\/\/(.*?).jpg|png|gif/) %>" style="height: 75px; float: right; margin: 0 0 1.0em 1.0em;" />
+          <img class="pulled_image" src="<%= @items_by_meme[meme.id].first.content.match(/http\:\/\/(.*?).jpg|png|gif/) %>" style="height: 75px; float: right; margin: 0 0 1.0em 1.0em;" />
           <% end %>
           <strong class="byline"><% if ! @items_by_meme[meme.id].first.author.nil? %><%= @items_by_meme[meme.id].first.author %> &middot; <% end %><%= link_to @items_by_meme[meme.id].first.feed.title, @items_by_meme[meme.id].first.link %></strong> 
           <%= excerpt(@items_by_meme[meme.id].first.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>

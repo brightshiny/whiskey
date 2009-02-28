@@ -79,3 +79,7 @@ strong.byline {
 .faded {
   color: #ccc;
 }
+
+.pulled_image {
+  display: none;
+}

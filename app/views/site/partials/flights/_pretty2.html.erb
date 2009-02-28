@@ -14,7 +14,7 @@
         <% if meme.number_of_columns != SiteController::COLUMN_ZOOM_FACTOR %>
         <ul class="alternate_sources">
           <% for item in @items_by_meme[meme.id][1..2] %>
-          <li><%= link_to "<strong>#{item.feed.title} &middot; </strong>#{item.title}", item.link %></li>
+          <li><strong><% if ! item.author.nil? %><%= item.author %> &middot; <% end %><%= link_to "#{item.feed.title}", item.link %></strong> <%= link_to "#{item.title}", item.link %></li>
           <% end %>
         </ul>
         <% end %>

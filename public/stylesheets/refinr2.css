@@ -1,6 +1,7 @@
 body {
   font-family: "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
   line-height: 1.4em;
+  background-color: #fff;
   color: #444;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -12,6 +13,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 a {
   color: #900;
+  color: #DD1343;
+  color: #C01818;
 }
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
   text-decoration: none;
@@ -58,10 +61,12 @@ ul.alternate_sources li {
   padding: 0;
 }
 ul.alternate_sources li a {
+  color: #55A5FE;
+  color: #2549B2;
   text-decoration: none;
 }
 ul.alternate_sources li a strong {
-  color: #555;
+  color: #444;
 }
 
 .faded {

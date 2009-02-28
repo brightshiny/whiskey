@@ -1,7 +1,7 @@
 class SiteController < ApplicationController
   
   COLUMN_ZOOM_FACTOR = 4
-  MAX_NUMBER_OF_COLUMNS = 12
+  MAX_NUMBER_OF_COLUMNS = 16
   
   before_filter :require_user
   layout "default" 

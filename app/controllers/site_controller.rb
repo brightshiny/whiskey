@@ -18,21 +18,23 @@ class SiteController < ApplicationController
     load_run
     if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
       load_memes
+
+      @items_by_meme = {}
+      for meme in @memes
+        items = []
+        meme.items.each { |item|
+          item_title = item.title.gsub(/\W/,'')
+          if items.empty? || items.select{ |i| i.title.gsub(/\W/,'') == item_title }.empty?
+            items.push(item)
+          end
+        }
+        if @items_by_meme[meme.id].nil?
+          @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..2]
+        end
+      end
+
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
-    end
-    @items_by_meme = {}
-    for meme in @memes
-      items = []
-      meme.items.each { |item|
-        item_title = item.title.gsub(/\W/,'')
-        if items.empty? || items.select{ |i| i.title.gsub(/\W/,'') == item_title }.empty?
-          items.push(item)
-        end
-      }
-      if @items_by_meme[meme.id].nil?
-        @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..2]
-      end
     end
     render :action => "index", :layout => "layouts/pretty_layout"
   end

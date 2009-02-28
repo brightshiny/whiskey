@@ -40,7 +40,8 @@ class SiteController < ApplicationController
   end
   
   def info
-    load_run_and_memes
+    load_run
+    load_memes
     render :action => "info", :layout => "layouts/default"
   end
 

@@ -42,16 +42,12 @@ class Meme < ActiveRecord::Base
       Meme.transaction do
         # create a new meme
         meme = Meme.new
-        lead_item_id = ir_map.keys.shift
-        lead_item = Item.find(lead_item_id)
-        meme.item = lead_item
+        entry_item_id = ir_map.keys.shift
         meme.run = run
         meme.save
         
         # generate an ir_map, a hash[item_id] of arrays[item_relationships]
-        meme_ir_map = meme_from_map(lead_item_id, ir_map)
-        
-        #Run.take_flash_photo(run, meme_ir_map, "#{lead_item.id}-#{meme_ir_map.keys.size}-nodes")
+        meme_ir_map = meme_from_map(entry_item_id, ir_map)
         
         # generate meme items
         meme_ir_map.each do |item_id, item_relationships|
@@ -69,6 +65,28 @@ class Meme < ActiveRecord::Base
         end
         
         #meme.to_graphviz
+      end
+    end
+    
+    # set total and avg cosine similarities for each meme_item
+    run.memes.each do |meme|
+      # meme head = meme with max total cosine similarity
+      meme_head = nil
+      max_cosine_similarity = 0.0
+      
+      MemeItem.transaction do
+        meme.meme_items.each do |mi|
+          mi.total_cosine_similarity = mi.item.total_cosine_similarity(run)
+          mi.avg_cosine_similarity = mi.item.avg_cosine_similarity(run)
+          mi.save
+          
+          if mi.total_cosine_similarity > max_cosine_similarity
+            max_cosine_similarity = mi.total_cosine_similarity
+            meme_head = mi.item
+          end
+        end
+        meme.item = meme_head
+        meme.save
       end
     end
   end
@@ -131,7 +149,7 @@ class Meme < ActiveRecord::Base
     end
     return self.cached_strength
   end
-
+  
   attr_accessor :cached_z_score_strength  
   def z_score_strength
     if self.cached_z_score_strength.nil?

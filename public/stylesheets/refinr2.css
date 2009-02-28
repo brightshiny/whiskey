@@ -36,7 +36,6 @@ h1#logo a {
 }
 
 .grid_16 {
-  border-bottom: 1px solid #ccc;
   margin-bottom: 0.5em;
 }
 
@@ -66,7 +65,7 @@ strong.byline {
 }
 .alternate_sources strong,
 .alternate_sources strong a {
-  color: #777;
+  color: #888;
 }
 
 .faded {

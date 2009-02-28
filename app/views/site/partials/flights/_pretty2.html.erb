@@ -11,12 +11,10 @@
           <strong class="byline"><% if ! @items_by_meme[meme.id].first.author.nil? %><%= @items_by_meme[meme.id].first.author %> &middot; <% end %><%= link_to @items_by_meme[meme.id].first.feed.title, @items_by_meme[meme.id].first.link %></strong> 
           <%= excerpt(@items_by_meme[meme.id].first.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>
         </p>
-        <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) %>
+        <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR) %>
         <div class="alternate_sources">
           <% for item in @items_by_meme[meme.id][1..2] %>
-          <div class="grid_<%= meme.number_of_columns / 4 %> alpha" style="text-align: right;"><strong><%= link_to "#{item.feed.title}", item.link %></strong></div>
-          <div class="grid_<%= meme.number_of_columns - (meme.number_of_columns / 4) %> omega"><%= link_to "#{item.title}", item.link %></div>
-          <div class="clear"></div>
+          <div class="" style=""><strong><%= link_to "#{item.feed.title}", item.link %></strong> &middot; <%= link_to "#{item.title}", item.link %></div>
           <% end %>
         </div>
         <% end %>

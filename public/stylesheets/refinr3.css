@@ -12,7 +12,7 @@ a {
 }
 .alternate_content a {
   color: #55A5FE;
-  color: #2549B2;
+  color: #2549d2;
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: georgia, serif;
@@ -35,7 +35,7 @@ p.excerpt {
 .alternate_content {
   padding-bottom: 1.5em;
   margin-bottom: 0.2em;
-  border-bottom: 1px solid #efefef;
+  /*border-bottom: 1px solid #efefef;*/
 }
 .alternate_content h1, 
 .alternate_content h2, 
@@ -45,7 +45,6 @@ p.excerpt {
 .alternate_content h6 {
   font-family: Helvetica, Arial, sans-serif;
   font-size: 110%;
-  font-weight: bold;
 }
 .alternate_content p,
 .alternate_content h3 {

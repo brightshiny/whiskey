@@ -1,5 +1,6 @@
 body {
-  font-family: "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", sans-serif;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1.0em;
   line-height: 1.4em;
   background-color: #fff;
   color: #444;
@@ -37,6 +38,15 @@ h1#logo a {
 
 .grid_16 {
   margin-bottom: 0.5em;
+}
+.grid_8 {
+  font-size: 90%;
+}
+.grid_4 {
+  font-size: 90%;
+}
+.grid_4 a {
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 .alpha .item {}

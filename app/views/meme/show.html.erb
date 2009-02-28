@@ -4,6 +4,7 @@
 
 <h2>Details</h2>
 <p>Meme Head: (<%= @meme.item.id %>) <%= link_to @meme.item.title, @meme.item.link %></p>
+<p>Meme Strength: <%= @meme.strength %>
 </ul>
 <h3>Run <%= @meme.run_id %></h3>
 <table>
@@ -23,7 +24,7 @@
   </tr>
 </table>
 
-<h2><%= @meme.items.size if @meme %> Related Items (Nodes)</h2>
+<h2><%= @distinct_meme_items.size if @meme %> Related Items (Nodes)</h2>
 <table>
   <tr>
     <th>Item ID</th>

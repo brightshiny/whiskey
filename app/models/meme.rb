@@ -73,6 +73,10 @@ class Meme < ActiveRecord::Base
       # meme head = meme with max total cosine similarity
       meme_head = nil
       max_cosine_similarity = 0.0
+      # strength = sum of distinct meme item total_cosine_similarity
+      strength = 0.0
+      seen_items = Hash.new
+      
       
       MemeItem.transaction do
         meme.meme_items.each do |mi|
@@ -80,12 +84,16 @@ class Meme < ActiveRecord::Base
           mi.avg_cosine_similarity = mi.item.avg_cosine_similarity(run)
           mi.save
           
+          strength += mi.total_cosine_similarity unless seen_items.has_key?(mi.item.id)
+          seen_items[mi.item.id] = true
+          
           if mi.total_cosine_similarity > max_cosine_similarity
             max_cosine_similarity = mi.total_cosine_similarity
             meme_head = mi.item
           end
         end
         meme.item = meme_head
+        meme.strength = strength
         meme.save
       end
     end
@@ -122,8 +130,27 @@ class Meme < ActiveRecord::Base
     end
   end
   
+  attr_accessor :cached_distinct_meme_items
+  def distinct_meme_items
+    if self.cached_distinct_meme_items.nil?
+      seen_meme_items = Hash.new
+      dmi = Array.new
+      meme_items = MemeItem.find(:all, :include => {:item_relationship => :item}, :conditions => ["meme_id = ?", self.id])
+      meme_items.each do |mi|
+        item = mi.item_relationship.item
+        next if seen_meme_items.has_key?(item.id)
+        seen_meme_items[item.id] = true
+        dmi.push mi
+      end
+      self.cached_distinct_meme_items = dmi
+    end
+    return self.cached_distinct_meme_items
+  end
+  
   attr_accessor :cached_items
   def items
+    warn "[DEPRECATION] `meme.items is deprecrated.  Please use `meme.distinct_meme_items` instead."
+    warn "[DEPRECATION] #{Kernel.caller.join("\n\t")}"
     if self.cached_items.nil?
       items = Item.find_by_sql(["select distinct i.* from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id join items i on i.id = ir.item_id where m.id = ?", self.id])
       self.cached_items = items
@@ -132,22 +159,6 @@ class Meme < ActiveRecord::Base
       # logger.info "*** I: CACHE"
     end
     return self.cached_items
-  end
-  
-  attr_accessor :cached_strength
-  def strength
-    if self.cached_strength.nil?
-      strength = 0
-      item_relationships = items = ItemRelationship.find_by_sql(["select ir.* from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id where m.id = ?", self.id])
-      item_relationships.each do |ir|
-        strength += ir.cosine_similarity
-      end
-      # logger.info "*** S: NOT CACHE"
-      self.cached_strength = strength
-    else
-      # logger.info "*** S: CACHE"
-    end
-    return self.cached_strength
   end
   
   attr_accessor :cached_z_score_strength  

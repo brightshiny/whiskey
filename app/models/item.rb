@@ -40,12 +40,12 @@ class Item < ActiveRecord::Base
   end
 
   def total_cosine_similarity(run)
-    total_cosine_similarity = 0
+    tcs = 0
     item_relationships = ItemRelationship.find(:all, :conditions => ["item_id = ? and run_id = ?", self.id, run.id], :select => "cosine_similarity")
     item_relationships.each { |ir| 
-      total_cosine_similarity += ir.cosine_similarity
+      tcs += ir.cosine_similarity
     }
-    return total_cosine_similarity
+    return tcs
   end
 
   def avg_cosine_similarity(run)

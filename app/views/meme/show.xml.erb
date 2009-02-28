@@ -6,7 +6,7 @@
   <key id="link" for="node" attr.name="link" attr.type="string"/>
   <key id="item_id" for="node" attr.name="item_id" attr.type="integer"/>
   <graph id="animalValues-05" edgedefault="undirected" clipContent="false">
-<% for node in @meme.items -%>
+<% for node in @distinct_meme_items -%>
     <node id="<%= node.id %>"><data key="link"><%= node.link %></data><data key="name"><%= node.title %></data><data key="item_id"><%= node.id %></data></node>
 <% end -%>
 <% for edge in @meme.item_relationships -%>

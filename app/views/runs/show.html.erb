@@ -30,7 +30,7 @@
   <% for meme in @memes -%>
   <tr>
     <td><%= link_to meme.item.title, :controller => :meme, :action => :show, :id => meme.id %></td>
-    <td><%= meme.items.size %> items</td>
+    <td><%= meme.distinct_meme_items.size %> items</td>
     <td><%= meme.meme_items.map{ |mi| mi.item_relationship_id }.size %> connections</td>
   </tr>
   <% end -%>

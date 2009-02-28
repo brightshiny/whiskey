@@ -9,30 +9,26 @@ class SiteController < ApplicationController
   def index
     if params[:flight].nil?
       @flight = Flight.find(:first, 
-        :conditions => ["controller_name = ? and action_name = ?", controller_name, action_name], 
-        :order => "id desc"
+                            :conditions => ["controller_name = ? and action_name = ?", controller_name, action_name], 
+      :order => "id desc"
       )
     else
       @flight = Flight.find(params[:flight])
     end
     load_run
+    load_memes
     if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
-      load_memes
-
       @items_by_meme = {}
       for meme in @memes
-        items = []
-        meme.items.each { |item|
-          item_title = item.title.gsub(/\W/,'')
-          if items.empty? || items.select{ |i| i.title.gsub(/\W/,'') == item_title }.empty?
-            items.push(item)
+        @items_by_meme[meme.id] = []
+        meme_items = meme.distinct_meme_items.sort_by {|mi| mi.total_cosine_similarity}.reverse[0..4]
+        if meme_items
+          for mi in meme_items do
+            @items_by_meme[meme.id].push mi.item_relationship.item
           end
-        }
-        if @items_by_meme[meme.id].nil?
-          @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..4]
         end
       end
-
+      
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end
@@ -44,28 +40,26 @@ class SiteController < ApplicationController
     load_memes
     render :action => "info", :layout => "layouts/default"
   end
-
+  
   def load_run
     if params[:id].nil?
       user = User.find(5)
       @run = Run.find(:first, 
-        :conditions => ["user_id = ? and ended_at is not null", user.id],
-        :order => "ended_at desc, id desc"
+                      :conditions => ["user_id = ? and ended_at is not null", user.id],
+      :order => "ended_at desc, id desc"
       )
     else
       @run = Run.find(params[:id])
     end
   end
-
+  
   def load_memes
     if ! @run.nil?
-      @memes = Meme.find(:all, 
-        :conditions => ["run_id = ?", @run.id], 
-        :include => [ :meme_items => :item_relationship ]
+      @memes = Meme.find(:all, :conditions => ["run_id = ?", @run.id], 
+      :include => [ :meme_items => :item_relationship ]
       )
-      @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
+      @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.distinct_meme_items.size <= 2 }
     end
   end  
   
 end
-

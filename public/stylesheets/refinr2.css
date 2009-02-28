@@ -56,6 +56,8 @@ strong.byline,
   color: #333;
   text-decoration: none;
 }
+strong.byline {
+}
 
 .alternate_sources {
 }
@@ -67,6 +69,8 @@ strong.byline,
 .alternate_sources strong,
 .alternate_sources strong a {
   color: #333;
+}
+.alternate_sources strong {
 }
 
 .faded {

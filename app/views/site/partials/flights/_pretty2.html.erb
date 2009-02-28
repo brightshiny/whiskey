@@ -1,6 +1,10 @@
 <% handle_meme_column_assignment %>
 
-<% for meme in @memes %>
+<% @memes.each_with_index do |meme, n| %>
+    
+    <% if n == 2 %>
+    <div class="grid_12 alpha">
+    <% end %>
     
     <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha %> alpha<% end %><% if meme.break_afterwards %> omega<% end %>">
       <div class="item">
@@ -26,7 +30,14 @@
     <% if meme.break_afterwards == true %>
       <div class="clear"></div>
     <% end %>
-  
+    
+    <% if n == @memes.size-1 %>
+    </div><!-- grid12 -->
+    <div class="grid_4 omega">
+      <h3>I'm the sidebar</h3>
+    </div>
+    <% end %>
+    
 <% end %>
 
 <div class="clear"></div>

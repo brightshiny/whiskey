@@ -39,15 +39,16 @@ h1#logo a {
 .grid_16 {
   margin-bottom: 0.7em;
 }
+.grid_16 .grid_12 {
+  font-size: 1.3em; 
+  line-height: 1.4em;
+  color: #4f4f4f;
+}
 
 .grid_16 .excerpt, 
 .grid_16 .alternate_sources {
-  width: 50%;
-  float: left;
 }
-.grid_8 .headline a {
-  font-style: italic;
-}
+.grid_8 .headline a {}
 .grid_4 a {
   font-family: Helvetica, Arial, sans-serif;
 }

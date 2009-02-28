@@ -7,16 +7,18 @@
         <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>20%;">
           <%= link_to @items_by_meme[meme.id].first.title, @items_by_meme[meme.id].first.link %>
         </h3>
-        <div class="excerpt">
+        <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) %> grid_12 alpha<% end %>">
           <strong class="byline"><% if ! @items_by_meme[meme.id].first.author.nil? %><%= @items_by_meme[meme.id].first.author %> &middot; <% end %><%= link_to @items_by_meme[meme.id].first.feed.title, @items_by_meme[meme.id].first.link %></strong> 
           <%= excerpt(@items_by_meme[meme.id].first.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>
         </div>
-        <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR) %>
-        <div class="alternate_sources">
+        <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) %>
+        <div class="alternate_sources grid_4 omega">
+          <h4>Read More</h4>
           <% for item in @items_by_meme[meme.id][1..2] %>
-          <div class="" style=""><strong><%= link_to "#{item.feed.title}", item.link %></strong> &middot; <%= link_to "#{item.title}", item.link %></div>
+          <div class="" style=""><%= link_to "#{item.feed.title}", item.link %></div>
           <% end %>
         </div>
+        <div class="clear"></div>
         <% end %>
       </div>
     </div>

@@ -10,6 +10,7 @@
         <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1  %> grid_10 alpha<% end %>">
           <strong class="byline"><% if ! @items_by_meme[meme.id].first.author.nil? %><%= @items_by_meme[meme.id].first.author %> &middot; <% end %><%= link_to @items_by_meme[meme.id].first.feed.title, @items_by_meme[meme.id].first.link %></strong> 
           <%= excerpt(@items_by_meme[meme.id].first.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>
+		  [<%= link_to "?", :controller => :meme, :action => :show, :id => meme.id %>]
         </div>
         <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1 %>
         <div class="alternate_sources grid_6 omega">
@@ -32,4 +33,4 @@
 
 <div class="clear"></div>
 
-<p>R.<%= @run.id %> F.<%= @flight.id %></p>
+<p>R.<%= link_to "#{@run.id}", :controller => :runs, :action => :show, :id => @run.id  %> F.<%= @flight.id %></p>

@@ -71,7 +71,7 @@ class SiteController < ApplicationController
     @items_by_meme = {}
     for meme in @memes
       @items_by_meme[meme.id] = []
-      meme_items = meme.distinct_meme_items.sort_by {|mi| mi.total_cosine_similarity}.reverse[0..3]
+      meme_items = meme.distinct_meme_items.sort_by {|mi| mi.total_cosine_similarity}.reverse[0..4]
       if meme_items
         for mi in meme_items do
           @items_by_meme[meme.id].push mi.item_relationship.item

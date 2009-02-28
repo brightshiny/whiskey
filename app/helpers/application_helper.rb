@@ -2,13 +2,9 @@
 module ApplicationHelper
   
   def handle_meme_column_assignment
-    
     current_number_of_columns = 0
-  
     @memes.each_with_index do |m, c|
-      
-      next_item = @memes[c+1]
-      
+      next_item = @memes[c+1]      
       if current_number_of_columns == 0
         m.is_alpha = true
       else 
@@ -24,7 +20,14 @@ module ApplicationHelper
         m.break_afterwards = false
       end        
     end
-
+  end
+  
+  def title_font_size(meme)
+    font_size = (meme.z_score_strength / 1.25).ceil*100
+    if font_size == 100 && meme.z_score_strength >= 1
+      font_size += 50
+    end
+    return "#{font_size}%"
   end
   
 end

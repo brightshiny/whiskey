@@ -1,0 +1,11 @@
+<div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha == true %> alpha<% end %><% if meme.break_afterwards == true %> omega<% end %>">
+  <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
+  <p class="excerpt">
+    <strong class="byline"><% if ! item.author.nil? %><%= item.author %> &middot; <% end %><%= link_to item.feed.title, item.link %></strong>
+    <% if meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>
+    <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip %>
+    <% else %>
+      <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip[0..150] %>
+    <% end %>
+  </p>
+</div>

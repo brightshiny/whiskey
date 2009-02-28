@@ -1,0 +1,4 @@
+<div class="grid_<%= SiteController::COLUMN_ZOOM_FACTOR + 1 %><% if defined?(extra_classes) %> <%= extra_classes %><% end %>">
+  <h3 class="title"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
+  <p class="excerpt"><strong class="byline"><% if ! item.author.nil? %><%= item.author %> &middot; <% end %><%= link_to item.feed.title, item.link %></strong></p>
+</div>

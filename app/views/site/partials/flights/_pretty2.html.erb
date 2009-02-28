@@ -4,7 +4,7 @@
     
     <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha %> alpha<% end %><% if meme.break_afterwards %> omega<% end %>">
       <div class="item">
-        <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>20%;">
+        <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>30%;">
           <%= link_to @items_by_meme[meme.id].first.title, @items_by_meme[meme.id].first.link %>
         </h3>
         <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1  %> grid_10 alpha<% end %>">

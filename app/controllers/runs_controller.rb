@@ -11,7 +11,7 @@ class RunsController < ApplicationController
       :page => params[:page], 
       :include => :memes, 
       :per_page => 30,
-      :order => "id"
+      :order => "id desc"
     )
   end
   

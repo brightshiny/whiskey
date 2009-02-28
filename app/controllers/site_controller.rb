@@ -29,7 +29,7 @@ class SiteController < ApplicationController
           end
         }
         if @items_by_meme[meme.id].nil?
-          @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..2]
+          @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..4]
         end
       end
 

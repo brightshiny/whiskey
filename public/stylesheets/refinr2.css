@@ -65,7 +65,8 @@ ul.alternate_sources li a {
   color: #2549B2;
   text-decoration: none;
 }
-ul.alternate_sources li a strong {
+ul.alternate_sources li strong,
+ul.alternate_sources li strong a {
   color: #444;
 }
 

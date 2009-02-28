@@ -1,7 +1,7 @@
 class SiteController < ApplicationController
   
-  COLUMN_ZOOM_FACTOR = 4
-  MAX_NUMBER_OF_COLUMNS = 16
+  COLUMN_ZOOM_FACTOR = 3
+  MAX_NUMBER_OF_COLUMNS = 12
   
   before_filter :require_user
   layout "default" 
@@ -18,21 +18,7 @@ class SiteController < ApplicationController
     load_run
     if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
       load_memes
-
-      @items_by_meme = {}
-      for meme in @memes
-        items = []
-        meme.items.each { |item|
-          item_title = item.title.gsub(/\W/,'')
-          if items.empty? || items.select{ |i| i.title.gsub(/\W/,'') == item_title }.empty?
-            items.push(item)
-          end
-        }
-        if @items_by_meme[meme.id].nil?
-          @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..4]
-        end
-      end
-
+      load_items
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end
@@ -58,14 +44,44 @@ class SiteController < ApplicationController
   end
 
   def load_memes
+    @memes = []
     if ! @run.nil?
-      @memes = Meme.find(:all, 
+      memes = Meme.find(:all, 
         :conditions => ["run_id = ?", @run.id], 
         :include => [ :meme_items => :item_relationship ]
       )
-      @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 }
+      @memes = memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.items.size <= 2 } 
+      # memes.each { |m|
+      #   meme_should_be_included = false
+      #   required_item_strength = m.items.size / 2.0
+      #   m.items.each { |i|
+      #     logger.info "#{i.total_cosine_similarity(@run)} > #{required_item_strength}"
+      #     if i.total_cosine_similarity(@run) > required_item_strength
+      #       meme_should_be_included = true
+      #     end
+      #   }
+      #   if meme_should_be_included
+      #     @memes.push(m)
+      #   end
+      # }
     end
   end  
+  
+  def load_items
+    @items_by_meme = {}
+    for meme in @memes
+      items = []
+      meme.items.each { |item|
+        item_title = item.title.gsub(/\W/,'')
+        if items.empty? || items.select{ |i| i.title.gsub(/\W/,'') == item_title }.empty?
+          items.push(item)
+        end
+      }
+      if @items_by_meme[meme.id].nil?
+        @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..3]
+      end
+    end
+  end
   
 end
 

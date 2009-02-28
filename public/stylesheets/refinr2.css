@@ -44,7 +44,10 @@ h1#logo a {
 }
 
 .grid_8 .headline a {}
-.grid_4 a {
+.grid_3 h3 a, 
+.grid_4 h3 a {
+  font-size: 130%;
+  line-height: 1.15em;
   font-family: Helvetica, Arial, sans-serif;
 }
 

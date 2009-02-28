@@ -1,10 +1,13 @@
 body {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 80%;
+  font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
+  font-size: 90%;
   line-height: 1.4em;
   background-color: #fff;
   color: #444;
 }
+
 a {
   color: #900;
   color: #DD1343;
@@ -16,10 +19,17 @@ a {
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: georgia, serif;
+  font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif," "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
   font-weight: normal;
   line-height: 1.2em;
   margin: 0 0 0.3em 0;
   padding-bottom: 0;
+}
+
+h1#logo {
+  padding: 0.5em 0 !important;
+  margin-bottom: 0 !important;
+  border-bottom: 1px solid #000;
 }
 
 h3.title {
@@ -44,7 +54,7 @@ p.excerpt {
 .alternate_content h5, 
 .alternate_content h6 {
   font-family: Helvetica, Arial, sans-serif;
-  font-size: 110%;
+  font-size: 105%;
 }
 .alternate_content p,
 .alternate_content h3 {
@@ -73,10 +83,14 @@ h1#logo a {
   font-family: Helvetica, Arial, sans-serif;
 }
 
+strong.byline, 
+.alternate_content strong.byline {
+  color: #666;
+}
 strong.byline a,
 .alternate_content strong.byline a {
   text-decoration: none;
-  color: #444;
+  color: #333;
 }
 
 .faded {

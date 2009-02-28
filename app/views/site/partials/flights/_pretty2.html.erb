@@ -4,7 +4,7 @@
     
     <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha %> alpha<% end %><% if meme.break_afterwards %> omega<% end %>">
       <div class="item">
-        <h3 style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>50%;">
+        <h3 style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>20%;">
           <%= link_to @items_by_meme[meme.id].first.title, @items_by_meme[meme.id].first.link %>
         </h3>
         <p class="excerpt">

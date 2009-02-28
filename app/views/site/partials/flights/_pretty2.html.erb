@@ -4,19 +4,22 @@
     
     <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha %> alpha<% end %><% if meme.break_afterwards %> omega<% end %>">
       <div class="item">
-        <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>30%;">
-          <%= link_to @items_by_meme[meme.id].first.title, @items_by_meme[meme.id].first.link %>
+        <h3 class="headline" style="font-size: <%= Math.sqrt(meme.z_score_strength).ceil %>00%;">
+          <%= link_to @items_by_meme[meme.id].first.title.gsub(/\[(.*?)\]/,''), @items_by_meme[meme.id].first.link %>
         </h3>
-        <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1  %> grid_10 alpha<% end %>">
+        <div class="excerpt<% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1  %> grid_8 alpha<% end %>">
+          <% if @items_by_meme[meme.id].first.content.match(/http\:\/\/(.*?).jpg/) %>
+          <img class="pulled_image" src="<%= @items_by_meme[meme.id].first.content.match(/http\:\/\/(.*?).jpg|png|gif/) %>" style="height: 75px; float: right; margin: 0 0 1.0em 1.0em;" />
+          <% end %>
           <strong class="byline"><% if ! @items_by_meme[meme.id].first.author.nil? %><%= @items_by_meme[meme.id].first.author %> &middot; <% end %><%= link_to @items_by_meme[meme.id].first.feed.title, @items_by_meme[meme.id].first.link %></strong> 
           <%= excerpt(@items_by_meme[meme.id].first.content.gsub(/\<(.*?)\>/,''), '', :radius => 200) %>
 		  [<%= link_to "?", :controller => :meme, :action => :show, :id => meme.id %>]
         </div>
         <% if meme.number_of_columns > (SiteController::COLUMN_ZOOM_FACTOR * 2) && meme.z_score_strength >= @memes.first.z_score_strength-1 %>
-        <div class="alternate_sources grid_6 omega">
+        <div class="alternate_sources grid_4 omega">
           <h4>Read More</h4>
           <% @items_by_meme[meme.id][1..4].each_with_index do |item, c| %>
-          <%= link_to "#{item.feed.title}", item.link %><% if c != @items_by_meme[meme.id][1..4].size-1 %>, <% end %>
+          <%= link_to "#{item.title}", item.link %><% if c != @items_by_meme[meme.id][1..4].size-1 %>, <% end %>
           <% end %>
         </div>
         <div class="clear"></div>

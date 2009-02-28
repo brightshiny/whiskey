@@ -86,6 +86,13 @@ class Run < ActiveRecord::Base
       :skip_single_terms => skip_single_terms, 
       :a => docs, :q => docs, :verbose => false})
   end
+  
+  def self.calc_meme_stats
+    memes = Meme.find(:all, :joins => " as `memes` join runs r on `memes`.run_id = r.id", :conditions => ["`memes`.strength is null and r.ended_at is not null"])
+    if memes
+      memes.each {|m| Meme.find(m.id).calc_stats }  # dumb, but joins make objects read-only
+    end
+  end
 
   attr_accessor :cached_average_meme_strength
   def average_meme_strength

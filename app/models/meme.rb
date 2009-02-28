@@ -70,32 +70,35 @@ class Meme < ActiveRecord::Base
     
     # set total and avg cosine similarities for each meme_item
     run.memes.each do |meme|
-      # meme head = meme with max total cosine similarity
-      meme_head = nil
-      max_cosine_similarity = 0.0
-      # strength = sum of distinct meme item total_cosine_similarity
-      strength = 0.0
-      seen_items = Hash.new
-      
-      
-      MemeItem.transaction do
-        meme.meme_items.each do |mi|
-          mi.total_cosine_similarity = mi.item.total_cosine_similarity(run)
-          mi.avg_cosine_similarity = mi.item.avg_cosine_similarity(run)
-          mi.save
-          
-          strength += mi.total_cosine_similarity unless seen_items.has_key?(mi.item.id)
-          seen_items[mi.item.id] = true
-          
-          if mi.total_cosine_similarity > max_cosine_similarity
-            max_cosine_similarity = mi.total_cosine_similarity
-            meme_head = mi.item
-          end
+      meme.calc_stats
+    end
+  end
+  
+  def calc_stats
+    # meme head = meme with max total cosine similarity
+    meme_head = nil
+    max_cosine_similarity = 0.0
+    # strength = sum of distinct meme item total_cosine_similarity
+    strength = 0.0
+    seen_items = Hash.new
+    
+    Meme.transaction do
+      self.meme_items.each do |mi|
+        mi.total_cosine_similarity = mi.item.total_cosine_similarity(run)
+        mi.avg_cosine_similarity = mi.item.avg_cosine_similarity(run)
+        mi.save
+        
+        strength += mi.total_cosine_similarity unless seen_items.has_key?(mi.item.id)
+        seen_items[mi.item.id] = true
+        
+        if mi.total_cosine_similarity > max_cosine_similarity
+          max_cosine_similarity = mi.total_cosine_similarity
+          meme_head = mi.item
         end
-        meme.item = meme_head
-        meme.strength = strength
-        meme.save
       end
+      self.item = meme_head
+      self.strength = strength
+      self.save
     end
   end
   

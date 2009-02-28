@@ -35,6 +35,11 @@ h1#logo a {
   margin-bottom: 0.8em;
 }
 
+.grid_16 {
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 0.5em;
+}
+
 .alpha .item {}
 .omega .item {}
 
@@ -51,24 +56,17 @@ strong.byline {
   text-decoration: none;
 }
 
-ul.alternate_sources {
-  margin: 0.5em 0 0 0;
-  padding: 0;
-  list-style-type: none;
+.alternate_sources {
+  margin-top: 0.5em;
 }
-ul.alternate_sources li {
-  margin: 0;
-  padding: 0;
-}
-ul.alternate_sources li a {
-  color: #55A5FE;
+.alternate_sources a {
   color: #2549B2;
+  color: #55A5FE;
   text-decoration: none;
 }
-ul.alternate_sources li strong,
-ul.alternate_sources li strong a {
-  font-weight: normal;
-  color: #444;
+.alternate_sources strong,
+.alternate_sources strong a {
+  color: #777;
 }
 
 .faded {

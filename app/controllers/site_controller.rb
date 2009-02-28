@@ -1,5 +1,8 @@
 class SiteController < ApplicationController
   
+  COLUMN_ZOOM_FACTOR = 4
+  MAX_NUMBER_OF_COLUMNS = 12
+  
   before_filter :require_user
   layout "default" 
   
@@ -17,6 +20,18 @@ class SiteController < ApplicationController
       load_memes
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
+    end
+    @items_by_meme = {}
+    for meme in @memes
+      items = []
+      meme.items.each { |item|
+        if items.empty? || items.select{ |i| i.title == item.title }.empty?
+          items.push(item)
+        end
+      }
+      if @items_by_meme[meme.id].nil?
+        @items_by_meme[meme.id] = items.sort_by{ |i| i.total_cosine_similarity(@run) }.reverse[0..2]
+      end
     end
     render :action => "index", :layout => "layouts/pretty_layout"
   end

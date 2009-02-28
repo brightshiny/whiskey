@@ -3,10 +3,8 @@ module ApplicationHelper
   
   def handle_meme_column_assignment
     
-    column_zoom_factor = 4
-    max_number_of_columns = 16
     current_number_of_columns = 0
-    
+  
     @memes.each_with_index do |m, c|
       
       next_item = @memes[c+1]
@@ -16,10 +14,10 @@ module ApplicationHelper
       else 
         m.is_alpha = false
       end
-      m.number_of_columns = m.z_score_strength.ceil * column_zoom_factor
+      m.number_of_columns = m.z_score_strength.ceil * SiteController::COLUMN_ZOOM_FACTOR
       current_number_of_columns += m.number_of_columns
-      if current_number_of_columns >= max_number_of_columns || ((! next_item.nil?)&&((current_number_of_columns + next_item.z_score_strength.ceil*column_zoom_factor) > max_number_of_columns))
-        m.number_of_columns += max_number_of_columns - current_number_of_columns
+      if current_number_of_columns >= SiteController::MAX_NUMBER_OF_COLUMNS || ((! next_item.nil?)&&((current_number_of_columns + next_item.z_score_strength.ceil*SiteController::COLUMN_ZOOM_FACTOR) > SiteController::MAX_NUMBER_OF_COLUMNS))
+        m.number_of_columns += SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns
         m.break_afterwards = true
         current_number_of_columns = 0
       else

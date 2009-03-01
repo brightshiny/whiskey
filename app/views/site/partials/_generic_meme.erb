@@ -1,7 +1,7 @@
 <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha == true %> alpha<% end %><% if meme.break_afterwards == true %> omega<% end %>">
   <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
   <p class="excerpt">
-    <strong class="byline"><%= time_ago_in_words(item.published_at) %> ago &middot; <% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to item.feed.title, item.link %></span>, </strong>
+    <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to item.feed.title, item.link %></span>, </strong>
     <% if meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>
       <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip %>
     <% else %>

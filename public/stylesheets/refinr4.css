@@ -1,11 +1,6 @@
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-/*
-  font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
-*/
-  font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 85%;
+  font-size: 90%;
   line-height: 1.4em;
   background-color: #fff;
   color: #444;
@@ -21,7 +16,6 @@ a {
   color: #2579d2;
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: georgia, serif;
   font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif," "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
   font-weight: normal;
   line-height: 1.2em;
@@ -46,6 +40,16 @@ p.excerpt {
 .main_story p.excerpt {
   margin: 0.4em 0 0.5em 0;
 }
+
+/*
+.main_story .grid_16 p.excerpt:first-letter {
+  font-size: 306% !important;
+  float: left;
+  margin: 4px 0px 1px 0;
+  font-weight: normal;
+}
+*/
+
 .alternate_content {
   padding-bottom: 0.5em;
   margin-bottom: 0.2em;
@@ -107,28 +111,15 @@ strong.byline a,
   color: #333;
 }
 
-#sidebar ul {
-  margin: 0; 
-  padding: 0;
-  list-style-type: none;
-}
-#sidebar ul li {
-  margin: 0; 
-  padding: 0;
-  margin-bottom: 0.4em;
-}
-#sidebar a {
-  color: #55A5FE;
-  color: #2579d2;
-}
-
 .enlarged .excerpt {
   font-size: 130%;
   line-height: 1.3em;
 }
+
 .faded {
   color: #ccc;
 }
+
 .bordered {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;

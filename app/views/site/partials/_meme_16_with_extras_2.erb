@@ -16,7 +16,7 @@
   <div class="list_of_alternate_content">
     <ul>
     <% for item in @items_by_meme[meme.id][1..3]%>
-    <li><strong class="byline"><span class="website"><%= link_to item.feed.title, item.link %></span></strong><br /><%= link_to item.title, item.link %></li>
+    <li><%= link_to item.title, item.link %><br /><strong class="byline"><span class="website"><%= link_to item.feed.title, item.link %></span></strong></li>
     <% end %>
     </ul>
   </div>

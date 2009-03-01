@@ -1,6 +1,6 @@
 <div class="">
+<h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
 <div class="grid_10 alpha">
-  <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
   <p class="excerpt">
     <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to item.feed.title, item.link %></span>, </strong>
     <% if meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>

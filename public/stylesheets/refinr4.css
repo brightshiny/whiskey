@@ -5,7 +5,7 @@ body {
   font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
 */
   font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 95%;
+  font-size: 85%;
   line-height: 1.4em;
   background-color: #fff;
   color: #444;
@@ -35,7 +35,7 @@ h1#logo {
 }
 
 h3.title {
-  margin: 30px 0 0 0;
+  margin: 20px 0 0 0;
   padding: 0;
   line-height: 1.0em;
 }
@@ -49,12 +49,6 @@ p.excerpt {
 .alternate_content {
   padding-bottom: 0.5em;
   margin-bottom: 0.2em;
-  /*border-bottom: 1px solid #efefef;*/
-}
-.alternate_content p,
-.alternate_content h3 {
-  margin: 0 0 0 0;
-  padding: 0;
 }
 .alternate_content p.excerpt {
   margin: 0 0 0 0;

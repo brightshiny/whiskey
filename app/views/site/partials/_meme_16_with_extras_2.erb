@@ -1,25 +1,28 @@
 <div class="">
-<h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
-<div class="grid_10 alpha">
-  <p class="excerpt">
-    <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to item.feed.title, item.link %></span>, </strong>
-    <% if meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>
-      <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip %>
-    <% else %>
-      <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip[0..150] %>
-    <% end %>
-    <%= link_to "#", :controller => :meme, :action => :show, :id => meme.id %>
-  </p>
-</div>
-
-<div class="alternate_content grid_6 omega">
-  <div class="list_of_alternate_content">
-    <ul>
-    <% for item in @items_by_meme[meme.id][1..3]%>
-    <li><%= link_to item.title, item.link %><br /><strong class="byline"><span class="website"><%= link_to item.feed.title, item.link %></span></strong></li>
-    <% end %>
-    </ul>
+  
+  <div class="grid_10 alpha">
+    <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
+    <p class="excerpt">
+      <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to item.feed.title, item.link %></span>, </strong>
+      <% if meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>
+        <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip %>
+      <% else %>
+        <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip[0..150] %>
+      <% end %>
+      <%= link_to "#", :controller => :meme, :action => :show, :id => meme.id %>
+    </p>
   </div>
-</div>
-<div class="clear"></div>
+
+  <div class="alternate_content grid_6 omega">
+    <div class="list_of_alternate_content">
+      <ul>
+      <% for alt_item in @items_by_meme[meme.id][1..3]%>
+      <li><%= link_to alt_item.title, alt_item.link %><br /><strong class="byline"><span class="website"><%= link_to alt_item.feed.title, alt_item.link %></span></strong></li>
+      <% end %>
+      </ul>
+    </div>
+  </div>
+  
+  <div class="clear"></div>
+  
 </div>

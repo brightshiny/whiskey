@@ -8,9 +8,9 @@
   <% elsif meme.number_of_columns >= SiteController::MAX_NUMBER_OF_COLUMNS && meme.z_score_strength.ceil >= @memes[0].z_score_strength.ceil-3 %>
     <%= render :partial => "site/partials/meme_16_with_extras_2", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :alternate_content => false  } %>
   <% else %>  
-    <%= render :partial => "site/partials/generic_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :alternate_content => false  } %>
+    <%= render :partial => "site/partials/generic_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :alternate_content => false } %>
   <% end %>
-
+  </div>
   
   <% if meme.break_afterwards %>
   <div class="clear"></div>

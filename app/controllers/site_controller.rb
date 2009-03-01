@@ -47,8 +47,8 @@ class SiteController < ApplicationController
     @memes = []
     if ! run.nil?
       memes = Meme.find(:all, 
-                        :conditions => ["run_id = ?", run.id], 
-      :include => [ :meme_items => :item_relationship ]
+        :conditions => ["run_id = ?", run.id], 
+        :include => [ :meme_items => :item_relationship ]
       )
       @memes = memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.distinct_meme_items.size <= 2 } 
     end
@@ -58,10 +58,10 @@ class SiteController < ApplicationController
     @items_by_meme = {}
     for meme in @memes
       @items_by_meme[meme.id] = []
-      meme_items = meme.distinct_meme_items.sort_by {|mi| mi.total_cosine_similarity}.reverse[0..4]
+      meme_items = meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse[0..4]
       if meme_items
         for mi in meme_items do
-          @items_by_meme[meme.id].push mi.item_relationship.item
+          @items_by_meme[meme.id].push(mi.item_relationship.item)
         end
       end
     end

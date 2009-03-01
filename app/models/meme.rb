@@ -152,7 +152,7 @@ class Meme < ActiveRecord::Base
   
   attr_accessor :cached_items
   def items
-    warn "[DEPRECATION] `meme.items is deprecrated.  Please use `meme.distinct_meme_items` instead."
+    warn "[DEPRECATION] `meme.items is deprecrated.  Please use `meme.distinct_meme_items` and `meme.distinct_meme_items[].item_relationship.item` instead.  It's pre-cached."
     warn "[DEPRECATION] #{Kernel.caller.join("\n\t")}"
     if self.cached_items.nil?
       items = Item.find_by_sql(["select distinct i.* from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id join items i on i.id = ir.item_id where m.id = ?", self.id])

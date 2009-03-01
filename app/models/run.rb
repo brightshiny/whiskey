@@ -48,6 +48,7 @@ class Run < ActiveRecord::Base
   def self.go
     # defaults
     max_docs_for_a = 500
+    min_docs_for_a = 500
     hours_to_scan = 24
     k=nil
     minimum_cosine_similarity = 0.9
@@ -60,6 +61,7 @@ class Run < ActiveRecord::Base
     opts.on("-u", "--user-id=USER_ID", "required", Integer) {|val| user_id = val }
     opts.on("-t", "--hours-to-scan=[HOURS]", "defaults to #{hours_to_scan}", Integer) {|val| hours_to_scan = val }
     opts.on("-n", "--max-docs-for-a=[MAX]" "defaults to #{max_docs_for_a}", Integer) {|val| max_docs_for_a = val}
+    opts.on("-i", "--min-docs-for-a=[MIN]" "defaults to #{min_docs_for_a}", Integer) {|val| min_docs_for_a = val}
     opts.on("-k", "--k=[K]", "defaults to 2.25 * sqrt(a.size)", Integer) {|val| k=val}
     opts.on("-c", "--minimum-cosine-similarity=[COS]", "defaults to 0.9", Float) {|val| minimum_cosine_similarity = val}
     opts.on("-m", "--max-matches-per-q=[MAX]", "defaults to #{max_matches_per_q}", Integer) {|val| max_matches_per_q = val}
@@ -78,7 +80,7 @@ class Run < ActiveRecord::Base
     if ! most_recent_doc.nil?
       start_date = most_recent_doc.published_at
     end
-    docs = user.documents_from_feeds_by_date_range(start_date-hours_to_scan.hours, start_date, max_docs_for_a)
+    docs = user.documents_from_feeds_by_date_range(start_date-hours_to_scan.hours, start_date, max_docs_for_a, min_docs_for_a)
     decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
     decider.memes({:user => user, :k => k, :n => max_docs_for_a,
       :maximum_matches_per_query_vector => max_matches_per_q, 

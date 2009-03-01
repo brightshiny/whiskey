@@ -57,12 +57,18 @@ class SiteController < ApplicationController
   def load_items
     @items_by_meme = {}
     for meme in @memes
+      logger.info "#{meme.id} ***"
       @items_by_meme[meme.id] = []
-      meme_items = meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse[0..4]
+      meme_items = meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse
       if meme_items
+        items_to_push = []
         for mi in meme_items do
-          @items_by_meme[meme.id].push(mi.item_relationship.item)
+          # if mi.item_relationship.item.content.strip.split(/\s/).size > 1
+            items_to_push.push(mi.item_relationship.item)
+            logger.info "PUSHING: #{mi.item_relationship.item.id}"
+          # end
         end
+        @items_by_meme[meme.id] = items_to_push[0..4]
       end
     end
   end

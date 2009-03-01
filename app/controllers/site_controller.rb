@@ -1,7 +1,7 @@
 class SiteController < ApplicationController
   
-  COLUMN_ZOOM_FACTOR = 3
-  MAX_NUMBER_OF_COLUMNS = 12
+  COLUMN_ZOOM_FACTOR = 4
+  MAX_NUMBER_OF_COLUMNS = 16
   
   before_filter :require_user
   layout "default" 
@@ -16,7 +16,7 @@ class SiteController < ApplicationController
       @flight = Flight.find(params[:flight])
     end
     load_run
-    load_memes
+    load_memes(@run)
     if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
       load_items
     else
@@ -43,27 +43,14 @@ class SiteController < ApplicationController
     end
   end
   
-  def load_memes
+  def load_memes(run)
     @memes = []
-    if ! @run.nil?
+    if ! run.nil?
       memes = Meme.find(:all, 
-                        :conditions => ["run_id = ?", @run.id], 
+                        :conditions => ["run_id = ?", run.id], 
       :include => [ :meme_items => :item_relationship ]
       )
       @memes = memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.distinct_meme_items.size <= 2 } 
-      # memes.each { |m|
-      #   meme_should_be_included = false
-      #   required_item_strength = m.items.size / 2.0
-      #   m.items.each { |i|
-      #     logger.info "#{i.total_cosine_similarity(@run)} > #{required_item_strength}"
-      #     if i.total_cosine_similarity(@run) > required_item_strength
-      #       meme_should_be_included = true
-      #     end
-      #   }
-      #   if meme_should_be_included
-      #     @memes.push(m)
-      #   end
-      # }
     end
   end  
   

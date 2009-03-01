@@ -140,13 +140,22 @@ class User < ActiveRecord::Base
     ) 
   end
   
-  def documents_from_feeds_by_date_range(start_date, end_date, number_of_items_to_return = 10000)
-    Item.find(:all, 
+  def documents_from_feeds_by_date_range(start_date, end_date, number_of_items_to_return = 10000, min_number_of_items_to_return = 500)
+    items = Item.find(:all, 
       :joins => "join feed_users fu on (fu.feed_id = items.feed_id)",
       :conditions => ["fu.user_id = ? and items.published_at <= ? and items.published_at >= ?", self.id, end_date, start_date],
       :order => "items.published_at desc",
       :limit => number_of_items_to_return
     ) 
+    if items.size < min_number_of_items_to_return 
+      items = Item.find(:all,
+        :joins => "join feed_users fu on (fu.feed_id = items.feed_id)",
+        :conditions => ["fu.user_id = ? and items.published_at <= ? ", self.id, end_date],
+        :order => "items.published_at desc",
+        :limit => min_number_of_items_to_return
+      )
+    end
+    return items
   end
   
   private

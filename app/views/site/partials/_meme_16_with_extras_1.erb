@@ -1,0 +1,9 @@
+<%= render :partial => "site/partials/generic_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :extra_classes => "enlarged" } %>
+<div class="clear"></div>
+<div class="alternate_content">
+  <%= render :partial => "site/partials/alternate_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id][1], :extra_classes => "alpha" } %>
+  <%= render :partial => "site/partials/alternate_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id][2] } %>
+  <%= render :partial => "site/partials/alternate_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id][3] } %>
+  <%= render :partial => "site/partials/alternate_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id][4], :extra_classes => "omega" } %>
+  <div class="clear"></div>
+</div>

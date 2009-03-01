@@ -1,0 +1,19 @@
+<% handle_meme_column_assignment2 %>
+
+<% @memes.each_with_index do |meme, n| %>
+
+  <div id="meme_<%= meme.id %>" class="meme">
+  <% if meme.number_of_columns >= SiteController::MAX_NUMBER_OF_COLUMNS && meme.z_score_strength.ceil >= @memes[0].z_score_strength.ceil-3 && n == 0 %>
+    <%= render :partial => "site/partials/meme_16_with_extras_1", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :alternate_content => false  } %>
+  <% elsif meme.number_of_columns >= SiteController::MAX_NUMBER_OF_COLUMNS && meme.z_score_strength.ceil >= @memes[0].z_score_strength.ceil-3 %>
+    <%= render :partial => "site/partials/meme_16_with_extras_2", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :alternate_content => false  } %>
+  <% else %>  
+    <%= render :partial => "site/partials/generic_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :alternate_content => false  } %>
+  <% end %>
+
+  
+  <% if meme.break_afterwards %>
+  <div class="clear"></div>
+  <% end %>
+    
+<% end %>

@@ -4,7 +4,6 @@
   
   <div id="meme_<%= meme.id %>" class="meme">
   <%= render :partial => "site/partials/generic_meme", :locals => { :meme => meme, :item => @items_by_meme[meme.id].first, :alternate_content => false  } %>
-  
   <% if meme.number_of_columns == SiteController::MAX_NUMBER_OF_COLUMNS && meme.z_score_strength.ceil >= @memes[0].z_score_strength.ceil-3 %>
     <div class="clear"></div>
     <div class="alternate_content">
@@ -14,7 +13,6 @@
       <div class="clear"></div>
     </div>
   <% end %>
-  
   </div><!-- meme_<%= meme.id %> -->
   
   <% if meme.break_afterwards %>

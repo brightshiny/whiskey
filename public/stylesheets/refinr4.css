@@ -1,11 +1,6 @@
 body {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-/*
-  font-family: Corbel, "Lucida Grande", "Lucida Sans Unicode", "Lucida Sans", "DejaVu Sans", "Bitstream Vera Sans", "Liberation Sans", Verdana, "Verdana Ref", sans-serif;
-*/
-  font-family: Frutiger, "Frutiger Linotype", Univers, Calibri, "Gill Sans", "Gill Sans MT", "Myriad Pro", Myriad, "DejaVu Sans Condensed", "Liberation Sans", "Nimbus Sans L", Tahoma, Geneva, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 95%;
+  font-size: 87%;
   line-height: 1.4em;
   background-color: #fff;
   color: #444;
@@ -21,7 +16,6 @@ a {
   color: #2579d2;
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: georgia, serif;
   font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif," "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
   font-weight: normal;
   line-height: 1.2em;
@@ -35,7 +29,7 @@ h1#logo {
 }
 
 h3.title {
-  margin: 30px 0 0 0;
+  margin: 25px 0 0 0;
   padding: 0;
   line-height: 1.0em;
 }
@@ -43,24 +37,35 @@ p.excerpt {
   margin: 0.5em 0 1.0em 0;
   padding: 0;
 }
+.main_story p.excerpt {
+  margin: 0.4em 0 0.5em 0;
+}
+
+/*
+.main_story .grid_16 p.excerpt:first-letter {
+  font-size: 306% !important;
+  float: left;
+  margin: 4px 0px 1px 0;
+  font-weight: normal;
+}
+*/
 
 .alternate_content {
   padding-bottom: 0.5em;
   margin-bottom: 0.2em;
-  /*border-bottom: 1px solid #efefef;*/
 }
-.alternate_content .title {
-  font-family: Helvetica, Arial, sans-serif;
-  font-size: 105%;
-}
-.alternate_content p,
-.alternate_content h3 {
+.alternate_content p.excerpt {
   margin: 0 0 0 0;
   padding: 0;
 }
+.alternate_content h3.title {
+  margin: 0 0 0 0;
+  padding: 0;
+  font-size: 100%;
+}
 
 .list_of_alternate_content {
-  padding-top: 2.5em;
+  padding-top: 3.0em;
 }
 .list_of_alternate_content ul {
   margin: 0;
@@ -68,8 +73,9 @@ p.excerpt {
   list-style-type: none;
 }
 .list_of_alternate_content ul li {
+  line-height: 1.3em;
   margin: 0;
-  padding: 0 0 0.7em 0;
+  padding: 0 0 0.6em 0;
 }
   
 h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
@@ -105,28 +111,15 @@ strong.byline a,
   color: #333;
 }
 
-#sidebar ul {
-  margin: 0; 
-  padding: 0;
-  list-style-type: none;
-}
-#sidebar ul li {
-  margin: 0; 
-  padding: 0;
-  margin-bottom: 0.4em;
-}
-#sidebar a {
-  color: #55A5FE;
-  color: #2579d2;
-}
-
 .enlarged .excerpt {
   font-size: 130%;
   line-height: 1.3em;
 }
+
 .faded {
   color: #ccc;
 }
+
 .bordered {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;

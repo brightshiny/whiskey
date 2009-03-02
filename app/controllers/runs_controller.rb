@@ -19,9 +19,14 @@ class RunsController < ApplicationController
     @run = Run.find(params[:id])
     @memes = Meme.find(:all, :conditions => ["run_id = ?", @run.id], :include => [ :meme_items ])
     @items = []
+    @min_published_at = nil
+    @max_published_at = nil
     @memes.each { |meme| 
-      meme.items.each { |item|
+      meme.distinct_meme_items.each { |mi|
+        item = mi.item_relationship.item
         @items.push(item)
+        @max_published_at = item.published_at if !@max_published_at || @max_published_at < item.published_at
+        @min_published_at = item.published_at if !@min_published_at || @min_published_at > item.published_at
       }
     }
     # @items = @items.sort_by{ |i| i.title.size }

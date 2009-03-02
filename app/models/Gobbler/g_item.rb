@@ -40,7 +40,7 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
   def extract_content
     return nil if @rss_item.nil?
     # guess where the content is...
-    return Gobbler::AttrHelper.get_first(@rss_item, [:content, :description, :summary])
+    return Gobbler::AttrHelper.get_first(@rss_item, [:content_encoded, :content, :description, :summary])
   end  
   
   def extract_published_at

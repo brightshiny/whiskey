@@ -2,6 +2,7 @@
 module ApplicationHelper
   
   def handle_meme_column_assignment
+    @has_displayed_level_2 = false
     current_number_of_columns = 0
     @memes.each_with_index do |m, c|
       next_item = @memes[c+1]      

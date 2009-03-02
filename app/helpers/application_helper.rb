@@ -42,16 +42,14 @@ module ApplicationHelper
           # current_number_of_columns = 0
           # @memes.reject!{ |x| x.id == item_to_move.id }
           # @memes.insert(c, item_to_move)
-          item_to_move = @memes[c..@memes.size+1].select{ |x| x.z_score_strength <= 1.0 }.first
-          if ! item_to_move.nil?
-            item_to_move.number_of_columns = SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns
-            item_to_move.is_alpha = true
-            m.is_alpha = false
-            m.break_afterwards = true
-            current_number_of_columns = 0
-            @memes.reject!{ |x| x.id == item_to_move.id }
-            @memes.insert((c-1), item_to_move)
-          end
+          item_to_move = @memes.select{ |x| x.z_score_strength <= 1.0 }.first
+          item_to_move.number_of_columns = SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns
+          item_to_move.is_alpha = true
+          m.is_alpha = false
+          m.break_afterwards = true
+          current_number_of_columns = 0
+          @memes.reject!{ |x| x.id == item_to_move.id }
+          @memes.insert((c-1), item_to_move)
         else
           m.number_of_columns += SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns
           m.break_afterwards = true

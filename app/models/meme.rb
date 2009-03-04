@@ -207,45 +207,4 @@ class Meme < ActiveRecord::Base
     return (common_item_count > 2) # related if >2 items in common
   end
   
-  def self.keith
-    start_run_id = 200
-    end_run_id = 250
-    prev_run = nil
-    
-    for run_id in start_run_id .. end_run_id do
-      curr_run = Run.find(run_id)
-      
-      next if curr_run.n != 500 || curr_run.ended_at.nil?
-      if curr_run && prev_run
-        curr_run.generate_related_memes(prev_run)
-      end
-      prev_run = curr_run
-    end
-  end
-
-#    File.open("doc/a.dot", "w") do |dot|
-#      dot.puts "digraph whiksey {"
-#          related_memes.each do |m1,m2|
-#            dot.puts %Q(  "#{m1.id}" [label="#{m1.id} (#{sprintf("%.1f", m1.strength)})"];)
-#            dot.puts %Q(  "#{m2.id}" [label="#{m2.id} (#{sprintf("%.1f", m2.strength)})"];)
-#          end
-#          dot.puts %Q(  {rank=same)
-#          related_memes.keys.each do |m1|
-#            dot.puts %Q(; #{m1.id})
-#          end
-#          dot.puts %Q(  })
-#          dot.puts %Q(  {rank=same)
-#          related_memes.values.each do |m2|
-#            dot.puts %Q(; #{m2.id})
-#          end
-#          dot.puts %Q(  })
-#          related_memes.each do |m1,m2|
-#            dot.puts %Q(  "#{m2.id}" -> "#{m1.id}";) # [label="#{sprintf('%.2f', pct)} #{common_item_count},#{new_item_count},#{lost_item_count}"];)
-#          end
-#          
-#        end
-#      end
-#      dot.puts "}"
-#    end
-  
 end

@@ -181,19 +181,16 @@ class Meme < ActiveRecord::Base
     return false if !prev_meme
     my_items = {}
     prev_meme_items = {}
-    
     self.distinct_meme_items.each do |mi|
       for item in [mi.item_relationship.item, mi.item_relationship.related_item]
         my_items[item.id] = true if item
       end
     end
-    
     prev_meme.distinct_meme_items.each do |mi|
       for item in [mi.item_relationship.item, mi.item_relationship.related_item]
         prev_meme_items[item.id] = true if item
       end
     end
-    
     my_keys = my_items.keys
     common_item_count = 0
     my_keys.each do |k|
@@ -203,8 +200,50 @@ class Meme < ActiveRecord::Base
         my_items.delete(k)
       end
     end
-    
     return (common_item_count > 2) # related if >2 items in common
+  end
+  
+  attr_accessor :cached_related_memes
+  def related_memes(number_of_related_memes=60)
+    if self.cached_related_memes.nil?
+      forward_sql_select = "select "
+      forward_sql_from = "from meme_relationships m0 "
+      forward_sql_join = ""
+      forward_sql_where = "where m0.meme_id = #{self.id}"
+      number_of_related_memes.times do |n|
+        forward_sql_select += " m#{n}.related_meme_id as m#{n}_id "
+        if n != number_of_related_memes-1
+          forward_sql_select += ", "
+        end
+        forward_sql_join   += "left join meme_relationships m#{n+1} on m#{n+1}.meme_id = m#{n}.related_meme_id "
+      end
+      forward_sql = "#{forward_sql_select} #{forward_sql_from} #{forward_sql_join} #{forward_sql_where}"
+      forward_meme_ids = Meme.connection.select_rows(forward_sql).first
+      if forward_meme_ids.nil?
+        forward_meme_ids = []
+      end
+            
+      backward_sql_select = "select "
+      backward_sql_from = "from meme_relationships m0 "
+      backward_sql_join = ""
+      backward_sql_where = "where m0.related_meme_id = #{self.id}"
+      number_of_related_memes.times do |n|
+        backward_sql_select += " m#{n}.meme_id as m#{n}_id "
+        if n != number_of_related_memes-1
+          backward_sql_select += ", "
+        end
+        backward_sql_join   += "left join meme_relationships m#{n+1} on m#{n+1}.related_meme_id = m#{n}.meme_id "
+      end
+      backward_sql = "#{backward_sql_select} #{backward_sql_from} #{backward_sql_join} #{backward_sql_where}"
+      backward_meme_ids = Meme.connection.select_rows(backward_sql).first
+      if backward_meme_ids.nil?
+        backward_meme_ids = []
+      end
+    
+      meme_ids = (forward_meme_ids + backward_meme_ids).uniq.select{ |id| ! id.nil? && id.to_i != self.id }
+      self.cached_related_memes = Meme.find(:all, :conditions => { :id => meme_ids }, :order => "id desc")
+    end
+    return self.cached_related_memes
   end
   
 end

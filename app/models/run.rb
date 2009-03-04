@@ -133,7 +133,32 @@ class Run < ActiveRecord::Base
       end
     end
   end
-    
+  
+  attr_accessor :cached_published_at_range
+  def published_at_range
+    if self.cached_published_at_range.nil?
+      max_published_at = Time.now - 100.years
+      min_published_at = Time.now + 100.years
+      self.memes.each { |meme| 
+        meme.distinct_meme_items.each { |mi|
+          item = mi.item_relationship.item
+          max_published_at = item.published_at if max_published_at < item.published_at
+          min_published_at = item.published_at if min_published_at > item.published_at
+        }
+      }
+      self.cached_published_at_range = [min_published_at, max_published_at]
+    end
+    return self.cached_published_at_range
+  end
+  
+  def min_published_at
+    published_at_range[0]
+  end
+  
+  def max_published_at
+    published_at_range[1]
+  end
+
 end
 
 

@@ -23,7 +23,7 @@ package
 	import flash.net.URLRequest;
 	import flash.text.TextFormat;
 	
-	[SWF(width="1000", height="1000", backgroundColor="#ffffff", frameRate="30")]
+	[SWF(width="600", height="600", backgroundColor="#ffffff", frameRate="30")]
 	public class Dependency extends Sprite 
 	{
 		/** We will be rotating text, so we embed the font. */
@@ -43,10 +43,12 @@ package
 			var url:String = "";
 			if (root.loaderInfo.parameters.run_id) {
 			    var run_id:String = root.loaderInfo.parameters.run_id;
-			    url = "http://whiskey.brightshiny.me/runs/show/" + run_id + ".xml";
+			    // url = "http://whiskey.brightshiny.me/runs/show/" + run_id + ".xml";
+			    url = "http://localhost:3000/runs/show/" + run_id + ".xml";
 			} else if (root.loaderInfo.parameters.meme_id) {
 				var meme_id:String = root.loaderInfo.parameters.meme_id;
-			    url = "http://whiskey.brightshiny.me/meme/show/" + meme_id + ".xml";
+			    // url = "http://whiskey.brightshiny.me/meme/show/" + meme_id + ".xml";
+			    url = "http://localhost:3000/meme/show/" + meme_id + ".xml";
 			}
 			trace(url);
 			gmr.read(url);

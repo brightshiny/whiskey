@@ -18,7 +18,7 @@ a {
 h1, h2, h3, h4, h5, h6 {
   font-family: Constantia, "Lucida Bright", Lucidabright, "Lucida Serif", Lucida, "DejaVu Serif," "Bitstream Vera Serif", "Liberation Serif", Georgia, serif;
   font-weight: normal;
-  line-height: 1.2em;
+  line-height: 1.3em;
   margin: 0 0 0.3em 0;
   padding-bottom: 0;
 }
@@ -133,4 +133,13 @@ strong.byline a,
 
 .highlight {
   background-color: #E7F6FF;
+}
+
+
+.meme_details {
+  margin-top: 3.0em;
+}
+
+.meme_details td {
+  border-top: 1px solid #efefef;
 }

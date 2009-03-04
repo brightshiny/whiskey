@@ -8,7 +8,7 @@
       <% else %>
         <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip[0..150] %>
       <% end %>
-      <%= link_to "#", :controller => :meme, :action => :show, :id => meme.id %>
+      <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %>
     </p>
   </div>
 </div>

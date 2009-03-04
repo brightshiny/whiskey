@@ -114,6 +114,25 @@ class Run < ActiveRecord::Base
     end
     return self.cached_standard_deviation_meme_strength
   end
+  
+  def generate_meme_relationships(prev_run)
+    MemeComparison.transaction do
+      meme_comparison = MemeComparison.find(:first, :conditions => ["run_id = ? and related_run_id = ?", self.id, prev_run.id])
+      if !meme_comparison
+        meme_comparison = MemeComparison.create({:run_id => self.id, :related_run_id => prev_run.id})
+      end
+      self.memes.each do |m1|
+        prev_run.memes.each do |m2|
+          if m1.similar_to(m2)
+            existing_count = MemeRelationship.count(:conditions => ["meme_comparison_id = ? and meme_id = ? and related_meme_id = ?", meme_comparison.id, m1.id, m2.id])
+            if existing_count <= 0
+              MemeRelationship.create({:meme_comparison_id => meme_comparison.id, :meme_id => m1.id, :related_meme_id => m2.id})
+            end
+          end
+        end
+      end
+    end
+  end
     
 end
 

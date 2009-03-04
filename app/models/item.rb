@@ -19,7 +19,7 @@ class Item < ActiveRecord::Base
     if self.cached_string_of_contained_words.nil?
       # self.cached_string_of_contained_words = self.words.map{ |w| w.word }.join(" ")
       s = ""
-      i = Item.find(:first, :conditions => ["id = ?", self.id], :include => [{:item_words, :word}])
+      i = Item.find(:first, :conditions => ["id = ?", self.id], :include => [{:item_words => :word}])
       i.item_words.each { |iw|
         iw.count.times do |n| 
           s += "#{iw.word.word} "

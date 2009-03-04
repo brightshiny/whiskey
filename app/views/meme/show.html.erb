@@ -3,9 +3,18 @@
 <h1>Meme <%= @meme.id %></h1>
 
 <h2>Details</h2>
-<p>Meme Head: (<%= @meme.item.id %>) <%= link_to @meme.item.title, @meme.item.link %></p>
-<p>Meme Strength: <%= @meme.strength %>
+<ul>
+<li>Meme Head: (<%= @meme.item.id %>) <%= link_to @meme.item.title, @meme.item.link %></li>
+<li>Meme Strength: <%= @meme.strength %></li>
+<li>Related previous generation meme(s): 
+	<% if @prev_memes %>
+		<% for meme in @prev_memes %>
+			<%= link_to "#{meme.item.title}", :controller => :meme, :action => :show, :id => meme.id %><br>
+		<% end %>
+	<% end %>
+</li>
 </ul>
+
 <h3>Run <%= @meme.run_id %></h3>
 <table>
   <tr>

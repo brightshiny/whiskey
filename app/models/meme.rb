@@ -5,6 +5,8 @@ class Meme < ActiveRecord::Base
   belongs_to :run
   has_many :meme_items
   has_many :item_relationships, :through => :meme_items
+  has_many :meme_relationships
+  has_many :related_memes, :through => :meme_relationships
   include Graphviz
   
   attr_accessor :number_of_columns, :break_afterwards, :is_alpha
@@ -180,25 +182,16 @@ class Meme < ActiveRecord::Base
     my_items = {}
     prev_meme_items = {}
     
-    interesting_items = {296184 => true, 295538 => true, 295587 => true, 295606 => true, 295774 => true, 295572 => true, 295298 => true, 294257 => true, 295293 => true, 295773 => true, 295971 => true, 295427 => true, 295607 => true, 295748 => true, 295285 => true, 292695 => true, 292562 => true, 295857 => true, 295673 => true, 295555 => true, 295630 => true, 29563 => true}
-    interesting = true
-    
     self.distinct_meme_items.each do |mi|
-      item = mi.item_relationship.item
-      interesting = true if interesting_items.has_key?(item.id)
-      my_items[item.id] = true
-      item = mi.item_relationship.related_item
-      interesting = true if interesting_items.has_key?(item.id)
-      my_items[item.id] = true
+      for item in [mi.item_relationship.item, mi.item_relationship.related_item]
+        my_items[item.id] = true if item
+      end
     end
     
     prev_meme.distinct_meme_items.each do |mi|
-      item = mi.item_relationship.item
-      interesting = true if interesting_items.has_key?(item.id)
-      prev_meme_items[item.id] = true
-      item = mi.item_relationship.related_item
-      interesting = true if interesting_items.has_key?(item.id)
-      prev_meme_items[item.id] = true
+      for item in [mi.item_relationship.item, mi.item_relationship.related_item]
+        prev_meme_items[item.id] = true if item
+      end
     end
     
     my_keys = my_items.keys
@@ -211,68 +204,48 @@ class Meme < ActiveRecord::Base
       end
     end
     
-    #new_item_count = my_items.size
-    #lost_item_count = prev_meme_items.size
-    
-    # pct = (common_item_count.to_f/((new_item_count/4.0).to_f+lost_item_count+common_item_count).to_f).to_f
-    if interesting && common_item_count > 2
-      return true
-      #puts "#{pct} r1=#{self.run.id},m1=#{self.id} vs. r2=#{prev_meme.run.id},m2=#{prev_meme.id} common=#{common_item_count} new=#{new_item_count} lost=#{lost_item_count}"
-      #puts %Q(  "#{prev_meme.id}" -> "#{self.id}" [label="#{sprintf('%.2f', pct)} #{common_item_count},#{new_item_count},#{lost_item_count}"];)
-    else
-      return false
-    end
+    return (common_item_count > 2) # related if >2 items in common
   end
   
-  def self.keith    
-    
-    #    Meme.find(11418).percent_similar_to(Meme.find(11332))
-    
-    #    start_run_id = 150
-    #    end_run_id = 250
-    start_run_id = 201
+  def self.keith
+    start_run_id = 200
     end_run_id = 250
     prev_run = nil
     
-    File.open("doc/a.dot", "w") do |dot|
-      dot.puts "digraph whiksey {"
-      for run_id in start_run_id .. end_run_id do
-        curr_run = Run.find(run_id)
-        
-        next if curr_run.n != 500 || curr_run.ended_at.nil?
-        if curr_run && prev_run
-          related_memes = {}
-          curr_run.memes.each do |m1|
-            prev_run.memes.each do |m2|
-              if m1.similar_to(m2)
-                related_memes[m1] = m2
-              end
-            end
-          end
-          
-          related_memes.each do |m1,m2|
-            dot.puts %Q(  "#{m1.id}" [label="#{m1.id} (#{sprintf("%.1f", m1.strength)})"];)
-            dot.puts %Q(  "#{m2.id}" [label="#{m2.id} (#{sprintf("%.1f", m2.strength)})"];)
-          end
-          dot.puts %Q(  {rank=same)
-          related_memes.keys.each do |m1|
-            dot.puts %Q(; #{m1.id})
-          end
-          dot.puts %Q(  })
-          dot.puts %Q(  {rank=same)
-          related_memes.values.each do |m2|
-            dot.puts %Q(; #{m2.id})
-          end
-          dot.puts %Q(  })
-          related_memes.each do |m1,m2|
-            dot.puts %Q(  "#{m2.id}" -> "#{m1.id}";) # [label="#{sprintf('%.2f', pct)} #{common_item_count},#{new_item_count},#{lost_item_count}"];)
-          end
-          
-        end
-        prev_run = curr_run
+    for run_id in start_run_id .. end_run_id do
+      curr_run = Run.find(run_id)
+      
+      next if curr_run.n != 500 || curr_run.ended_at.nil?
+      if curr_run && prev_run
+        curr_run.generate_related_memes(prev_run)
       end
-      dot.puts "}"
+      prev_run = curr_run
     end
   end
+
+#    File.open("doc/a.dot", "w") do |dot|
+#      dot.puts "digraph whiksey {"
+#          related_memes.each do |m1,m2|
+#            dot.puts %Q(  "#{m1.id}" [label="#{m1.id} (#{sprintf("%.1f", m1.strength)})"];)
+#            dot.puts %Q(  "#{m2.id}" [label="#{m2.id} (#{sprintf("%.1f", m2.strength)})"];)
+#          end
+#          dot.puts %Q(  {rank=same)
+#          related_memes.keys.each do |m1|
+#            dot.puts %Q(; #{m1.id})
+#          end
+#          dot.puts %Q(  })
+#          dot.puts %Q(  {rank=same)
+#          related_memes.values.each do |m2|
+#            dot.puts %Q(; #{m2.id})
+#          end
+#          dot.puts %Q(  })
+#          related_memes.each do |m1,m2|
+#            dot.puts %Q(  "#{m2.id}" -> "#{m1.id}";) # [label="#{sprintf('%.2f', pct)} #{common_item_count},#{new_item_count},#{lost_item_count}"];)
+#          end
+#          
+#        end
+#      end
+#      dot.puts "}"
+#    end
   
 end

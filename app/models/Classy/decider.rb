@@ -75,6 +75,9 @@ module Classy
       
       # generate memes!
       Meme.memes_from_item_relationship_map(run, relationship_map, true)
+      # generate meme_relationships with the previous run
+      prev_run = Run.find(:first, :conditions => ["user_id = ? and ended_at < ?", run.user_id, Time.now], :order => "ended_at desc")
+      run.generate_meme_relationships(prev_run) if prev_run
       run.ended_at = Time.now
       run.save
       return run

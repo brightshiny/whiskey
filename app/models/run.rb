@@ -6,6 +6,7 @@ class Run < ActiveRecord::Base
   has_many :items, :through => :item_relationships
   has_many :memes
   include Graphviz
+  include EncryptedId
   
   def to_s
     "                               db id: #{self.id}

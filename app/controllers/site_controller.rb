@@ -18,6 +18,14 @@ class SiteController < ApplicationController
     render :action => "index"
   end
   
+  def current
+    load_run
+    respond_to do |format|
+      format.html { render :text => @run.encrypted_id }
+      format.json { @run.to_json( :only => :encrypted_id ) }
+    end
+  end
+  
   def info
     load_run
     load_memes

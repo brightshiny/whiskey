@@ -21,3 +21,6 @@
 
 <div class="clear"></div>
 <p id="footer">&copy; 2009 <a href="http://www.magicbucketlabs.com/">Magic Bucket Labs</a> &middot; <%= @run.id %>.<%= @flight.id %></p>
+
+<%= hidden_field_tag "version_loaded", @run.encrypted_id %>
+<%= periodically_call_remote(:url => { :action => :current }, :success => "should_page_be_updated(request.responseText)", :frequency => '120') %>

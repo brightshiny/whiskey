@@ -43,12 +43,10 @@ package
 			var url:String = "";
 			if (root.loaderInfo.parameters.run_id) {
 			    var run_id:String = root.loaderInfo.parameters.run_id;
-			    // url = "http://whiskey.brightshiny.me/runs/show/" + run_id + ".xml";
 			    // url = "http://localhost:3000/runs/show/" + run_id + ".xml";
 			    url = "http://refinr.com/runs/show/" + run_id + ".xml";
 			} else if (root.loaderInfo.parameters.meme_id) {
 				var meme_id:String = root.loaderInfo.parameters.meme_id;
-			    // url = "http://whiskey.brightshiny.me/meme/show/" + meme_id + ".xml";
 			    // url = "http://localhost:3000/meme/show/" + meme_id + ".xml";
 			    url = "http://refinr.com/meme/show/" + meme_id + ".xml";
 			}

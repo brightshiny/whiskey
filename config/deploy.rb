@@ -26,7 +26,7 @@ set :use_sudo, false
 # We're using git and we want to deploy using the remote cache (to prevent .git dirs / etc)
 set :scm, :git
 set :deploy_via, :remote_cache
-set :repository,  "ssh://brightshiny.me:443/home/whiskey/git/whiskey.git"
+set :repository,  "ssh://refinr.com:443/home/whiskey/git/whiskey.git"
 
 # Number of releases to leave on server including the currently live version
 set :keep_releases, 3

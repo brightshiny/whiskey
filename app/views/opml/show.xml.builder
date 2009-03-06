@@ -1,7 +1,7 @@
 xml.instruct! :xml, :version => "1.0"
 xml.opml(:version => "1.0") do |opml|
   opml.head do |head|
-    head.title('Whiskey Feeds, OPML Style')
+    head.title('refinr Feeds, OPML Style')
   end
   opml.body do |body|
     for feed in @feeds do

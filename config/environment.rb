@@ -60,7 +60,7 @@ Rails::Initializer.run do |config|
   # Make sure the secret is at least 30 characters and all random, 
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
-    :session_key => '_whiskey_session',
+    :session_key => '_refinr_session',
     :secret      => 'dd3b9e746ce79eca63d34b7e82a3803686ec3db3cd95e80306bdda31783aa123e32d45870a5f6504618d823247db57e82c647a7cd25093ae7c0bb9095848819a'
   }
 

@@ -1,9 +1,9 @@
 class Notifier < ActionMailer::Base
-  default_url_options[:host] = "whiskey.brightshiny.me"
+  default_url_options[:host] = "refinr.com"
   
   def password_reset_instructions(user)
     subject       "Password Reset Instructions"
-    from          "Whiskey <noreply@sample.com>"
+    from          "refinr infobot <info@refinr.com>"
     recipients    user.email
     sent_on       Time.now
     body          :edit_password_reset_url => edit_password_reset_url(user.perishable_token)
@@ -11,7 +11,7 @@ class Notifier < ActionMailer::Base
   
   def activation_instructions(user)
     subject       "Activation Instructions"
-    from          "Whiskey <noreply@sample.com>"
+    from          "refinr infobot <info@refinr.com>"
     recipients    user.email
     sent_on       Time.now
     body          :account_activation_url => register_url(user.perishable_token)
@@ -19,7 +19,7 @@ class Notifier < ActionMailer::Base
   
   def activation_confirmation(user)
     subject       "Activation Complete"
-    from          "Whiskey <noreply@sample.com>"
+    from          "refinr infobot <info@refinr.com>"
     recipients    user.email
     sent_on       Time.now
     body          :root_url => root_url

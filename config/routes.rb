@@ -22,7 +22,7 @@ ActionController::Routing::Routes.draw do |map|
   map.register '/register/:activation_code', :controller => 'activations', :action => 'new'
   map.activate '/activate/:id', :controller => 'activations', :action => 'create'
   
-  map.root :controller => "user_sessions", :action => "new"
+  map.root :controller => "site", :action => "index"
 
   # The priority is based upon order of creation: first created -> highest priority.
 

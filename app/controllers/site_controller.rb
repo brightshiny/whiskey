@@ -55,12 +55,14 @@ class SiteController < ApplicationController
   
   def load_memes(run)
     @memes = []
-    if ! run.nil?
-      memes = Meme.find(:all, 
+    if ! @run.nil?
+      @memes = Meme.find(:all, 
         :conditions => ["run_id = ?", run.id], 
         :include => [ :meme_items => :item_relationship ]
       )
-      @memes = memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.distinct_meme_items.size <= 2 } 
+      if ! @memes.nil? && ! @memes.empty?
+        @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.distinct_meme_items.size <= 2 } 
+      end
     end
   end  
   

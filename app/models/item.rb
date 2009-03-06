@@ -8,6 +8,8 @@ class Item < ActiveRecord::Base
   has_many :related_items, :through => :item_relationships
   has_many :memes
 
+  include EncryptedId
+
   attr_accessor :score
 
   def self.recent_items(number_of_items_to_return = 100)
@@ -55,6 +57,10 @@ class Item < ActiveRecord::Base
       num_item_relationships_in_run += 1
     }
     self.total_cosine_similarity(run) / num_item_relationships_in_run.to_f
+  end
+  
+  def encrypted_id
+    KEY.url_safe_encrypt64(self.id)
   end
   
 end

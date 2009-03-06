@@ -1,8 +1,8 @@
 <div class="grid_<%= meme.number_of_columns %><% if meme.is_alpha == true %> alpha<% end %><% if meme.break_afterwards == true %> omega<% end %><% if defined?(extra_classes) %> <%= extra_classes %><% end %>">
   <div class="generic">
-    <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to item.title.gsub(/\[(.*?)\]/,''), item.link %></h3>
+    <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to_item_with_tracking item.title.gsub(/\[(.*?)\]/,''), item %></h3>
     <p class="excerpt">
-      <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to item.feed.title, item.link %></span>, </strong>
+      <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to_item_with_tracking item.feed.title, item %></span>, </strong>
       <% if meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>
         <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip %>
       <% else %>

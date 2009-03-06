@@ -23,49 +23,41 @@ module ApplicationHelper
     end
   end
   
-  def handle_meme_column_assignment2
-    @title_has_been_displayed = false
-    current_number_of_columns = 0
-    @memes.each_with_index do |m, c|
-      next_item = @memes[c+1]      
-      m.is_alpha = false
-      if current_number_of_columns == 0
-        m.is_alpha = true
-      end
-      m.number_of_columns = m.z_score_strength.ceil * SiteController::COLUMN_ZOOM_FACTOR
-      current_number_of_columns += m.number_of_columns
-      m.break_afterwards = false
-      if current_number_of_columns >= SiteController::MAX_NUMBER_OF_COLUMNS || ((! next_item.nil?)&&((current_number_of_columns + next_item.z_score_strength.ceil*SiteController::COLUMN_ZOOM_FACTOR) > SiteController::MAX_NUMBER_OF_COLUMNS))
-        if SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns > 0
-          # item_to_move = @memes.select{ |x| x.z_score_strength <= 1.0 }.first
-          # item_to_move.number_of_columns = SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns
-          # item_to_move.break_afterwards = true
-          # current_number_of_columns = 0
-          # @memes.reject!{ |x| x.id == item_to_move.id }
-          # @memes.insert(c, item_to_move)
-          item_to_move = @memes.select{ |x| x.z_score_strength <= 1.0 }.first
-          item_to_move.number_of_columns = SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns
-          item_to_move.is_alpha = true
-          m.is_alpha = false
-          m.break_afterwards = true
-          current_number_of_columns = 0
-          @memes.reject!{ |x| x.id == item_to_move.id }
-          @memes.insert((c-1), item_to_move)
-        else
-          m.number_of_columns += SiteController::MAX_NUMBER_OF_COLUMNS - current_number_of_columns
-          m.break_afterwards = true
-          current_number_of_columns = 0
-        end
-      end        
-    end
-  end
-  
   def title_font_size(meme)
-    font_size = (meme.z_score_strength ** 0.55).ceil*100
+    font_size = (meme.z_score_strength ** 0.35).ceil*100
     if font_size == 100 && meme.z_score_strength >= 1
       font_size += 50
     end
     return "#{font_size}%"
   end
+  
+  def link_to_item_with_tracking(*args)
+    name         = args.first
+    item         = args.second
+    options      = args.third || {}
+    html_options = args.fourth
+
+    options.merge!({ :controller => :clicks, :action => :create, :i => item.encrypted_id })
+
+    url = url_for(options)
+    
+    if html_options.nil?
+      html_options = {}
+    end
+    html_options.merge!({ :title => "#{item.title} #{item.link}" })
+    
+    if html_options
+      html_options = html_options.stringify_keys
+      href = html_options['href']
+      convert_options_to_javascript!(html_options, url)
+      tag_options = tag_options(html_options)
+    else
+      tag_options = nil
+    end
+
+    href_attr = "href=\"#{url}\"" unless href
+    "<a #{href_attr}#{tag_options}>#{name || url}</a>"
+  end
+
   
 end

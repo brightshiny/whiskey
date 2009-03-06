@@ -8,7 +8,7 @@ if behind_firewall
 end
 
 # Remote server / file info 
-set :application, "whiskey.brightshiny.me"
+set :application, "refinr.com"
 set :deploy_to, "/var/www/#{application}"
 
 # ssh options, passed to net::ssh

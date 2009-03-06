@@ -24,7 +24,7 @@ module ApplicationHelper
   end
   
   def title_font_size(meme)
-    font_size = (meme.z_score_strength ** 0.35).ceil*100
+    font_size = (meme.z_score_strength ** 0.45).ceil*100
     if font_size == 100 && meme.z_score_strength >= 1
       font_size += 50
     end

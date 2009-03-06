@@ -8,7 +8,6 @@ class ClicksController < ApplicationController
       if ! item.nil? 
         destination = item.link
       end 
-      debugger
       if ! session.nil? && ! session.session_id.nil?
         Click.create({ :session_id => session.session_id[0..262], :item_id => item.id, :referrer => request.referer, :ip_address => request.remote_ip })
       else

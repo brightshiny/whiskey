@@ -1,13 +1,12 @@
-<div class="">
+<div class="second_story">
 
-  <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to_item_with_tracking item.title.gsub(/\[(.*?)\]/,''), item %></h3>  
+  <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to_item_with_tracking widow_prevention(item.title), item %></h3>  
   
-
   <div class="alternate_content grid_6 alpha">
     <div class="list_of_alternate_content">
       <ul>
       <% for alt_item in @items_by_meme[meme.id][1..2]%>
-      <li><%= link_to_item_with_tracking alt_item.title, alt_item %><br /><strong class="byline"><span class="website"><%= link_to_item_with_tracking alt_item.feed.title, alt_item %></span></strong></li>
+      <li><%= link_to_item_with_tracking widow_prevention(alt_item.title), alt_item %><br /><strong class="byline"><span class="website"><%= link_to_item_with_tracking alt_item.feed.title, alt_item %></span></strong></li>
       <% end %>
       </ul>
     </div>

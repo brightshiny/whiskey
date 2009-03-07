@@ -148,3 +148,7 @@ strong.byline a,
 #time_to_update {
   color: #D24A31;
 }
+#time_to_update a {
+  color: #D24A31 !important;
+  text-decoration: none;
+}

@@ -13,12 +13,27 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
   
   def self.fetch
     gobbler = Gobbler::Turkey.new
+    feed_id = nil
+    user_id = nil
+    opts = OptionParser.new
+    opts.on("-e", "--environment=[ENV]", "hack for ./script/runner")
+    opts.on("-i", "--id=[FEED_ID]", Integer) {|val| feed_id = val }
+    opts.on("-u", "--user-id=[USER_ID]", Integer) {|val| user_id = val }
+    opts.parse(ARGV)
+
+    user = User.find(user_id) if user_id
+    feed = Feed.find(feed_id) if feed_id
+    if !feed && !user
+      puts "Valid user or feed id required.\n\n#{opts.to_s}"
+      return
+    end
+  
     feeds = []
-    ARGV.reject!{ |a| a.match(/^\D/) }
-    if !ARGV.nil? && ARGV.size > 0
-      ARGV.each {|id| feeds.push Feed.find(id.to_i) }
-    else
-      feeds = Feed.find(:all)
+    if feed
+      feeds.push feed
+    end
+    if user
+      feeds += Feed.find(:all, :include => [:users], :conditions => ["`users`.id = ?", user.id])
     end
     
     pool = Gobbler::FeedBag.new(feeds)

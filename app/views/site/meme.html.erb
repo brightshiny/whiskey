@@ -1,40 +1,42 @@
 <div class="meme_details">
 
-
-<div class="grid_4 alpha">
-<h3>Top <%= @words.size %> Words</h3>
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <th class="grid_2 alpha">Word</th>
-    <th class="grid_1 omega">Count</th>
-  </tr>
-  <% for word in @words %>
-  <tr>
-    <td class="grid_2 alpha"><%= word.word %></td>
-    <td class="grid_1 omega"><%= word.number_of_occurances %></td>
-  </tr>
-  <% end %>
-</table>
-</div>
-
-<div class="grid_12 omega">
-  <% @meme.number_of_columns = 12 %>
+<div class="grid_16 alpha omega">
+  <% 
+    @meme.number_of_columns = 12
+    @meme.is_alpha = true
+  %>
   <%= render :partial => "site/partials/generic_meme", :locals => { :item => @meme.item, :meme => @meme, :ignore_title_sizing => true } %>
 </div>
 
 <div class="clear"></div>
 
-<div class="grid_16 alpha omega">
+<div class="grid_4 alpha">
+  <h3>Top <%= @words.size %> Words</h3>
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <th class="grid_2 alpha">Word</th>
+      <th class="grid_1 omega">Count</th>
+    </tr>
+    <% for word in @words %>
+    <tr>
+      <td class="grid_2 alpha"><%= word.word %></td>
+      <td class="grid_1 omega"><%= word.number_of_occurances %></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+
+<div class="grid_12 omega">
   <% if @items.map{ |i| i.content }.flatten.join(" ").match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
   <h3>Associated Images</h3>
   <% c = 1 %>
   <% for item in @items %>
     <% if item.content.match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
       <% item.content.scan(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/).each do |img_src| %>
-        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 8 %> omega<% end %>" style="background-image: url(<%= img_src %>);">
+        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 6 %> omega<% end %>" style="background-image: url(<%= img_src %>);">
           <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
         </div>
-        <% if c%8 == 0 %><div class="clear"></div><% c = 0 %><% end %>
+        <% if c%6 == 0 %><div class="clear"></div><% c = 0 %><% end %>
         <% c += 1 %>
       <% end %>
     <% end %>

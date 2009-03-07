@@ -35,7 +35,6 @@ class GraphController < ApplicationController
     x_axis_labels = related_memes.map{ |m| m.run.ended_at.strftime('%I%p').gsub(/^0/,'') }
     x_axis_labels[0] = related_memes.first.run.ended_at.strftime('%m/%d')
     x_axis_labels[strengths.size-1] = related_memes.last.run.ended_at.strftime('%m/%d')
-    
     x_axis_labels.each_with_index { |label, c|
       x_axis_labels[c] = XAxisLabel.new(label, '#111111', 10, nil)
     }

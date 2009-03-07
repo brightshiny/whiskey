@@ -32,7 +32,7 @@ module ApplicationHelper
   end
   
   def widow_prevention(title)
-    title.gsub(/ (\S+)$/,'&nbsp;\1')
+    textilize_without_paragraph(title.gsub(/ (\S+)$/,'&nbsp;\1'))
   end
   
   def link_to_item_with_tracking(*args)

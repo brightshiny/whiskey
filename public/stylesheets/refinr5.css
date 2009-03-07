@@ -89,6 +89,9 @@ h1#logo a {
   text-decoration: none;
 }
 
+.grid_8 h3.title {
+  line-height: 1.2em;
+}
 .grid_3 h3 a, 
 .grid_4 h3 a {
   font-size: 135%;

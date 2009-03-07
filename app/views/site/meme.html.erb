@@ -10,6 +10,7 @@
 
 <div class="clear"></div>
 
+<div class="meme">
 <div class="grid_4 alpha">
   <h3>Top <%= @words.size %> Words</h3>
   <table width="100%" cellspacing="0" cellpadding="0">
@@ -44,9 +45,11 @@
   </ul>
   <% end %>
 </div>
+</div>
 
 <div class="clear"></div>
 
+<div class="meme">
 <% if @meme.related_memes.size > 3 %>
 <div class="grid_16 alpha omega">
   <h3>Meme Strength: <%= @meme.related_memes.last.created_at.strftime('%m/%d/%Y %I:%M%p') %> - <%= @meme.related_memes.first.created_at.strftime('%m/%d/%Y %I:%M%p') %></h3>
@@ -54,9 +57,11 @@
   <%= @graph %>
 </div>
 <% end %>
+</div>
 
 <div class="clear"></div>
 
+<div class="meme">
 <div class="grid_16 alpha omega">
 <h3><%= @items.size %> Connected Items</h3>
   <table width="100%" cellspacing="0" cellpadding="0">
@@ -75,6 +80,7 @@
     </tr>
     <% end %>
   </table>
+</div>
 </div>
 
 <div class="clear"></div>

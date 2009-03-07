@@ -29,13 +29,26 @@ class GraphController < ApplicationController
     bar.set_tooltip("#val#")
     
     y = YAxis.new
-    y.set_range(0,strengths.max+10,10)
+    y.set_range(0,strengths.max+10,20)
     chart.set_y_axis(y)
 
+    x_axis_labels = related_memes.map{ |m| m.run.ended_at.strftime('%I%p').gsub(/^0/,'') }
+    x_axis_labels[0] = related_memes.first.run.ended_at.strftime('%m/%d')
+    x_axis_labels[strengths.size-1] = related_memes.last.run.ended_at.strftime('%m/%d')
+    
+    x_axis_labels.each_with_index { |label, c|
+      x_axis_labels[c] = XAxisLabel.new(label, '#111111', 10, nil)
+    }
+    
+    x_labels = XAxisLabels.new
+    x_labels.set_vertical()
+    x_labels.labels = x_axis_labels
+
     x = XAxis.new
-    x_axis_labels = Array.new(strengths.size)
-    x_axis_labels[0] = related_memes.first.run.ended_at.strftime('%m/%d/%Y %I%p')
-    x_axis_labels[strengths.size-1] = related_memes.last.run.ended_at.strftime('%m/%d/%Y %I%p')
+    x.set_labels(x_labels)
+
+
+    x.set_offset(true)
     x.set_labels(x_axis_labels)
     chart.set_x_axis(x)
 
@@ -44,6 +57,7 @@ class GraphController < ApplicationController
     x.set_colour('#777777')
     y.set_grid_colour('#efefef')
     y.set_colour('#777777')
+    
     
     render :text => chart.to_s
   end

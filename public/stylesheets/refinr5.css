@@ -118,11 +118,13 @@ strong.byline a,
 .meme_details {
   margin-top: 3.0em;
 }
+.meme_details .meme {
+  margin: 1.0em 0;
+}
 
 .meme_details .generic h3 {
   margin-top: 0 !important;
-  padding-top: 0;
-  font-size: 10%;
+  padding-top: 0 !important;
 }
 .meme_details th,
 .meme_details td {

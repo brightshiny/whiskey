@@ -31,6 +31,10 @@ module ApplicationHelper
     return "#{font_size}%"
   end
   
+  def widow_prevention(title)
+    title.gsub(/ (\S+)$/,'&nbsp;\1')
+  end
+  
   def link_to_item_with_tracking(*args)
     name         = args.first
     item         = args.second

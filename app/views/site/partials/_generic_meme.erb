@@ -8,9 +8,9 @@
     <p class="excerpt">
       <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to_item_with_tracking item.feed.title, item %></span>, </strong>
       <% if ! meme.number_of_columns.nil? && meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>
-        <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip %>
+        <%= limit_text(:meme=>meme,:text=>item.content,:max_col_char_limit=>350) %>
       <% else %>
-        <%= item.content.split(/\<\/p\>/)[0..1].join(" ").gsub(/\<(.*?)\>/,'').split(/\. /)[0..2].join(". ").strip[0..150] %>
+        <%= limit_text(:meme=>meme,:text=>item.content,:max_col_char_limit=>1000) %>
       <% end %>
     </p>
   </div>

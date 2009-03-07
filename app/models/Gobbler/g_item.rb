@@ -147,9 +147,11 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
       
       next if c.nil?
       
+      logger.info "))) extract_text: state=#{state.to_s}, prev=#{prev_state.to_s}" if debug_this
+
       # entity block
       if state != :pre
-        if c == '&' && state != :entity
+        if c == '&' && state != :entity && state != :html
           logger.info "))) extract_text: entering entity" if debug_this
           prev_state = state
           state = :entity
@@ -206,10 +208,7 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
         elsif state != :html
           text.push c
         end
-      end
-      
-      #logger.info "))) extract_text: state=#{state.to_s}, prev=#{prev_state.to_s}" if debug_this
-      
+      end      
     end
     
     if debug_this

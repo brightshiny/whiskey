@@ -90,4 +90,11 @@ module ApplicationHelper
     return limited_text.join(' ')+truncated_indicator
   end
 
+  def display_date(date)
+    date.strftime('%m/%d/%Y').gsub(/^0/,'').gsub(/\/0/,'/')
+  end
+  def display_time(date)
+    date.strftime('%I:%M%p').gsub(/^0/,'').downcase
+  end
+
 end

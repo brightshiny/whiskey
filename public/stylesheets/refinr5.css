@@ -29,6 +29,9 @@ h1#logo {
   padding: 0.5em 0 0.5em 0 !important;
   margin-bottom: 0 !important;
 }
+h1#logo a {
+  color: #20232A;
+}
 
 h3.title {
   margin: 25px 0 0 0;

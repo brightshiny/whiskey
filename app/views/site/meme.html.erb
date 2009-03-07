@@ -1,100 +1,40 @@
 <div class="meme_details">
 
-<div class="grid_8 alpha">
-<h3>Details</h3>
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <th>Total Strength</th>
-    <th>Time Coverage</th>
-  </tr>
-  <tr>
-    <td><%= @meme.strength %></td>
-  	<td><%= @meme.run.min_published_at %> - <%= @meme.run.max_published_at %></td>
-	</tr>
-</table>
-</div>
 
-<div class="clear"></div>
-
-<div class="grid_3 alpha">
+<div class="grid_4 alpha">
 <h3>Top <%= @words.size %> Words</h3>
 <table width="100%" cellspacing="0" cellpadding="0">
   <tr>
-    <th class="grid_2 alpha omega">Word</th>
-    <th class="grid_1 alpha omega">Count</th>
+    <th class="grid_2 alpha">Word</th>
+    <th class="grid_1 omega">Count</th>
   </tr>
   <% for word in @words %>
   <tr>
-    <td class="grid_2 alpha omega"><%= word.word %></td>
-    <td class="grid_1 alpha omega"><%= word.number_of_occurances %></td>
+    <td class="grid_2 alpha"><%= word.word %></td>
+    <td class="grid_1 omega"><%= word.number_of_occurances %></td>
   </tr>
   <% end %>
 </table>
 </div>
 
-<div class="grid_6">
-<h3>Related Memes</h3>
-<table width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <th class="grid_1 alpha">ID</th>
-    <th class="grid_1">Strength</th>
-    <th class="grid_1">Run ID</th>
-    <th class="grid_3 omega">Date Range</th>
-  </tr>
-  <% for meme in @meme.related_memes %>
-  <tr>
-    <td class="grid_1 alpha"><%= link_to meme.id, :action => :meme, :id => meme.id %></td>
-    <td class="grid_1"><%= number_with_precision(meme.strength, :precision => 2) %></td>
-    <td class="grid_1"><%= meme.run.id %></td>
-    <td class="grid_3  omega"><%= meme.run.min_published_at %><br /><%= meme.run.max_published_at %></td>
-  </tr>
-  <% end %>
-</table>
-</div>
-
-<div class="grid_7 omega">
-  <h3>Network Graph</h3>
-  <embed src="/flash/Molotov.swf" flashvars="meme_id=<%= @meme.id %>" id="Molotov" quality="high" bgcolor="#ffffff" name="Molotov" allowscriptaccess="sameDomain" pluginspage="http://www.adobe.com/go/getflashplayer" type="application/x-shockwave-flash" align="middle" height="266" width="400" />
+<div class="grid_12 omega">
+  <%= render :partial => "site/partials/generic_meme", :locals => { :item => @meme.item, :meme => @meme, :ignore_title_sizing => true } %>
 </div>
 
 <div class="clear"></div>
 
 <div class="grid_16 alpha omega">
-<h3><%= @distinct_meme_items.size %> Connected Items</h3>
-  <table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-      <th class="grid_2 alpha">ID</th>
-      <th class="grid_1">Strength</th>
-      <th class="grid_9">Title</th>
-      <th class="grid_4 omega">Published At</th>
-    </tr>
-    <% for meme_item in @distinct_meme_items.sort_by{ |i| i.total_cosine_similarity }.reverse %>
-    <tr>
-      <td class="grid_2 alpha"><%= meme_item.item.id %></td>
-      <td class="grid_1"><%= number_with_precision(meme_item.total_cosine_similarity, :precision => 1) %></td>
-      <td class="grid_9">
-        <%= link_to meme_item.item.title, meme_item.item.link %><br />
-        <% if ! meme_item.item.author.nil? %><%= meme_item.item.author %>, <% end %><%= meme_item.item.feed.title %>
-      </td>
-      <td class="grid_4 omega"><%= meme_item.item.published_at %></td>
-    </tr>
-    <% end %>
-  </table>
-</div>
-
-<div class="clear"></div>
-
-<div class="grid_16">
-  <% if @distinct_meme_items.map{ |mi| mi.item.content }.flatten.join(" ").match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
-  <h3>Article Images</h3>
-  <ul>
-  <% for meme_item in @distinct_meme_items.sort_by{ |i| i.total_cosine_similarity }.reverse %>
-    <% if meme_item.item.content.match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
-      <% for img_src in meme_item.item.content.scan(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
-        <li>
-          <%= link_to "<img src=\"#{img_src}\" />", meme_item.item.link %><br />
-          via <%= link_to meme_item.item.feed.title, meme_item.item.link %>
-        </li>
+  <% if @items.map{ |i| i.content }.flatten.join(" ").match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
+  <h3>Associated Images</h3>
+  <% c = 1 %>
+  <% for item in @items %>
+    <% if item.content.match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
+      <% item.content.scan(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/).each do |img_src| %>
+        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 8 %> omega<% end %>" style="background-image: url(<%= img_src %>);">
+          <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
+        </div>
+        <% if c%8 == 0 %><div class="clear"></div><% c = 0 %><% end %>
+        <% c += 1 %>
       <% end %>
     <% end %>
   <% end %>
@@ -104,4 +44,38 @@
 
 <div class="clear"></div>
 
+<% if @meme.related_memes.size > 3 %>
+<div class="grid_16 alpha omega">
+  <h3>Meme Strength: <%= @meme.related_memes.last.created_at.strftime('%m/%d/%Y %I:%M%p') %> - <%= @meme.related_memes.first.created_at.strftime('%m/%d/%Y %I:%M%p') %></h3>
+  <script type="text/javascript" src="/javascripts/swfobject.js"></script>
+  <%= @graph %>
 </div>
+<% end %>
+
+<div class="clear"></div>
+
+<div class="grid_16 alpha omega">
+<h3><%= @items.size %> Connected Items</h3>
+  <table width="100%" cellspacing="0" cellpadding="0">
+    <tr>
+      <th class="grid_3 alpha">Published At</th>
+      <th class="grid_8">Title</th>
+      <th class="grid_5 omega">Author</th>
+    </tr>
+    <% for item in @items %>
+    <tr>
+      <td class="grid_3 alpha"><%= item.published_at.strftime('%m/%d/%Y %I:%M%p') %></td>
+      <td class="grid_8">
+        <%= link_to_item_with_tracking item.title, item %>
+      </td>
+      <td class="grid_5 omega"><div class="alternate_content"><% if ! item.author.nil? %><%= item.author %>, <% end %><%= link_to_item_with_tracking(item.feed.title, item) %></div></td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+
+<div class="clear"></div>
+
+</div>
+
+<p id="footer">&copy; 2009 <a href="http://www.magicbucketlabs.com/">Magic Bucket Labs</a></p>

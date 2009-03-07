@@ -119,7 +119,43 @@ strong.byline a,
   margin-top: 3.0em;
 }
 
+.meme_details .generic h3 {
+  margin-top: 0 !important;
+  padding-top: 0;
+  font-size: 10%;
+}
+.meme_details th,
 .meme_details td {
+  line-height: 1.2em;
+  padding: 1px 0;
+}
+.meme_details th {
+  text-align: left;
+}
+.meme_details .alternate_content a {
+  font-weight: normal;
+}
+
+.meme_details .item_image_block {
+  height: 100px;
+  background-position: center center;
+  background-repeat: none;
+  margin-bottom: 20px;
+  background-color: #efefef;
+}
+.meme_details .item_image_block a {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-top: 10px solid #2579d2;
+  text-decoration: none;
+}
+.meme_details .item_image_block a:hover {
+  background-color: transparent;
+  border-top: 10px solid #ffcc00;
+}
+.meme_details .item_image_block a span {
+  visibility: hidden;
 }
 
 #footer {

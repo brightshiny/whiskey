@@ -59,5 +59,31 @@ module ApplicationHelper
     "<a #{href_attr}#{tag_options}>#{name || url}</a>"
   end
 
-  
+  def limit_text(opts={})
+    meme = opts[:meme]
+    text = opts[:text]
+    max_col_char_limit = opts[:max_col_char_limit] || 300
+    epsilon = 10
+    
+    return '' if !meme || !text
+
+    max_col_char_limit = max_col_char_limit / (16-meme.number_of_columns*1.79) if meme.number_of_columns < 16
+    truncated = false  
+    text = Gobbler::GItem.extract_text(text)
+    limited_text = []
+    char_count = 0
+      for word in text.split
+      char_count += (word.size + 1)
+      if char_count > max_col_char_limit + epsilon
+        truncated = true
+        break
+      else
+        limited_text.push word
+      end
+    end
+    
+    truncated_indicator = truncated ? '...' : ''
+    return limited_text.join(' ')+truncated_indicator
+  end
+
 end

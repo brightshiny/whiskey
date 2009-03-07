@@ -18,6 +18,7 @@
 </div>
 
 <div class="grid_12 omega">
+  <% @meme.number_of_columns = 16 %>
   <%= render :partial => "site/partials/generic_meme", :locals => { :item => @meme.item, :meme => @meme, :ignore_title_sizing => true } %>
 </div>
 

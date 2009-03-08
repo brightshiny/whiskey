@@ -141,7 +141,7 @@ strong.byline a,
 .meme_details .item_image_block {
   height: 100px;
   background-position: center center;
-  background-repeat: none;
+  background-repeat: no-repeat;
   margin-bottom: 20px;
   background-color: #efefef;
 }

@@ -82,6 +82,7 @@ h1#logo {
 h1#logo a {
   color: #20232A;
   text-decoration: none;
+  background-color: transparent;
 }
 
 .grid_8 h3.title {

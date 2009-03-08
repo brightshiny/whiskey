@@ -29,12 +29,35 @@ class GraphController < ApplicationController
     bar.set_tooltip("#val#")
     
     y = YAxis.new
-    y.set_range(0,strengths.max+10,20)
+    num_points_to_skip_on_y_axis = ((strengths.max+10)/16).ceil
+    y.set_range(0,strengths.max+10,num_points_to_skip_on_y_axis)
     chart.set_y_axis(y)
 
     x_axis_labels = related_memes.map{ |m| m.run.ended_at.strftime('%I%p').gsub(/^0/,'') }
-    x_axis_labels[0] = related_memes.first.run.ended_at.strftime('%m/%d')
-    x_axis_labels[strengths.size-1] = related_memes.last.run.ended_at.strftime('%m/%d')
+    
+    modulus = 2
+    case x_axis_labels.size
+    when 30..50 
+      modulus = 2
+    when 51..90
+      modulus = 3
+    when 91..9999
+      modulus = 10
+    else
+      modulus = 20
+    end
+    if x_axis_labels.size > 30
+      x_axis_labels.each_with_index { |label, c|
+        if c%modulus == 0
+          x_axis_labels[c] = label
+        else
+          x_axis_labels[c] = ""
+        end
+        logger.info "#{c} | #{c%modulus}"
+      }
+    end
+    x_axis_labels[0] = related_memes.first.run.ended_at.strftime('%m/%d       ')
+    x_axis_labels[strengths.size-1] = related_memes.last.run.ended_at.strftime('       %m/%d')
     x_axis_labels.each_with_index { |label, c|
       x_axis_labels[c] = XAxisLabel.new(label, '#111111', 10, nil)
     }

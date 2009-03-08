@@ -3,13 +3,13 @@ class SiteController < ApplicationController
   COLUMN_ZOOM_FACTOR = 4
   MAX_NUMBER_OF_COLUMNS = 16
   
-  before_filter :require_user
+  # before_filter :require_user
   layout "pretty_layout" 
   
   def index
     load_flight
     load_run
-    if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id, :user => current_user.logged_in? })    
+    if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id, :user => current_user })    
       load_memes(@run)
       load_items
     else

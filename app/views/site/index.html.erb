@@ -1,6 +1,6 @@
 <% if ! @run.nil? %>
 
-<% cache(:action => "index", :run => @run.id, :flight => @flight.id, :user => current_user.logged_in?) do %>
+<% cache(:action => "index", :run => @run.id, :flight => @flight.id, :user => current_user) do %>
 <%= render :partial => "site/partials/flights/#{@flight.partial_name}" %>
 <% end # cache %>
 

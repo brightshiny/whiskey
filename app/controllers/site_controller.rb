@@ -9,8 +9,8 @@ class SiteController < ApplicationController
   def index
     load_flight
     load_run
-    load_memes(@run)
-    if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id })
+    if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id, :user => current_user.logged_in? })    
+      load_memes(@run)
       load_items
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"

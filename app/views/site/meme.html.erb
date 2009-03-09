@@ -34,7 +34,7 @@
   <% for item in @items %>
     <% if item.content.match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
       <% item.content.scan(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/).each do |img_src| %>
-        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 6 %> omega<% end %>" style="background-image: url(<%= img_src %>);">
+        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 6 %> omega<% end %>" style="background-image: url(<%=h img_src.split(/ /).first %>);">
           <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
         </div>
         <% if c%6 == 0 %><div class="clear"></div><% c = 0 %><% end %>

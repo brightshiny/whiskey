@@ -204,3 +204,13 @@ strong.byline a,
   padding: 10px;
   border: 10px solid #efefef;
 }
+
+#about {
+  border-top: 1px solid #ccc;
+  padding-top: 1.0em;
+  color: #999;
+}
+#about .grid_12 {
+  font-size: 200%;
+  line-height: 1.2em;
+}

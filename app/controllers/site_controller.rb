@@ -3,8 +3,8 @@ class SiteController < ApplicationController
   COLUMN_ZOOM_FACTOR = 4
   MAX_NUMBER_OF_COLUMNS = 16
   
-  before_filter :require_user
-  # before_filter :require_user, :only => :meme
+  # before_filter :require_user
+  before_filter :require_user, :only => :meme
   layout "pretty_layout" 
   
   def index

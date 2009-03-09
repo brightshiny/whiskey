@@ -98,7 +98,8 @@ class SiteController < ApplicationController
     @items = @meme.related_memes.map{ |m| m.distinct_meme_items }.flatten.map{ |mi| mi.item }.uniq.sort_by{ |i| i.published_at }.reverse
     @words = Word.find_by_sql(["select w.id, w.word, sum(iw.count) as number_of_occurances from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id join item_words iw on iw.item_id = ir.item_id join words w on w.id = iw.word_id where m.id = ? group by w.id order by 3 desc limit 10", @meme.id])
     @page_title = "meme details for #{@meme.id}"
-    @graph = open_flash_chart_object(960,300,"/graph/meme_strength/#{@meme.id}")
+    @meme_strength_graph = open_flash_chart_object(960,300,"/graph/meme_strength/#{@meme.id}")
+    @items_published_graph = open_flash_chart_object(960,100,"/graph/items_published/#{@meme.id}")
   end
   
 end

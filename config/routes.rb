@@ -7,7 +7,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login '/login', :controller => 'user_sessions', :action => 'new'
   map.register '/register', :controller => 'users', :action => 'create'
   map.signup '/signup', :controller => 'users', :action => 'new'
-  map.account '/account', :controller => 'users', :action => 'edit'
+  map.account '/account', :controller => 'users', :action => 'show'
   # 
   # map.open_id_complete 'session', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   # 

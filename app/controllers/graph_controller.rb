@@ -112,7 +112,7 @@ class GraphController < ApplicationController
     
     y = YAxis.new
     num_points_to_skip_on_y_axis = ((published_at_counts.max+2)/2).ceil
-    y.set_range(0,published_at_counts.max+10,num_points_to_skip_on_y_axis)
+    y.set_range(0,published_at_counts.max+1,num_points_to_skip_on_y_axis)
     chart.set_y_axis(y)
 
     x_axis_labels = related_memes.map{ |m| m.run.ended_at.strftime('%I%p').gsub(/^0/,'') }

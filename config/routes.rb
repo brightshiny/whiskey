@@ -3,16 +3,14 @@ ActionController::Routing::Routes.draw do |map|
   # map.resources :clicks
   # map.resources :reads
 
-  # map.logout '/logout', :controller => 'sessions', :action => 'destroy'
-  # map.login '/login', :controller => 'sessions', :action => 'new'
-  # map.register '/register', :controller => 'users', :action => 'create'
-  # map.signup '/signup', :controller => 'users', :action => 'new'
-  # map.account '/account', :controller => 'users', :action => 'edit'
+  map.logout '/logout', :controller => 'user_sessions', :action => 'destroy'
+  map.login '/login', :controller => 'user_sessions', :action => 'new'
+  map.register '/register', :controller => 'users', :action => 'create'
+  map.signup '/signup', :controller => 'users', :action => 'new'
+  map.account '/account', :controller => 'users', :action => 'edit'
   # 
   # map.open_id_complete 'session', :controller => "sessions", :action => "create", :requirements => { :method => :get }
   # 
-  # map.resources :users
-  # map.resource :session, :controller => "sessions"
   
   map.resource :account, :controller => "users"
   map.resources :password_resets

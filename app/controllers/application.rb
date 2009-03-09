@@ -6,6 +6,24 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user
   filter_parameter_logging :password, :password_confirmation
   
+  before_filter :load_flight
+  def load_flight 
+    if params[:flight].nil?
+      @flight = Flight.find(:first, 
+                            :conditions => ["controller_name = ? and action_name = ?", controller_name, action_name], 
+      :order => "id desc"
+      )
+    else
+      @flight = Flight.find(params[:flight])
+    end
+    if @flight.nil?
+      @flight = Flight.find(:first, 
+        :conditions => ["controller_name = ? and action_name = ?", "site", "index"], 
+        :order => "id desc"
+      )
+    end
+  end
+  
   private
     def current_user_session
       return @current_user_session if defined?(@current_user_session)
@@ -21,7 +39,7 @@ class ApplicationController < ActionController::Base
       unless current_user
         store_location
         flash[:notice] = "You must be logged in to access this page"
-        redirect_to new_user_session_url
+        redirect_to login_url
         return false
       end
     end

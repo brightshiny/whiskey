@@ -4,7 +4,7 @@ function should_page_be_updated(responseText) {
       s = document.createElement("span");
       s.id = "time_to_update";
       s.style.display = "none";
-      s.innerHTML = " <a href=\"/\">&larr; we've updated, refresh to get the latest edition</a>";
+      s.innerHTML = " <a href=\"/\">&larr; we've updated, refresh to get the new edition</a>";
       logo = $('logo');
       logo.appendChild(s);
       Effect.toggle('time_to_update','appear');

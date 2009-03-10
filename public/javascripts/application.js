@@ -11,3 +11,15 @@ function should_page_be_updated(responseText) {
     }
   }
 }
+
+function update_time() {
+  if($('time_ago')) {
+    time_span = $('time_ago');
+    time_span_content = time_span.innerHTML;
+    if(time_span_content.match(/minutes/)) {
+      [time, units] = time_span_content.split(/ /);
+      time = parseInt(time) + 1;
+      time_span.innerHTML = [time, units].join(" ");
+    } 
+  }
+}

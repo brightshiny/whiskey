@@ -25,4 +25,10 @@
 
 <% if params[:id].nil? %>
 <%= periodically_call_remote(:url => { :action => :current }, :success => "should_page_be_updated(request.responseText)", :frequency => '120') %>
+<script type="text/javascript">
+  //<![CDATA[
+  new PeriodicalExecuter(function(){update_time()}, 60);
+  //]]>
+</script>
+
 <% end %>

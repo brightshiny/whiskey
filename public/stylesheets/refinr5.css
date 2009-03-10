@@ -214,3 +214,6 @@ strong.byline a,
   font-size: 200%;
   line-height: 1.2em;
 }
+#about .grid_4 {
+  padding-top: 3px;
+}

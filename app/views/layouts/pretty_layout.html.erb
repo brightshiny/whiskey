@@ -13,7 +13,7 @@
   <% if defined?(@flight) && defined?(@page_title) %>
   <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / <%= @page_title %></span></h1>
   <% elsif defined?(@flight) && defined?(@run) %>
-  <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / updated <%= time_ago_in_words(@run.ended_at) %> ago</span></h1>
+  <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / <span title="Updated on <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %>">updated <%= time_ago_in_words(@run.ended_at) %> ago</span></span></h1>
   <% else %>
   <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %></h1>
   <% end %>

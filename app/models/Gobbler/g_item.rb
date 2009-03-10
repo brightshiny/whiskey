@@ -41,7 +41,17 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
     return nil if @rss_item.nil?
     # guess where the content is...
     return Gobbler::AttrHelper.get_first(@rss_item, [:content_encoded, :content, :description, :summary])
-  end  
+  end
+  
+  def extract_images(content, pool, item)
+    return unless content && pool
+    srcs = content.scan(/<img [^>]*src=['"](.*?)['"]/i)[0]
+    return unless srcs && srcs.kind_of?(Enumerable)
+    for src in srcs.reject{|i| i.match(/(googleadservices.com|feedburner.com)/)}
+      pool.push ImageSrc.new(src,item)
+    end
+    
+  end
   
   def extract_published_at
     return nil if @rss_item.nil?

@@ -19,3 +19,7 @@ config.action_mailer.raise_delivery_errors = false
 
 # Gobbler fetch threads
 GOBBLER_THREAD_COUNT = 2
+
+# Image cache location
+ITEM_IMAGES_SRC = "/assets/images/items"
+ITEM_IMAGES_CACHE_DIR = File.expand_path("#{RAILS_ROOT}/public/assets/images/items")

@@ -2,6 +2,7 @@ require 'simple-rss'
 require 'open-uri'
 require 'digest/sha1'
 require 'cgi'
+require 'fileutils'
 
 class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
   attr_reader :decoder
@@ -41,8 +42,8 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     threads = (1..GOBBLER_THREAD_COUNT).map do |i|
       Thread.new("consumer #{i}") do |name|
         gobbler = Gobbler::Turkey.new
-        while feed = pool.get_next
-          gobbler.gobble_feed(feed)
+        while item = pool.get_next
+          gobbler.gobble(item,pool)
         end
       end
     end
@@ -51,7 +52,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       begin
         th.join
       rescue RuntimeError => e
-        logger.error "Fetch thread failed, rejoining: #{e.message}"
+        logger.error "Fetch thread failed, rejoining: #{e.backtrace.join("\n\t")}"
       end
     end
   end
@@ -71,8 +72,52 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     end
     items.each {|i| Gobbler::GItem.parse_words(i) }
   end
+
+  def gobble(item,pool)
+    if item.is_a? Feed
+      gobble_feed(item,pool)
+    elsif item.is_a? ImageSrc
+      gobble_image(item)
+    else
+      warn "I don't know how to gobble this item: #{item}"
+    end
+  end
   
-  def gobble_feed(feed)
+  def gobble_image(image_src)
+    image = Image.new
+    image.original_src = image_src.src
+    image.item_id = image_src.item.id
+    image.save
+    
+    local_path = image_src.local_location_dir(image) 
+    local_dir = "#{ITEM_IMAGES_CACHE_DIR}/#{local_path}"
+    FileUtils.makedirs(local_dir)
+    
+    begin
+      open(image_src.src) do |f|
+        content = f.read
+        image_size = ImageSize.new(content)
+        image.height = image_size.get_height
+        image.width = image_size.get_width
+        
+        if image.height && image.height > 1 && image.width && image.width > 1 # non-nil, non-tracking
+          image.type = image_size.get_type.downcase
+          image.local_src = "#{ITEM_IMAGES_SRC}/#{local_path}/#{image.id}.#{image.type}"
+          file_name = "#{local_dir}/#{image.id}.#{image.type}"
+          File.open(file_name, "w") {|i| i.puts(content) }
+          image.save
+        else # stupid tracking images
+          image.delete
+        end
+        
+      end
+    rescue RuntimeError => e
+      logger.error "Fetch thread failed, rejoining: #{e.backtrace.join("\n\t")}"
+      image.delete
+    end
+  end
+  
+  def gobble_feed(feed,pool)
     if feed.nil?
       logger.warn "Can't gobble a nil feed."
       return
@@ -95,7 +140,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         feed.title = rss_title
       end
       
-       (items_processed, items_new) = parse_items(feed, rss) || 0
+       (items_processed, items_new) = parse_items(feed, rss, pool) || 0
       
       feed.gobbled_at = Time.now
       feed.save
@@ -105,7 +150,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     end
   end  
   
-  def parse_items(feed, rss)
+  def parse_items(feed, rss, pool)
     if rss.nil?
       logger.warn "Can't parse_items on a nil feed."
       return
@@ -120,7 +165,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         published_at = gobbler_item.extract_published_at || feed.gobbled_at
         
         content = @decoder.decode(gobbler_item.extract_content)
-        
+       
         # about the length > 255 check:  current varchar size is 255 -- we'll never find anything longer
         # and when we try, we don't use an index and, instead, table scan
         if content.nil? || content.length <= 0 || item.link.nil? || item.link.length > 255
@@ -149,6 +194,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
           db_item.parsed_at = nil
           db_item.save
           items_new += 1
+          gobbler_item.extract_images(content, pool, db_item)
         end
         
         items_processed += 1

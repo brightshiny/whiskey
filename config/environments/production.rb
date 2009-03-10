@@ -26,3 +26,5 @@ config.action_controller.perform_caching             = true
 # Gobbler fetch threads
 GOBBLER_THREAD_COUNT = 5
 
+ITEM_IMAGES_SRC = "/assets/images/items"
+ITEM_IMAGES_CACHE_DIR = "/var/www/media.refinr.com/public#{ITEM_IMAGES_SRC}"

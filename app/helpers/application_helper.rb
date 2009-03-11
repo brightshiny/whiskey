@@ -70,8 +70,6 @@ module ApplicationHelper
     
     return '' if !meme || !text
 
-    puts ">>> #{text}"
-
     meme_number_of_columns = meme.number_of_columns || 16
     max_col_char_limit = 25 * meme_number_of_columns
     

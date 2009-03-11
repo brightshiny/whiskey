@@ -74,12 +74,16 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
   end
 
   def gobble(item,pool)
-    if item.is_a? Feed
-      gobble_feed(item,pool)
-    elsif item.is_a? ImageSrc
-      gobble_image(item)
-    else
-      warn "I don't know how to gobble this item: #{item}"
+    begin
+      if item.is_a? Feed
+        gobble_feed(item,pool)
+      elsif item.is_a? ImageSrc
+        gobble_image(item)
+      else
+        warn "I don't know how to gobble this item: #{item}"
+      end
+    rescue RuntimeError => e
+      logger.error "Turkey.gobble() blew up, rescuing. #{e.backtrace.join("\n\t")}"
     end
   end
   

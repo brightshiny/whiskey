@@ -103,13 +103,13 @@ module ApplicationHelper
     s = ""
     if meme.strength_trend != 0
       if meme.strength_trend > 0 && meme.strength_trend > big_mover_diff
-        s += "<span class=\"trending trend_up\" title=\"#{meme.strength_trend}\">&uarr;+</span>"
+        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;+</span>"
       elsif meme.strength_trend > 0 && meme.strength_trend > minimum_diff
-        s += "<span class=\"trending trend_up\" title=\"#{meme.strength_trend}\">&uarr;</span>"
+        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;</span>"
       elsif meme.strength_trend < 0 && meme.strength_trend.abs > big_mover_diff
-        s += "<span class=\"trending trend_down\" title=\"#{meme.strength_trend}\">&darr;-</span>"      
+        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;-</span>"      
       elsif meme.strength_trend < 0 && meme.strength_trend.abs > minimum_diff
-        s += "<span class=\"trending trend_down\" title=\"#{meme.strength_trend}\">&darr;</span>"      
+        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;</span>"      
       end
     end
     return s

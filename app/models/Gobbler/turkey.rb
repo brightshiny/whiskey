@@ -88,11 +88,17 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       return
     end
     
-    begin
+ #  begin
       rss_title = @decoder.decode(rss.title)
       
       if feed.title.nil? || feed.title != rss_title
         feed.title = rss_title
+      end
+      
+      if feed.logo.nil?
+        eater = Gobbler::ImageEater.new(rss.link.match('(http:\/\/.*)'),feed.id)
+        eater.eat_logo
+        feed.logo = eater.link
       end
       
        (items_processed, items_new) = parse_items(feed, rss) || 0
@@ -100,9 +106,9 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
       feed.gobbled_at = Time.now
       feed.save
       logger.info "#{Thread.current.object_id}: Processed #{items_processed} (#{items_new} new) items from [id=#{feed.id}]: #{rss_title}"
-    rescue Exception => e
-      logger.error("Error while processing feed: " + e + "\n" + e.backtrace.join("\n"))  
-    end
+ #   rescue Exception => e
+ #     logger.error("Error while processing feed: " + e + "\n" + e.backtrace.join("\n"))  
+ #   end
   end  
   
   def parse_items(feed, rss)

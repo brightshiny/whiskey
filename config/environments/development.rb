@@ -19,3 +19,7 @@ config.action_mailer.raise_delivery_errors = false
 
 # Gobbler fetch threads
 GOBBLER_THREAD_COUNT = 2
+
+# Image Paths
+IMAGE_FILE_PATH = RAILS_ROOT + '/public/images'
+IMAGE_WEB_PATH = '/images'

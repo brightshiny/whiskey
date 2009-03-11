@@ -12,7 +12,12 @@
       <% else %>
         <%= limit_text(:meme=>meme,:text=>item.content,:max_col_char_limit=>1000) %>
       <% end %>
-      <% if current_user %><%= link_to "#", :action => :meme, :id => meme.id %><% end %>
+      
+      <% if current_user %>
+        <%= meme_strength_trend(meme) %>
+        <%= link_to "#", :action => :meme, :id => meme.id %>
+      <% end %>
+      
     </p>
   </div>
 </div>

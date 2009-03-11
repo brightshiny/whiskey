@@ -217,3 +217,13 @@ strong.byline a,
 #about .grid_4 {
   padding-top: 3px;
 }
+
+.trending {
+  font-weight: bold;
+}
+.trend_up {
+  color: #0f0;
+}
+.trend_down {
+  color: #ff6600;
+}

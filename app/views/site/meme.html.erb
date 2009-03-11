@@ -73,7 +73,7 @@
       <th class="grid_8">Title</th>
       <th class="grid_5 omega">Author</th>
     </tr>
-    <% for item in @items %>
+    <% for item in @items.sort_by{ |i| i.published_at }.reverse %>
     <tr>
       <td class="grid_3 alpha"><%= display_date(item.published_at) %> <%= display_time(item.published_at) %></td>
       <td class="grid_8">
@@ -90,4 +90,3 @@
 
 </div>
 
-<p id="footer">&copy; 2009 <a href="http://www.magicbucketlabs.com/">Magic Bucket Labs</a></p>

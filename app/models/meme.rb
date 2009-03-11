@@ -177,6 +177,23 @@ class Meme < ActiveRecord::Base
     return self.cached_z_score_strength
   end
   
+  attr_accessor :cached_strength_trend
+  def strength_trend
+    if self.cached_strength_trend.nil?
+      memes = self.related_memes.select{ |m| m.id < self.id }
+      strengths_to_consider = 3
+      if memes.size > strengths_to_consider
+        last_n_strengths = memes.map{ |m| m.strength }[0..(strengths_to_consider-1)]
+        avg_recent_strength = last_n_strengths.sum / strengths_to_consider
+        strength_trend = self.strength - avg_recent_strength
+      else
+        strength_trend = 0
+      end
+      self.cached_strength_trend = strength_trend
+    end
+    return self.cached_strength_trend
+  end
+  
   def similar_to(prev_meme)
     return false if !prev_meme
     my_items = {}
@@ -241,7 +258,7 @@ class Meme < ActiveRecord::Base
       end
     
       meme_ids = (forward_meme_ids + backward_meme_ids).uniq.select{ |id| ! id.nil? && id.to_i != self.id }
-      self.cached_related_memes = Meme.find(:all, :conditions => { :id => meme_ids }, :order => "id desc")
+      self.cached_related_memes = Meme.find(:all, :conditions => ["id in (?)", meme_ids], :order => "id desc")
     end
     return self.cached_related_memes
   end

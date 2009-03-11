@@ -96,5 +96,23 @@ module ApplicationHelper
   def display_time(date)
     date.strftime('%I:%M%p').gsub(/^0/,'').downcase
   end
+  
+  def meme_strength_trend(meme)
+    big_mover_diff = 20 
+    minimum_diff = 3 
+    s = ""
+    if meme.strength_trend != 0
+      if meme.strength_trend > 0 && meme.strength_trend > big_mover_diff
+        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;+</span>"
+      elsif meme.strength_trend > 0 && meme.strength_trend > minimum_diff
+        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;</span>"
+      elsif meme.strength_trend < 0 && meme.strength_trend.abs > big_mover_diff
+        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;-</span>"      
+      elsif meme.strength_trend < 0 && meme.strength_trend.abs > minimum_diff
+        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;</span>"      
+      end
+    end
+    return s
+  end
 
 end

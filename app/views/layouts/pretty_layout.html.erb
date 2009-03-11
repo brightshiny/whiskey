@@ -13,7 +13,7 @@
   <% if defined?(@flight) && defined?(@page_title) %>
   <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / <%= @page_title %></span></h1>
   <% elsif defined?(@flight) && defined?(@run) %>
-  <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / updated <%= time_ago_in_words(@run.ended_at) %> ago</span></h1>
+  <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / <span title="Updated on <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %>">updated <span id="time_ago"><%= time_ago_in_words(@run.ended_at) %></span> ago</span></span></h1>
   <% else %>
   <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %></h1>
   <% end %>
@@ -23,7 +23,7 @@
   
   <div id="about">
     <div class="grid_12 alpha">
-      <p>This is <a href="/" style="color: #20232A; text-decoration: none;">refinr</a>, a new way to keep on top of technology news. Every half-hour we read hundreds of news sources from across the web and refine all that content down to just the most important bits.  We help you find all the news you need to stay up-to-the-minute in the world of technology</p>
+      <p>This is <a href="/" style="color: #20232A; text-decoration: none; font-weight: bold;">refinr</a>, a new way to keep on top of technology news. Every half-hour we read hundreds of news sources from across the web and refine all that content down to just the most important bits.  We help you find all the news you need to stay up-to-the-minute in the world of technology</p>
     </div>
     <div class="grid_4 omega">
       <p>We'd love to hear from you.  Tell us how you're using the site, or how we could improve things. <a href="http://refinr.uservoice.com/pages/general" onclick="UserVoice.Popin.show(); return false;">Let us know how we can help you get the most out of <strong>refinr</strong></a>.</p>

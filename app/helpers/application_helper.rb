@@ -66,12 +66,15 @@ module ApplicationHelper
   def limit_text(opts={})
     meme = opts[:meme]
     text = opts[:text]
-    max_col_char_limit = opts[:max_col_char_limit] || 300
     epsilon = 10
     
     return '' if !meme || !text
 
-    max_col_char_limit = max_col_char_limit / (16-meme.number_of_columns*1.79) if meme.number_of_columns < 16
+    puts ">>> #{text}"
+
+    meme_number_of_columns = meme.number_of_columns || 16
+    max_col_char_limit = 25 * meme_number_of_columns
+    
     truncated = false  
     text = Gobbler::GItem.extract_text(text)
     limited_text = []

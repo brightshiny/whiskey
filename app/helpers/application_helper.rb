@@ -87,7 +87,8 @@ module ApplicationHelper
     end
     
     truncated_indicator = truncated ? '...' : ''
-    return limited_text.join(' ')+truncated_indicator
+    last_word = limited_text.pop
+    return "#{limited_text.join(' ')}&nbsp;#{last_word}#{truncated_indicator}"
   end
 
   def display_date(date)

@@ -17,7 +17,9 @@ function update_time() {
     time_span = $('time_ago');
     time_span_content = time_span.innerHTML;
     if(time_span_content.match(/minutes/)) {
-      [time, units] = time_span_content.split(/ /);
+      time_pieces = time_span_content.split(/ /);
+      time = time_pieces[0];
+      units = time_pieces[1];
       time = parseInt(time) + 1;
       time_span.innerHTML = [time, units].join(" ");
     } 

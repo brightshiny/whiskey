@@ -6,6 +6,16 @@ body {
   color: #20232A;
 }
 
+label, input {
+  vertical-align: middle;
+}
+label {
+  display: block;
+  float: left;
+  width: 100px;
+  text-align: right;
+  margin-right: 10px;
+}
 a {
   color: #D24A31;
 }
@@ -141,7 +151,7 @@ strong.byline a,
 .meme_details .item_image_block {
   height: 100px;
   background-position: center center;
-  background-repeat: none;
+  background-repeat: no-repeat;
   margin-bottom: 20px;
   background-color: #efefef;
 }
@@ -170,4 +180,50 @@ strong.byline a,
 #time_to_update a {
   color: #D24A31 !important;
   text-decoration: none;
+}
+
+#login #errorExplanation {
+  border: 10px solid #D24A31;
+  color: #D24A31;
+  padding: 10px;
+  margin-top: 10px;
+}
+#login {
+  margin-top: 2.0em;
+}
+#login h3 {
+  text-align: center;
+  margin-bottom: 1.0em;
+}
+#login p {
+  margin: 0;
+  padding: 0.25em 0;
+}
+#openid_container .sleeve, 
+#login_container .sleeve {
+  padding: 10px;
+  border: 10px solid #efefef;
+}
+
+#about {
+  border-top: 1px solid #ccc;
+  padding-top: 1.0em;
+  color: #999;
+}
+#about .grid_12 {
+  font-size: 200%;
+  line-height: 1.2em;
+}
+#about .grid_4 {
+  padding-top: 3px;
+}
+
+.trending {
+  font-weight: bold;
+}
+.trend_up {
+  color: #0f0;
+}
+.trend_down {
+  color: #ff6600;
 }

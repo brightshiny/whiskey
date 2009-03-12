@@ -143,7 +143,7 @@ class Meme < ActiveRecord::Base
       meme_items = MemeItem.find(:all, :include => {:item_relationship => :item}, :conditions => ["meme_id = ?", self.id])
       meme_items.each do |mi|
         item = mi.item_relationship.item
-        next if seen_meme_items.has_key?(item.id)
+        next if !item || seen_meme_items.has_key?(item.id)
         seen_meme_items[item.id] = true
         dmi.push mi
       end
@@ -175,6 +175,23 @@ class Meme < ActiveRecord::Base
       # logger.info "*** Z: CACHE"
     end
     return self.cached_z_score_strength
+  end
+  
+  attr_accessor :cached_strength_trend
+  def strength_trend
+    if self.cached_strength_trend.nil?
+      memes = self.related_memes.select{ |m| m.id < self.id }
+      strengths_to_consider = 3
+      if memes.size > strengths_to_consider
+        last_n_strengths = memes.map{ |m| m.strength }[0..(strengths_to_consider-1)]
+        avg_recent_strength = last_n_strengths.sum / strengths_to_consider
+        strength_trend = self.strength - avg_recent_strength
+      else
+        strength_trend = 0
+      end
+      self.cached_strength_trend = strength_trend
+    end
+    return self.cached_strength_trend
   end
   
   def similar_to(prev_meme)
@@ -241,7 +258,7 @@ class Meme < ActiveRecord::Base
       end
     
       meme_ids = (forward_meme_ids + backward_meme_ids).uniq.select{ |id| ! id.nil? && id.to_i != self.id }
-      self.cached_related_memes = Meme.find(:all, :conditions => { :id => meme_ids }, :order => "id desc")
+      self.cached_related_memes = Meme.find(:all, :conditions => ["id in (?)", meme_ids], :order => "id desc")
     end
     return self.cached_related_memes
   end

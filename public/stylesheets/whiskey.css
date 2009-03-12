@@ -1,8 +1,0 @@
-label, input {
-  vertical-align: middle;
-}
-.errorExplanation, .fieldWithErrors { color: #900; }
-
-td, th {
-  padding: 2px 10px;
-}

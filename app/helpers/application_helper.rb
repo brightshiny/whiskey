@@ -66,12 +66,13 @@ module ApplicationHelper
   def limit_text(opts={})
     meme = opts[:meme]
     text = opts[:text]
-    max_col_char_limit = opts[:max_col_char_limit] || 300
     epsilon = 10
     
     return '' if !meme || !text
 
-    max_col_char_limit = max_col_char_limit / (16-meme.number_of_columns*1.79) if meme.number_of_columns < 16
+    meme_number_of_columns = meme.number_of_columns || 16
+    max_col_char_limit = 25 * meme_number_of_columns
+    
     truncated = false  
     text = Gobbler::GItem.extract_text(text)
     limited_text = []
@@ -87,7 +88,33 @@ module ApplicationHelper
     end
     
     truncated_indicator = truncated ? '...' : ''
-    return limited_text.join(' ')+truncated_indicator
+    last_word = limited_text.pop
+    return "#{limited_text.join(' ')}&nbsp;#{last_word}#{truncated_indicator}"
+  end
+
+  def display_date(date)
+    date.strftime('%m/%d/%Y').gsub(/^0/,'').gsub(/\/0/,'/')
+  end
+  def display_time(date)
+    date.strftime('%I:%M%p').gsub(/^0/,'').downcase
+  end
+  
+  def meme_strength_trend(meme)
+    big_mover_diff = 20 
+    minimum_diff = 3 
+    s = ""
+    if meme.strength_trend != 0
+      if meme.strength_trend > 0 && meme.strength_trend > big_mover_diff
+        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;+</span>"
+      elsif meme.strength_trend > 0 && meme.strength_trend > minimum_diff
+        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;</span>"
+      elsif meme.strength_trend < 0 && meme.strength_trend.abs > big_mover_diff
+        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;-</span>"      
+      elsif meme.strength_trend < 0 && meme.strength_trend.abs > minimum_diff
+        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;</span>"      
+      end
+    end
+    return s
   end
 
 end

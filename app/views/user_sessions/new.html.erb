@@ -1,23 +1,29 @@
-<h2>Login</h2>
-
+<div id="login">
 <% form_for @user_session, :url => user_session_path do |f| %>
 
-  <%= f.error_messages %>
-
   <div class="grid_8 alpha" id="openid_container">
-    <h3>Login with your OpenID</h3>
-    <p><%= f.label :openid_identifier, "OpenID" %> <%= f.text_field :openid_identifier %></p>  
+    <div class="sleeve">
+      <h3>Login with your OpenID</h3>
+      <p><%= f.label :openid_identifier, "OpenID" %> <%= f.text_field :openid_identifier %></p>  
+      <!-- <p><%= f.label :remember_me_1, "Remember Me" %><%= f.check_box :remember_me, :id => "user_session_remember_me_1" %></p> -->
+      <p><%= f.label :submit, "Login", :style => "visibility: hidden;" %><%= f.submit "Login" %></p>
+      <div class="clear"></div>
+    </div>  
   </div>
 
   <div class="grid_8 omega" id="login_container">
-    <h3>Login with a local account</h3>
-    <p><%= f.label :login %> <%= f.text_field :login %></p>
-    <p><%= f.label :password %> <%= f.password_field :password %></p>  
+    <div class="sleeve">
+      <h3>Login with a local account</h3>
+      <p><%= f.label :login %> <%= f.text_field :login %></p>
+      <p><%= f.label :password %> <%= f.password_field :password %></p> 
+      <p><%= f.label :submit, "Login", :style => "visibility: hidden;" %><%= f.submit "Login" %></p> 
+    </div>
   </div>
+
+  <div class="clear"></div>    
+
+  <%= f.error_messages %>
   
-  <div class="grid_16 alpha omega">
-    <p><%= f.check_box :remember_me, :id => "user_session_remember_me_1" %><%= f.label :remember_me_1, "Remember Me" %></p>
-    <p><%= f.submit "Login" %></p>
-  </div>
-    
 <% end %>
+
+</div>

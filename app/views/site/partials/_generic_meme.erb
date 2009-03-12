@@ -7,11 +7,12 @@
     <% end %>
     <p class="excerpt">
       <strong class="byline"><% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %><span class="website"><%= link_to_item_with_tracking item.feed.title, item %></span>, </strong>
-      <% if ! meme.number_of_columns.nil? && meme.number_of_columns > SiteController::COLUMN_ZOOM_FACTOR %>
-        <%= limit_text(:meme=>meme,:text=>item.content,:max_col_char_limit=>350) %>
-      <% else %>
-        <%= limit_text(:meme=>meme,:text=>item.content,:max_col_char_limit=>1000) %>
+        <%= limit_text(:meme=>meme,:text=>item.content) %>
+      <% if current_user %>
+        <%= meme_strength_trend(meme) %>
+        <%= link_to "#", :action => :meme, :id => meme.id %>
       <% end %>
+      
     </p>
   </div>
 </div>

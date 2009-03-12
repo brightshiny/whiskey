@@ -2,7 +2,6 @@
 
 <div class="grid_16 alpha omega">
   <% 
-    @meme.number_of_columns = 12
     @meme.is_alpha = true
   %>
   <%= render :partial => "site/partials/generic_meme", :locals => { :item => @meme.item, :meme => @meme, :ignore_title_sizing => true } %>
@@ -34,7 +33,7 @@
   <% for item in @items %>
     <% if item.content.match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
       <% item.content.scan(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/).each do |img_src| %>
-        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 6 %> omega<% end %>" style="background-image: url(<%= img_src %>);">
+        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 6 %> omega<% end %>" style="background-image: url(<%=h img_src.split(/ /).first %>);">
           <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
         </div>
         <% if c%6 == 0 %><div class="clear"></div><% c = 0 %><% end %>
@@ -52,10 +51,13 @@
 <div class="meme">
 <% if @meme.related_memes.size > 3 %>
 <div class="grid_16 alpha omega">
-  <h3>Meme Strength: <%= @meme.related_memes.last.created_at.strftime('%m/%d/%Y %I:%M%p') %> - <%= @meme.related_memes.first.created_at.strftime('%m/%d/%Y %I:%M%p') %></h3>
+  <h3>Meme Strength: <%= display_date(@meme.related_memes.last.created_at) %> <%= display_time(@meme.related_memes.last.created_at) %> - <%= display_date(@meme.related_memes.first.created_at) %> <%= display_time(@meme.related_memes.first.created_at) %></h3>
   <script type="text/javascript" src="/javascripts/swfobject.js"></script>
-  <%= @graph %>
+  <%= @meme_strength_graph %>
+  <%= @items_published_graph %>
 </div>
+<% else %>
+<h3>Meme Strength: Not enough data</h3>
 <% end %>
 </div>
 
@@ -70,9 +72,9 @@
       <th class="grid_8">Title</th>
       <th class="grid_5 omega">Author</th>
     </tr>
-    <% for item in @items %>
+    <% for item in @items.sort_by{ |i| i.published_at }.reverse %>
     <tr>
-      <td class="grid_3 alpha"><%= item.published_at.strftime('%m/%d/%Y %I:%M%p') %></td>
+      <td class="grid_3 alpha"><%= display_date(item.published_at) %> <%= display_time(item.published_at) %></td>
       <td class="grid_8">
         <%= link_to_item_with_tracking item.title, item %>
       </td>
@@ -87,4 +89,3 @@
 
 </div>
 
-<p id="footer">&copy; 2009 <a href="http://www.magicbucketlabs.com/">Magic Bucket Labs</a></p>

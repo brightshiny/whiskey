@@ -161,6 +161,9 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
     entity = []
     tag = []
     
+    # goodbye script and embed tags
+    content.gsub!(/<\s*(script|embed).*?<\/\1>/i, ' ')
+    
     scanner = StringScanner.new(content)
     while !scanner.eos?
       c = scanner.getch

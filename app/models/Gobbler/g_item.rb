@@ -69,7 +69,17 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
   
   def self.parse_words(db_item)
     content_words = {}
-    content = "#{Gobbler::GItem.extract_text(db_item.content)} #{Gobbler::GItem.extract_text(db_item.title)}"
+    title = Gobbler::GItem.extract_text(db_item.title).strip
+    content = Gobbler::GItem.extract_text(db_item.content).strip
+    
+    if !title || title.size <= 0 || !content || content.length <= 0
+      db_item.delete
+      logger.info "Parsed item id=#{db_item.id} and deleted it.  Missing title or content."
+      return
+    end
+
+    content = "#{title} #{content}"
+    
     document_word_count = 0
     content.downcase.scan(/[a-z0-9]+/) do |w|
       next if is_stop_word?(w)

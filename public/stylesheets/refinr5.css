@@ -227,3 +227,8 @@ strong.byline a,
 .trend_down {
   color: #ff6600;
 }
+
+.feed_favicon {
+  vertical-align: middle;
+  margin-right: 3px;
+}

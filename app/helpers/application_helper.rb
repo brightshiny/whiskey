@@ -89,6 +89,7 @@ module ApplicationHelper
     
     truncated_indicator = truncated ? '...' : ''
     last_word = limited_text.pop
+    last_word = last_word.chop if !last_word.match(/,$/).nil?
     return "#{limited_text.join(' ')}&nbsp;#{last_word}#{truncated_indicator}"
   end
 

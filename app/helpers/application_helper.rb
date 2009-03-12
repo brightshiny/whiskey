@@ -121,7 +121,7 @@ module ApplicationHelper
   def byline(item)
     s = ""
     if ! item.feed.logo.nil?
-      s += "<img src=\"#{item.logo}\" alt=\"#{item.feed.title}\" class=\"feed_favicon\" />"
+      s += "<img src=\"#{item.feed.logo}\" alt=\"#{item.feed.title}\" class=\"feed_favicon\" />"
     end
     if ! item.author.nil?
       s += "<span class=\"author\">#{item.author} &middot; </span>"

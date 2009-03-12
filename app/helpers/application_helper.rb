@@ -121,7 +121,7 @@ module ApplicationHelper
   def byline(item)
     s = ""
     if ! item.feed.logo.nil?
-      s += "<img src=\"#{item.feed.logo}\" alt=\"#{item.feed.title}\" class=\"feed_favicon\" />"
+      s += "#{link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title), item)}"
     end
     if ! item.author.nil?
       s += "<span class=\"author\">#{item.author} &middot; </span>"

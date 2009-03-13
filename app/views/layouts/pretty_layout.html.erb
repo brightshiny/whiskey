@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<div class="container_16">  
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">  
   <% if defined?(@flight) && defined?(@page_title) %>
   <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / <%= @page_title %></span></h1>
   <% elsif defined?(@flight) && defined?(@run) %>

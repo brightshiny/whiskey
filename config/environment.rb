@@ -86,13 +86,14 @@ end
 #   config.remember_me_for = 3.months.to_i
 # end
 
-require 'smtp_tls'
 require 'ezcrypto_url_safe'
 KEY = EzCrypto::Key.with_password "4e3064a5e2e0037812e6b7103fd73091dc29ac7e2cbb3e9a9e3092c4ac48603dd6ff0532bd12bc4ffcf95b36a7f6e7d88633073b28c717ee32c4e59e637dfe1a", "d995ca6318a590fd14df40311ed1b42ef7d96a67548c990e53b77752cd59f4306ee592e0b7010b68229db7fd388250b489111ad90a8e87d14b40576f7625c796", :algorithm=>"aes256"
 
+# The crux of the matter
 require 'linalg'
 
 # Should probably find a better place for these...
+require 'smtp_tls'
 ActionMailer::Base.delivery_method = :smtp
 ActionMailer::Base.perform_deliveries = true
 ActionMailer::Base.raise_delivery_errors = true
@@ -104,4 +105,13 @@ ActionMailer::Base.smtp_settings = {
   :authentication => :login,
   :user_name => "whiskeybrightshinyme@gmail.com",
   :password => "9aHefafaXath&GAz"
+}
+
+# From where should images be pulled?
+ActionController::Base.asset_host = Proc.new { |source|
+  if source.starts_with?('/assets/images')
+    "http://media.refinr.com"
+  else
+    ""
+  end
 }

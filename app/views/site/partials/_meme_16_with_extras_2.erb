@@ -14,7 +14,7 @@
   
   <div class="grid_10 omega">
     <p class="excerpt">
-      <strong class="byline"><%= byline(item) %></strong>,
+      <strong class="byline"><%= render :partial => "byline", :locals => { :item => item } %></strong>,
 	  <%= limit_text(:meme=>meme,:text=>item.content,:max_col_char_limit=>300) %>
 	  <% if current_user %>
       <%= meme_strength_trend(meme) %>

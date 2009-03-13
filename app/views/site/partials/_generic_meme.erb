@@ -6,7 +6,7 @@
     <h3 class="title" style="font-size: <%= title_font_size(meme) %>;"><%= link_to_item_with_tracking widow_prevention(item.title), item %></h3>
     <% end %>
     <p class="excerpt">
-      <strong class="byline"><%= byline(item) %></strong>,
+      <strong class="byline"><%= render :partial => "byline", :locals => { :item => item } %></strong>,
         <%= limit_text(:meme=>meme,:text=>item.content) %>
       <% if current_user %>
         <%= meme_strength_trend(meme) %>

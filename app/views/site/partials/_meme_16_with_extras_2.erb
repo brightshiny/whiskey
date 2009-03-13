@@ -17,7 +17,7 @@
     <div class="list_of_alternate_content">
       <% @items_by_meme[meme.id][1..2].each_with_index do |alt_item, c| %>
       <div class="grid_8<% if c == 0 %> alpha<% elsif c == @items_by_meme[meme.id][1..2].size-1 %> omega<% end %>">
-         <%= link_to_item_with_tracking widow_prevention(alt_item.title), alt_item %><br /><strong class="byline"><span class="website"><%= link_to_item_with_tracking alt_item.feed.title, alt_item %></span></strong></li>
+         <%= link_to_item_with_tracking widow_prevention(alt_item.title), alt_item %> &middot; <strong class="byline"><span class="website"><%= link_to_item_with_tracking widow_prevention(alt_item.feed.title), alt_item %></span></strong></li>
       </div>
       <% end %>
       </ul>

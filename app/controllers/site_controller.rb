@@ -12,6 +12,9 @@ class SiteController < ApplicationController
     if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id, :user => current_user })    
       load_memes(@run)
       load_items
+      if @run != Run.current(5)
+        @archive = true
+      end
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end

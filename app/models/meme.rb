@@ -194,6 +194,16 @@ class Meme < ActiveRecord::Base
     return self.cached_strength_trend
   end
   
+  attr_accessor :cached_strength_over_time
+  def strength_over_time
+    if self.cached_strength_over_time.nil?
+      memes = self.related_memes.select{ |m| m.id < self.id }
+      last_n_strengths = memes.map{ |m| m.strength }
+      self.cached_strength_over_time = last_n_strengths
+    end
+    return self.cached_strength_over_time
+  end
+  
   def similar_to(prev_meme)
     return false if !prev_meme
     my_items = {}

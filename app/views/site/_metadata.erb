@@ -1,0 +1,4 @@
+<div class="grid_1 alpha">
+<% if ! item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title, :size => "16x16", :class => "feed_favicon"), item) %><% end %><br />
+<span id="meme_strength_<%= meme.id %>" class="dynamicsparkline"></span>
+</div>

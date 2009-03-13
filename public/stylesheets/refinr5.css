@@ -230,5 +230,9 @@ strong.byline a,
 
 .feed_favicon {
   vertical-align: middle;
-  margin: -1px 3px 0 0;
+  margin: 0 3px 0 0;
+}
+
+#next_or_previous {
+  color: #999;
 }

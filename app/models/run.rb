@@ -159,7 +159,28 @@ class Run < ActiveRecord::Base
   def max_published_at
     published_at_range[1]
   end
+  
+  attr_accessor :cached_previous_run
+  def previous
+    if self.cached_previous_run.nil?
+      self.cached_previous_run = Run.find(:first, :conditions => ["id < ? and user_id = ? and ended_at is not null", self.id, self.user_id], :order => "id desc")
+    end
+    return self.cached_previous_run
+  end
+  
+  attr_accessor :cached_next_run
+  def next
+    if self.cached_next_run.nil?
+      self.cached_next_run = Run.find(:first, :conditions => ["id > ? and user_id = ? and ended_at is not null", self.id, self.user_id], :order => "id")
+    end
+    return self.cached_next_run
+  end
+  
+  def Run.current(user_id)
+    @run = Run.find(:first, 
+      :conditions => ["user_id = ? and ended_at is not null", user_id],
+      :order => "ended_at desc, id desc"
+    )
+  end
 
 end
-
-

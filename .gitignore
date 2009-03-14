@@ -5,3 +5,4 @@
 db/schema.rb
 .loadpath
 .project
+public/assets/images/*

@@ -9,7 +9,7 @@ class Gobbler::ImageEater
     def initialize(source,reference)
       reference = "%06d" % reference
       @source = source
-      @destfile = reference + ".jpg"
+      @destfile = reference + ".gif"
       @link = nil
     end
     
@@ -21,15 +21,24 @@ class Gobbler::ImageEater
         doc.each_line do |x|
           if x.match(/link.*rel\s*="*shortcut*\s*icon"*\s+/)
             urlToTry = x.match(/href\s*="*(.*?)"*\s+/)[1]
-            image = Magick::Image.from_blob(open(urlToTry).read) { self.format = "ico" }[0]
-            break
+            if urlToTry.match(/\.ico$/)
+              image = Magick::Image.from_blob(open(urlToTry).read) { self.format = "ico" }[0]
+            else
+              image = Magick::Image.from_blob(open(urlToTry).read)
+            end
+            if image.x_resolution >= 50.0 || image.y_resolution >= 50.0
+              image = nil
+            end
+           break
           end
         end
       rescue
       end
       if image.nil?
         begin
-          image = Magick::ImageList.new("http://#{@source}/favicon.png")
+    #      image = Magick::ImageList.new("http://#{@source}/favicon.png")
+          image = Magick::Image.from_blob(open("http://#{@source}/favicon.png").read)
+
         rescue
         end
         if image.nil?

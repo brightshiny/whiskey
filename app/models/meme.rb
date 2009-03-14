@@ -142,7 +142,7 @@ class Meme < ActiveRecord::Base
       dmi = Array.new
       meme_items = MemeItem.find(:all, :include => {:item_relationship => :item}, :conditions => ["meme_id = ?", self.id])
       meme_items.each do |mi|
-        item = mi.item_relationship.item
+        item = mi.item_relationship.item if mi.item_relationship
         next if !item || seen_meme_items.has_key?(item.id)
         seen_meme_items[item.id] = true
         dmi.push mi

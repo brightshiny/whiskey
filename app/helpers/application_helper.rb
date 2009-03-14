@@ -48,8 +48,10 @@ module ApplicationHelper
     if html_options.nil?
       html_options = {}
     end
-    html_options.merge!({ :title => "#{item.title} #{item.link}" })
     
+    title = item.title
+    html_options.merge!({ :title => title })
+    html_options.merge!({ :onclick => "track_click('#{url}', '#{CGI::escape(title)}')"})
     if html_options
       html_options = html_options.stringify_keys
       href = html_options['href']
@@ -59,7 +61,7 @@ module ApplicationHelper
       tag_options = nil
     end
 
-    href_attr = "href=\"#{url}\"" unless href
+    href_attr = "href=\"#{item.link}\"" unless href
     "<a #{href_attr}#{tag_options}>#{name || url}</a>"
   end
 

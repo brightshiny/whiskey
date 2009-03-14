@@ -25,3 +25,12 @@ function update_time() {
     } 
   }
 }
+
+function track_click(src, link_name) {
+	if(document.images) {
+		(new Image()).src = src;
+	}
+	if (pageTracker) {
+		pageTracker._trackPageview(link_name)
+	}
+}

@@ -116,7 +116,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         
       end
     rescue RuntimeError => e
-      logger.error "Fetch thread failed, rejoining: #{e.backtrace.join("\n\t")}"
+      logger.error "Image download failed (probably harmless): #{e.message}"  #{e.backtrace.join("\n\t")}"
       image.delete
     end
   end
@@ -180,6 +180,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         published_at = gobbler_item.extract_published_at || feed.gobbled_at
         
         content = @decoder.decode(gobbler_item.extract_content)
+        title = gobbler_item.extract_title
        
         # about the length > 255 check:  current varchar size is 255 -- we'll never find anything longer
         # and when we try, we don't use an index and, instead, table scan
@@ -189,11 +190,15 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
           next
         end
         
-        db_item = Item.find(:first, :conditions => ["feed_id = :feed_id and link = :link", {:feed_id => feed.id, :link => item.link}])
+        #db_item = Item.find(:first, :conditions => ["feed_id = :feed_id and link = :link", {:feed_id => feed.id, :link => item.link}])
+        published_before = published_at < 24.hours.ago ? published_at : 24.hours.ago
+        db_item = Item.find(:first, :conditions => ["feed_id = :feed_id and title = :title and published_at >= :published_before", 
+          {:feed_id => feed.id, :title => title, :published_before => published_before}])
         if db_item.nil?
           db_item = Item.new
           db_item.feed_id = feed.id
           db_item.link = item.link
+          db_item.title = title
         end
         
         sha1 = Digest::SHA1.new

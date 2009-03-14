@@ -33,6 +33,7 @@ Rails::Initializer.run do |config|
   config.gem "htmlentities"
   config.gem "stemmer"
   config.gem "imagesize", :lib => "image_size"
+  config.gem "rmagick", :lib => "RMagick"
 
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.

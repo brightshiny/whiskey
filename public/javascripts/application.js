@@ -29,7 +29,7 @@ function update_time() {
     var newTime = "";
     if((units == "minute")&&(time == 1)) {
       time += 1;
-      newTime = time + " " + minutes;
+      newTime = time + " minutes";
     } else if(time_span_content.split(/ /).length > 2) {
       time = 1;
       newTime += "1 minute";

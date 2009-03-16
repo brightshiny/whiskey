@@ -37,9 +37,7 @@ function update_time() {
       if(units == "minutes") {
         time += 1; 
         newTime = [time, units].join(" "); 
-      } else {
-        console.log("is days");
-      }
+      } 
     }
     time_span.innerHTML = newTime;
   }

@@ -1,0 +1,156 @@
+<% number_of_displayed_top_memes = 0 %>
+<% number_of_displayed_middle_memes = 0 %>
+<% number_of_displayed_bottom_memes = 0 %>
+
+<% @memes.each_with_index do |meme, n| %>
+
+<% primary_item = meme.distinct_meme_items[0].item %>
+<% if meme.z_score_strength > 1.5 %>
+
+<% if number_of_displayed_top_memes == 0 %>
+<div id="top_memes">
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
+<h2 class="meme_grouping_title hide">Top Meme</h2>
+<% end %>
+
+<% if n == 0 %>
+<% meme.number_of_columns = 12 %>
+<div id="meme_<%= meme.id %>" class="meme"> 
+  <h3 class="title" style="font-size: 300%;"><%= link_to_item_with_tracking widow_prevention(meme.distinct_meme_items[0].item.title), meme.distinct_meme_items[0].item %></h3>
+  <div class="grid_6 alpha">
+    <p class="excerpt"><strong><%= render :partial => "byline", :locals => { :item => meme.distinct_meme_items[0].item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.distinct_meme_items[0].item.content) %></p>
+  </div>
+  <div class="grid_4">
+    <ul class="alternate_content">
+      <% for meme_item in meme.distinct_meme_items[1..2] %>
+      <li>
+        <%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %><br />
+        <%= render :partial => "byline", :locals => { :item => meme_item.item, :meme => meme } %>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="grid_2 omega">
+    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item } %>
+  </div>
+  <div class="clear"></div>  
+</div>
+
+<div class="clear"></div>  
+
+
+<% else %>
+<% if n == 1 %>
+</div>
+</div><!-- top_memes -->
+<div id="second_memes">
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
+<h2 class="meme_grouping_title hide">Secondary Memes</h2>
+<% end %>
+
+<% meme.number_of_columns = 12 %>
+<div id="meme_<%= meme.id %>" class="meme">  
+  <div class="grid_6 alpha">
+    <h3 class="title"><%= link_to_item_with_tracking(widow_prevention(meme.distinct_meme_items[0].item.title), meme.distinct_meme_items[0].item) %></h3>
+    <p class="byline"><strong><%= render :partial => "byline", :locals => { :item => meme.distinct_meme_items[0].item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.distinct_meme_items[0].item.content) %></p>
+  </div>
+  <div class="grid_4">
+    <ul class="alternate_content">
+      <% for meme_item in meme.distinct_meme_items[1..2] %>
+      <li>
+        <%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %><br />
+        <%= render :partial => "byline", :locals => { :item => meme_item.item, :meme => meme } %>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+  <div class="grid_2 omega">
+    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item } %>
+  </div>  
+  <div class="clear"></div>  
+</div>
+
+<div class="clear"></div>  
+<% end %>
+<% number_of_displayed_top_memes += 1 %>
+
+<% else %>
+
+<% if number_of_displayed_middle_memes < 6 %>
+<% if number_of_displayed_middle_memes == 0 %>
+</div><!-- top_memes container -->
+</div><!-- top_memes -->
+
+<div id="middle_memes">
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
+<h2 class="meme_grouping_title hide">Tertiary Memes</h2>
+<% end %>
+<% meme.number_of_columns = 4 %>
+<div class="meme grid_4<% if number_of_displayed_middle_memes%3 == 0%> alpha<% elsif number_of_displayed_middle_memes%3 == 2 %> omega<% end %>">
+  <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.distinct_meme_items[0].item.title), meme.distinct_meme_items[0].item %></h3>
+  <p><strong><%= render :partial => "byline", :locals => { :item => meme.distinct_meme_items[0].item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.distinct_meme_items[0].item.content) %></p>
+  <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item } %>
+</div>
+<% if number_of_displayed_middle_memes%3 == 2 %>
+<div class="clear"></div> 
+<% end %>
+
+<% number_of_displayed_middle_memes += 1 %>
+
+<% if number_of_displayed_middle_memes == 6 %>
+<div class="clear"></div>
+</div><!-- middle_memes container -->
+</div><!-- middle_memes -->
+<div id="bottom_memes">
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
+<h2 class="meme_grouping_title hide">Rumblings</h2>
+<% end %>
+
+
+<% else %>
+
+
+
+<% meme.number_of_columns = 3 %>
+<div class="meme grid_3<% if number_of_displayed_bottom_memes%4 == 0%> alpha<% elsif number_of_displayed_bottom_memes%4 == 3 %> omega<% end %>">
+  <div class="generic">
+    <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.distinct_meme_items[0].item.title), meme.distinct_meme_items[0].item %></h3>
+    <p><% if ! meme.distinct_meme_items[0].item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(meme.distinct_meme_items[0].item.feed.logo, :alt => meme.distinct_meme_items[0].item.feed.title, :size => "16x16", :class => "feed_favicon"), meme.distinct_meme_items[0].item) %><% end %><%= render :partial => "byline", :locals => { :item => meme.distinct_meme_items[0].item, :meme => meme } %>, <%= limit_text(:meme=>meme,:text=>meme.distinct_meme_items[0].item.content) %></p>
+  </div>
+</div>
+<% if number_of_displayed_bottom_memes%4 == 3 %>
+<div class="clear"></div>
+<% end %>
+<% number_of_displayed_bottom_memes += 1%>
+
+<% end %>
+
+
+<% end %>
+<% end %>
+
+<div class="clear"></div>
+</div><!-- bottom_memes container-->
+</div><!-- bottom_memes -->
+
+<div class="clear"></div>
+
+<div id="current_version"><%= hidden_field_tag "version_loaded", @run.encrypted_id %></div>
+
+
+<div id="updater" class="container_12 hide"></div>
+
+<script type="text/javascript">
+<% if params[:id].nil? -%>
+// Check for new versions
+$.timer(120000, function (timer) {
+  $.get("/site/current", function(data){
+    should_page_be_updated(data);
+  });
+});
+<% end -%>
+// Keep updated time in line
+$.timer(60000, function(timer) {
+  update_time();
+});
+</script>

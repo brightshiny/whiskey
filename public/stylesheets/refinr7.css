@@ -1,0 +1,335 @@
+body {
+  font-family: helvetica, arial, "sans serif";
+  font-size: 81%;
+  line-height: 1.4em;
+  background-color: #fff;
+  color: #20232A;
+}
+
+label, input {
+  vertical-align: middle;
+}
+label {
+  display: block;
+  float: left;
+  width: 100px;
+  text-align: right;
+  margin-right: 10px;
+}
+a {
+  color: #D24A31;
+}
+a:hover {
+  background-color: #ffcc00;
+}
+.alternate_content a {
+  color: #2579d2;
+}
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.3em;
+  margin: 0 0 0.3em 0;
+  padding-bottom: 0;
+}
+
+h3.title {
+  margin: 0 0 0 0;
+  padding: 0 0 0.2em 0;
+  line-height: 1.1em;
+}
+p.excerpt {
+  margin: 0.5em 0 1.0em 0;
+  padding: 0;
+}
+
+.meme {
+  padding: 1.2em 0;
+}
+
+.meme .related {
+  padding: 0.5em 0;
+}
+
+.main_story p.excerpt {
+  margin: 0.4em 0 0.5em 0;
+}
+
+.alternate_content {
+  margin: 0;
+  padding: 0;
+  padding-bottom: 0.5em;
+  margin-bottom: 0.2em;
+}
+  
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+  text-decoration: none;
+  color: #20232A;
+}
+
+
+h1#logo {
+  margin: 0;
+  padding: 1.0em 0;
+  line-height: 1.0em;
+}
+h1#logo a {
+  color: #20232A;
+  text-decoration: none;
+}
+
+.grid_8 h3.title {
+  line-height: 1.2em;
+}
+.grid_3 h3 a, 
+.grid_4 h3 a {
+  font-size: 135%;
+  line-height: 1.2em;
+}
+
+p.excerpt, p.byline {
+  margin: 0;
+  padding: 0;
+  font-weight: normal;
+}
+strong.byline, 
+.alternate_content strong.byline {
+  color: #D24A31;
+}
+strong.byline a,
+.alternate_content strong.byline a {
+  color: #D24A31;
+}
+.alternate_content .website a {
+  color: #D24A31;
+}
+.alternate_content {
+  font-weight: normal;
+}
+
+.alternate_content li {
+  margin-bottom: 0.3em;
+}
+
+.enlarged .excerpt {
+  font-size: 120%;
+  line-height: 1.3em;
+}
+
+.faded {
+  color: #ccc;
+}
+
+.highlight {
+  background-color: #E7F6FF;
+}
+
+.meme_details {
+  margin-top: 3.0em;
+}
+.meme_details .meme {
+  margin: 1.0em 0;
+}
+
+.meme_details .generic h3 {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+.meme_details th,
+.meme_details td {
+  line-height: 1.2em;
+  padding: 1px 0;
+}
+.meme_details th {
+  text-align: left;
+}
+.meme_details .alternate_content a {
+  font-weight: normal;
+}
+
+.meme_details .item_image_block {
+  height: 100px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  margin-bottom: 20px;
+  background-color: #efefef;
+}
+.meme_details .item_image_block a {
+  display: block;
+  height: 100%;
+  width: 100%;
+  border-top: 10px solid #2579d2;
+  text-decoration: none;
+}
+.meme_details .item_image_block a:hover {
+  background-color: transparent;
+  border-top: 10px solid #ffcc00;
+}
+.meme_details .item_image_block a span {
+  visibility: hidden;
+}
+
+#footer {
+  margin-top: 2.0em;
+}
+
+#time_to_update {
+  color: #D24A31;
+}
+#time_to_update a {
+  color: #D24A31 !important;
+  text-decoration: none;
+}
+
+#login #errorExplanation {
+  border: 10px solid #D24A31;
+  color: #D24A31;
+  padding: 10px;
+  margin-top: 10px;
+}
+#login {
+  margin-top: 2.0em;
+}
+#login h3 {
+  text-align: center;
+  margin-bottom: 1.0em;
+}
+#login p {
+  margin: 0;
+  padding: 0.25em 0;
+}
+#openid_container .sleeve, 
+#login_container .sleeve {
+  padding: 10px;
+  border: 10px solid #efefef;
+}
+
+#about {
+  padding-top: 1.0em;
+  color: #999;
+}
+#about .grid_8 {
+  font-size: 200%;
+  line-height: 1.2em;
+}
+#about .grid_4 {
+  padding-top: 3px;
+}
+
+.trending {
+  display: block;
+  font-weight: bold;
+  font-size: 400%;
+  color: #ccc;
+  padding: 0.5em 0;
+  visibility: hidden;
+}
+.trend_up {
+}
+.trend_down {
+}
+
+
+li.article_favicon {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  float: left;
+}
+li.article_favicon a:hover {
+  background-color: transparent;
+}
+
+.feed_favicon {
+  vertical-align: middle;
+  margin: 0 2px 1px 0;
+  border: 1px solid #fff;
+}
+.feed_favicon:hover {
+  vertical-align: middle;
+  margin: 0 2px 1px 0;
+  border: 1px solid #2579d2 !important;
+}
+
+#next_or_previous {
+  color: #999;
+}
+
+.rank {
+  font-size: 300%;
+  color: #ddd;
+  line-height: 1.0em;
+}
+
+#heading {
+  border-bottom: 1px dotted #999;
+}
+#top_memes {
+  background-color: #fff;
+  padding: 1.5em 0;
+}
+#second_memes {
+  padding: 1.5em 0;
+  border-top: 1px dotted #999;
+}
+#second_memes h3.title {
+  font-size: 210%;
+}
+#middle_memes {
+  border-top: 1px dotted #999;
+  border-bottom: 1px dotted #999;
+  background-color: #fff;
+  padding: 2.0em 0;
+}
+#middle_memes h3.title {
+  font-size: 110%;
+}
+#middle_memes p,
+#middle_memes ul {
+  margin: 0 0 0.4em 0;
+  padding: 0;
+}
+#bottom_memes {
+  border-bottom: 1px dotted #999;
+  background-color: #fff;
+  padding: 2.0em 0;
+}
+#bottom_memes h3.title {
+  font-size: 81%;
+}
+
+
+
+
+
+.hide {
+  display: none;
+}
+
+
+
+#updater {
+  position: fixed;
+  left: 50%;
+  bottom: 30px;
+  margin-left: -480px;
+  padding: 25px 0;
+  border: 1px dotted #999;
+  background-color: #fff;
+  z-index: 999;
+  font-size: 150%;
+  text-align: center;
+  line-height: 1.2em;
+  background-color: #E7F6FF;
+  color: #444;
+}
+#updater h3 {
+  font-size: 300%;
+}
+#updater h3, 
+#updater p {
+  margin: 0;
+  padding: 0;
+}
+#seconds_until_refresh {
+  color: #333;
+  font-weight: bold;
+}

@@ -1,16 +1,16 @@
 class SiteController < ApplicationController
   
   COLUMN_ZOOM_FACTOR = 4
-  MAX_NUMBER_OF_COLUMNS = 16
+  MAX_NUMBER_OF_COLUMNS = 12
   
   # before_filter :require_user
   before_filter :require_user, :only => :meme
-  layout "pretty_layout" 
   
   def index
     load_run
     if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id, :user => current_user })    
       load_memes(@run)
+      @maximum_meme_strength = @memes.map{ |m| m.strength }.max
       load_items
       if @run != Run.current(5)
         @archive = true
@@ -18,7 +18,7 @@ class SiteController < ApplicationController
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end
-    render :action => "index"
+    render :action => "index", :layout => "layouts/pretty_layout_7_without_container"
   end
   
   def current

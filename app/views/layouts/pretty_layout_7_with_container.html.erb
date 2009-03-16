@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head profile="http://gmpg.org/xfn/11">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+	<% if @page_title == "archived" %><% end %>
+  <title>refinr<% if @page_title %> :: <% if defined?(@archive) %>archived <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %><% else %><%= @page_title %><% end %><% end %></title> 
+  <% if defined?(@run) %>
+    <% if ! @run.next.nil? %><link rel="next" href="<%= url_for(:controller => :site, :action => :index, :id => @run.next.id) %>" /><% end %>
+    <% if ! @run.previous.nil? %><link rel="prev" href="<%= url_for(:controller => :site, :action => :index, :id => @run.previous.id) %>" /><% end %>
+  <% end %>
+  <%= stylesheet_link_tag "reset", "960", "text" %>
+  <%= stylesheet_link_tag @flight.css_filename %>
+  <%= javascript_include_tag "application", "jquery-1.2.6", "jquery.timer" %>
+</head>
+<body>
+
+<div id="heading">
+  <div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">  
+    <% if defined?(@flight) && defined?(@page_title) %>
+    <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / <%= @page_title %></span></h1>
+    <% elsif defined?(@flight) && defined?(@run) %>                                                     
+    <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %> <span class="faded"> / <span title="Updated on <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %>">updated <span id="time_ago"><%= time_ago_in_words(@run.ended_at) %></span> ago</span></span></h1>
+    <% else %>
+    <h1 id="logo"><%= link_to "refinr", :controller => :site, :action => :index %></h1>
+    <% end %>
+    <div class="clear"></div>
+  </div>
+</div>
+
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>"> 
+<%= yield :layout %>
+</div>
+
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">  
+  <div id="about">
+    <div class="grid_8 alpha">
+      <p>This is <a href="/" style="color: #20232A; text-decoration: none; font-weight: bold;">refinr</a>, a new way to keep on top of technology news. Every half-hour we read hundreds of news sources from across the web and refine all that content down to just the most important bits.  We help you find all the news you need to stay up-to-the-minute in the world of technology.</p>
+    </div>
+    <div class="grid_4 omega">
+      <p>We'd love to hear from you.  Tell us how you're using the site, or how we could improve things. <a href="http://refinr.uservoice.com/pages/general" onclick="UserVoice.Popin.show(); return false;">Let us know how we can help you get the most out of <strong>refinr</strong></a>.</p>
+    </div>
+  </div>  
+  <div class="clear"></div>
+  <div class="grid_10 alpha omega">
+    <p id="next_or_previous"><% if defined?(@run) && ! @run.previous.nil? %>This edition of <a href="/">refinr</a> was published on <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %>.  The <%= link_to "previous edition was posted on #{display_date(@run.previous.ended_at)} at #{display_time(@run.previous.ended_at)}", :controller => :site, :action => :index, :id => @run.previous.id %><% if ! @run.next.nil? %>, and the <%=  link_to "following edition was posted #{display_date(@run.next.ended_at)} at #{display_time(@run.next.ended_at)}", :controller => :site, :action => :index, :id => @run.next.id  %>.  The newest edition was <a href="/">published <%= time_ago_in_words(Run.current(@run.user_id).ended_at) %> ago</a><% end %><% end %>.</p>
+  </div>
+  <div class="clear"></div>
+  <p id="footer">&copy; 2009 <a href="http://www.magicbucketlabs.com/">Magic Bucket Labs</a></p>
+</div>
+
+<%= render :partial => "layouts/uservoice" %>
+<%= render :partial => "layouts/google_analytics" %>
+
+</body>
+</html>

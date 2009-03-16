@@ -1,0 +1,15 @@
+<ul class="all_related_items">
+  <% meme.distinct_meme_items.sort_by{ |mi| mi.item.published_at }.each do |mi| %>
+    <% if ! mi.item.feed.logo.nil? %>
+      <li class="article_favicon">
+      <% if primary_item.id == mi.item.id %>
+        <%= link_to_item_with_tracking(image_tag(mi.item.feed.logo, :alt => mi.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), mi.item) %>
+      <% elsif (Time.now - mi.item.published_at) < 2.2.days %>
+        <%= link_to_item_with_tracking(image_tag(mi.item.feed.logo, :alt => mi.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #fc0;"), mi.item) %>
+      <% else %>
+        <%= link_to_item_with_tracking(image_tag(mi.item.feed.logo, :alt => mi.item.feed.title, :size => "16x16", :class => "feed_favicon"), mi.item) %>
+      <% end %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

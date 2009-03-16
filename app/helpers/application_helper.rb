@@ -50,7 +50,7 @@ module ApplicationHelper
     end
     
     title = item.title
-    html_options.merge!({ :title => title })
+    html_options.merge!({ :title => "#{title} | #{item.feed.title}" })
     html_options.merge!({ :onclick => "track_click('#{url}', '#{CGI::escape(title)}')"})
     if html_options
       html_options = html_options.stringify_keys
@@ -61,7 +61,7 @@ module ApplicationHelper
       tag_options = nil
     end
 
-    href_attr = "href=\"#{item.link}\"" unless href
+    href_attr = "href=\"#{item.link.gsub(/\&amp;/,'^^^^^^^^^^').gsub(/\&/,'&amp;').gsub(/\^\^\^\^\^\^\^\^\^\^/,'&amp;')}\"" unless href
     "<a #{href_attr}#{tag_options}>#{name || url}</a>"
   end
 
@@ -72,7 +72,7 @@ module ApplicationHelper
     
     return '' if !meme || !text
 
-    meme_number_of_columns = meme.number_of_columns || 16
+    meme_number_of_columns = meme.number_of_columns || 12
     max_col_char_limit = 25 * meme_number_of_columns
     
     truncated = false  
@@ -91,7 +91,7 @@ module ApplicationHelper
     
     truncated_indicator = truncated ? '...' : ''
     last_word = limited_text.pop
-    last_word = last_word.chop if !last_word.match(/,$/).nil?
+    last_word = last_word.chop if !last_word.nil? && !last_word.match(/,$/).nil?
     return "#{limited_text.join(' ')}&nbsp;#{last_word}#{truncated_indicator}"
   end
 
@@ -108,11 +108,11 @@ module ApplicationHelper
     s = ""
     if meme.strength_trend != 0
       if meme.strength_trend > 0 && meme.strength_trend > big_mover_diff
-        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;+</span>"
+        s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;<span class=\"hide\">+</span></span>"
       elsif meme.strength_trend > 0 && meme.strength_trend > minimum_diff
         s += "<span class=\"trending trend_up\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&uarr;</span>"
       elsif meme.strength_trend < 0 && meme.strength_trend.abs > big_mover_diff
-        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;-</span>"      
+        s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;<span class=\"hide\">-</span></span>"      
       elsif meme.strength_trend < 0 && meme.strength_trend.abs > minimum_diff
         s += "<span class=\"trending trend_down\" title=\"Strength: #{number_with_precision(meme.strength_trend, :precision => 2)}\">&darr;</span>"      
       end

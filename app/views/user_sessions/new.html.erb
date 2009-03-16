@@ -1,7 +1,7 @@
 <div id="login">
 <% form_for @user_session, :url => user_session_path do |f| %>
 
-  <div class="grid_8 alpha" id="openid_container">
+  <div class="grid_6 alpha" id="openid_container">
     <div class="sleeve">
       <h3>Login with your OpenID</h3>
       <p><%= f.label :openid_identifier, "OpenID" %> <%= f.text_field :openid_identifier %></p>  
@@ -11,7 +11,7 @@
     </div>  
   </div>
 
-  <div class="grid_8 omega" id="login_container">
+  <div class="grid_6 omega" id="login_container">
     <div class="sleeve">
       <h3>Login with a local account</h3>
       <p><%= f.label :login %> <%= f.text_field :login %></p>

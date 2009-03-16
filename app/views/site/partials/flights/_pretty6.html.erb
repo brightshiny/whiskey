@@ -1,0 +1,57 @@
+<% handle_meme_column_assignment %>
+
+<% @memes.each_with_index do |meme, n| %>
+<% if meme.strength_over_time.size > 3 %>
+
+<div class="meme">  
+  <div class="grid_8 alpha">
+    <div class="grid_1 alpha">
+      <%= meme_strength_trend(meme) %>&nbsp;
+    </div>
+    <div class="grid_5">
+      <% primary_item = meme.distinct_meme_items[0].item %>
+      <h3 class="title" style=""><%= link_to_item_with_tracking(widow_prevention(meme.distinct_meme_items[0].item.title), meme.distinct_meme_items[0].item) %></h3>
+      <% if n == 0 %>
+      <p class="excerpt"><%= limit_text(:meme=>meme,:text=>meme.distinct_meme_items[0].item.content) %></p>
+      <% end %>
+    </div>
+    <div class="grid_2 omega">
+      <p><%= render :partial => "byline", :locals => { :item => meme.distinct_meme_items[0].item, :meme => meme } %>
+    </div>
+  </div>
+  <div class="grid_4 omega">
+    <p>
+      <%= meme.distinct_meme_items.size %> sources<br />
+      <% meme.distinct_meme_items.sort_by{ |mi| mi.item.published_at }.each do |mi| %>
+      <% if ! mi.item.feed.logo.nil? %>
+      <span class="article_favicon">
+        <% if primary_item.id == mi.item.id %>
+          <%= link_to_item_with_tracking(image_tag(mi.item.feed.logo, :alt => mi.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), mi.item) %>
+        <% elsif (Time.now - mi.item.published_at) < 2.2.days %>
+          <%= link_to_item_with_tracking(image_tag(mi.item.feed.logo, :alt => mi.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #fc0;"), mi.item) %>
+        <% else %>
+          <%= link_to_item_with_tracking(image_tag(mi.item.feed.logo, :alt => mi.item.feed.title, :size => "16x16", :class => "feed_favicon"), mi.item) %>
+        <% end %>
+      </span>
+      <% end %>
+      <% end %>
+    </p>
+  </div>
+  <div class="clear"></div>  
+  <% if meme.z_score_strength > 1.5 %>
+  <div class="grid_5 prefix_1 alpha">
+    <ul class="alternate_content">
+      <% for meme_item in meme.distinct_meme_items[1..3] %>
+      <li><%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %><br /><%= render :partial => "byline", :locals => { :item => meme_item.item, :meme => meme } %></li>
+      <% end %>
+    </ul>
+  </div>
+  <% end %>
+</div>
+
+<% end %>
+<% end %>
+
+<div class="clear"></div>
+
+<%= hidden_field_tag "version_loaded", @run.encrypted_id %>

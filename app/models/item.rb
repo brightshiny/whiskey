@@ -7,6 +7,7 @@ class Item < ActiveRecord::Base
   has_many :item_relationships
   has_many :related_items, :through => :item_relationships
   has_many :memes
+  has_many :images
 
   include EncryptedId
 

@@ -1,3 +1,2 @@
-<% if ! item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title, :size => "16x16", :class => "feed_favicon"), item) %><% end %>
-<% if ! item.author.nil? %><span class="author"><%= item.author %> &middot; </span><% end %>
-<span class="website"><%= link_to_item_with_tracking(item.feed.title, item) %></span>
+<% if ! item.author.nil? %><span class="author"><%= widow_prevention(item.author) %> &middot; </span><% end %>
+<span class="website"><%= link_to_item_with_tracking(widow_prevention(item.feed.title), item) %></span>

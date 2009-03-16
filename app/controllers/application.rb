@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user
   filter_parameter_logging :password, :password_confirmation
   
+  layout "layouts/pretty_layout_7_with_container"
+
   before_filter :load_flight
   def load_flight 
     if params[:flight].nil?

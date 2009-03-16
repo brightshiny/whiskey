@@ -192,8 +192,8 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         
         #db_item = Item.find(:first, :conditions => ["feed_id = :feed_id and link = :link", {:feed_id => feed.id, :link => item.link}])
         published_before = published_at < 24.hours.ago ? published_at : 24.hours.ago
-        db_item = Item.find(:first, :conditions => ["feed_id = :feed_id and title = :title and published_at >= :published_before", 
-          {:feed_id => feed.id, :title => title, :published_before => published_before}])
+        db_item = Item.find(:first, :conditions => ["feed_id = :feed_id and ((title = :title and published_at >= :published_before) or (link = :link))", 
+          {:feed_id => feed.id, :title => title, :published_before => published_before, :link => item.link}])
         if db_item.nil?
           db_item = Item.new
           db_item.feed_id = feed.id

@@ -15,7 +15,7 @@
   <div id="meme_<%= @meme.id %>">
     <%= render :partial => "site/partials/meme_sparkline", :locals => { :meme => @meme }%>
   </div>
-  <h3 style="margin-top: 1.0em;"><%= @items.size %> Connected Items</h3>
+  <h4 style="margin-top: 1.5em;font-size: 1.3em;"><%= @items.size %> Connected Items</h4>
   <table id="connected_items" width="100%" cellspacing="0" cellpadding="0">
     <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
     <tr>

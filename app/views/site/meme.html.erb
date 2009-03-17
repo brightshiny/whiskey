@@ -49,7 +49,7 @@
   </table>
   <h3 style="margin-top: 1.0em;">Images</h3>
   <% for item in @meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
-    <% if item.images.size != 0 %>
+    <% if item.images.size != 0 && ! item.images.first.nil? && ! item.images.first.local_src.nil? %>
     <div class="item_image_block" style="background-image: url(<%= image_path(item.images.first.local_src) %>);">
       <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
     </div>

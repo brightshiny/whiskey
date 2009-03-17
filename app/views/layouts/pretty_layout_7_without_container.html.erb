@@ -6,7 +6,7 @@
   <title>refinr<% if @page_title %> :: <% if defined?(@archive) %>archived <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %><% else %><%= @page_title %><% end %><% end %></title> 
   <%= stylesheet_link_tag "reset", "960", "text" %>
   <%= stylesheet_link_tag @flight.css_filename %>
-  <%= javascript_include_tag "application", "jquery-1.2.6", "jquery.timer" %>
+  <%= javascript_include_tag "application", "jquery-1.2.6", "jquery_sparklines", "jquery.timer" %>
 </head>
 <body>
 
@@ -35,9 +35,11 @@
     </div>
   </div>  
   <div class="clear"></div>
+  <% if defined?(@run) %>
   <div class="grid_10 alpha omega">
     <p id="next_or_previous"><% if defined?(@run) && ! @run.previous.nil? %>This edition of <a href="/">refinr</a> was published on <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %>.  The <%= link_to "previous edition was posted on #{display_date(@run.previous.ended_at)} at #{display_time(@run.previous.ended_at)}", :controller => :site, :action => :index, :id => @run.previous.id %><% if ! @run.next.nil? %>, and the <%=  link_to "following edition was posted #{display_date(@run.next.ended_at)} at #{display_time(@run.next.ended_at)}", :controller => :site, :action => :index, :id => @run.next.id  %>.  The newest edition was <a href="/">published <%= time_ago_in_words(Run.current(@run.user_id).ended_at) %> ago</a><% end %><% end %>.</p>
   </div>
+  <% end %>
   <div class="clear"></div>
   <p id="footer">&copy; 2009 <a href="http://www.magicbucketlabs.com/">Magic Bucket Labs</a></p>
 </div>

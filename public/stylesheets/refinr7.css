@@ -215,12 +215,7 @@ strong.byline a,
 }
 
 .trending {
-  display: block;
   font-weight: bold;
-  font-size: 400%;
-  color: #ccc;
-  padding: 0.5em 0;
-  visibility: hidden;
 }
 .trend_up {
 }
@@ -332,4 +327,36 @@ li.article_favicon a:hover {
 #seconds_until_refresh {
   color: #333;
   font-weight: bold;
+}
+
+.cardinality {
+  display: block;
+  color: #efefef; 
+  font-size: 300%;
+  padding: 0.3em 0 0 0;
+  font-weight: bold;
+}
+
+#connected_items td {
+  border-top: 1px solid #efefef;
+  padding: 1.0em 0;
+}
+#connected_items .published_at {
+  color: #ccc;
+}
+#connected_items p.byline {}
+
+.tweet {
+  border-top: 1px solid #efefef;
+  padding: 1.0em 0;
+}
+.tweet img {
+  margin: 0;
+  padding: 4px 0;
+}
+.tweet .tweet_user {
+  font-weight: bold;
+}
+.tweet .tweet_date {
+  color: #ccc;
 }

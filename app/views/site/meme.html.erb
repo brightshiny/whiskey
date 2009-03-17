@@ -1,91 +1,94 @@
 <div class="meme_details">
 
 <div class="grid_16 alpha omega">
-  <% 
-    @meme.is_alpha = true
-  %>
+  <% @meme.number_of_columns = 16 %>
+  <% @meme.is_alpha = true %>
   <%= render :partial => "site/partials/generic_meme", :locals => { :item => @meme.item, :meme => @meme, :ignore_title_sizing => true } %>
 </div>
 
 <div class="clear"></div>
 
 <div class="meme">
-<div class="grid_4 alpha">
-  <h3>Top <%= @words.size %> Words</h3>
+
+<div class="grid_5 alpha">
+  <h3>Meme Strength Over Time</h3>
+  <div id="meme_<%= @meme.id %>">
+    <%= render :partial => "site/partials/meme_sparkline", :locals => { :meme => @meme }%>
+  </div>
+  <h3 style="margin-top: 1.0em;"><%= @items.size %> Connected Items</h3>
+  <table id="connected_items" width="100%" cellspacing="0" cellpadding="0">
+    <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
+    <tr>
+      <td>
+        <div class="grid_4 alpha title_byline">
+        <h3 class="title" style="font-size: 81%;"><%= link_to_item_with_tracking widow_prevention(item.title), item %></h3>
+        <p class="byline"><%= render :partial => "favicon", :locals => { :item => item } %><%= render :partial => "byline", :locals => { :item => item } %></p>
+        </div>
+        <div class="grid_1 omega published_at">
+          <%= display_date(item.published_at) %> <%= display_time(item.published_at) %>
+        </div>
+      </td>
+    </tr>
+    <% end %>
+  </table>
+</div>
+
+<div class="grid_2">
+  <h3>Top Words</h3>
   <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
-      <th class="grid_2 alpha">Word</th>
+      <th class="grid_1 alpha">Word</th>
       <th class="grid_1 omega">Count</th>
     </tr>
     <% for word in @words %>
     <tr>
-      <td class="grid_2 alpha"><%= word.word %></td>
+      <td class="grid_1 alpha"><%= word.word %></td>
       <td class="grid_1 omega"><%= word.number_of_occurances %></td>
     </tr>
     <% end %>
   </table>
-</div>
-
-<div class="grid_12 omega">
-  <% if @items.map{ |i| i.content }.flatten.join(" ").match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
-  <h3>Associated Images</h3>
-  <% c = 1 %>
-  <% for item in @items %>
-    <% if item.content.match(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/) %>
-      <% item.content.scan(/src=\"(http\:\/\/.*?\.jpg|png|gif)\"/).each do |img_src| %>
-        <div class="grid_2 item_image_block<% if c == 1 %> alpha<% end %><% if c == 6 %> omega<% end %>" style="background-image: url(<%=h img_src.split(/ /).first %>);">
-          <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
-        </div>
-        <% if c%6 == 0 %><div class="clear"></div><% c = 0 %><% end %>
-        <% c += 1 %>
-      <% end %>
+  <h3 style="margin-top: 1.0em;">Images</h3>
+  <% for item in @meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
+    <% if item.images.size != 0 %>
+    <div class="item_image_block" style="background-image: url(<%= image_path(item.images.first.local_src) %>);">
+      <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
+    </div>
     <% end %>
   <% end %>
   </ul>
-  <% end %>
-</div>
 </div>
 
-<div class="clear"></div>
+<div class="grid_5 omega">
+  <h2>Tweets About <%= @words[0..1].map{ |w| w.word }.join("+") %></h2>
+  <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
+  <script type="text/javascript">
+  // http://search.twitter.com/search.json?q=%23haiku
+  twitter_domain = "http://search.twitter.com/search.json"
+  twitter_url = twitter_domain + "?callback=?&show_user=false&q=<%= @words[0..1].map{ |w| w.word }.join("+") %>";
+  $.getJSON(twitter_url, function(data) {
+    window.data = data;
+    if(data.results.length > 0) {
+      $.each(data.results, function(i,result) {
+        $('#loading_tweets').hide();
+        var tweet_id_no_hash = "tweet_"+result.id;
+        var tweet_id = "#" + tweet_id_no_hash;
+        $('<div></div>').html("").attr('id',tweet_id_no_hash).addClass("tweet").appendTo("#topical_tweets");
+        $('<div></div>').html("&nbsp;").attr('id',tweet_id_no_hash+"_img").addClass('grid_1 alpha').appendTo(tweet_id);
+        $('<div></div>').html("<span class=\"tweet_user\">"+result.from_user+"</span><br />"+result.text+" <span class=\"tweet_date\">"+result.created_at+"</span>").addClass('grid_4 omega').appendTo(tweet_id);
+        $('<a></a>').html("").attr('id',tweet_id_no_hash+"_img_a").attr('href',"http://twitter.com/"+result.from_user).attr('title',result.from_user).appendTo("#"+tweet_id_no_hash+"_img");
+        $("<img/>").attr("src", result.profile_image_url).appendTo("#"+tweet_id_no_hash+"_img_a");
+        $('<div></div>').html("").addClass("clear").appendTo(tweet_id);
+        $('<div></div>').html("").addClass("clear").appendTo("#topical_tweets");
+      });
+      twitter_url = twitter_domain + data.refresh_url; // call this url next time for only new tweets
+    } else {
+      $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong><%=h @words[0..1].map{ |w| w.word }.join("+") %></strong>");
+    }
+  });
+  </script>
+</div>
 
-<div class="meme">
-<% if @meme.related_memes.size > 3 %>
-<div class="grid_16 alpha omega">
-  <h3>Meme Strength: <%= display_date(@meme.related_memes.last.created_at) %> <%= display_time(@meme.related_memes.last.created_at) %> - <%= display_date(@meme.related_memes.first.created_at) %> <%= display_time(@meme.related_memes.first.created_at) %></h3>
-  <script type="text/javascript" src="/javascripts/swfobject.js"></script>
-  <%= @meme_strength_graph %>
-  <%= @items_published_graph %>
-</div>
-<% else %>
-<h3>Meme Strength: Not enough data</h3>
-<% end %>
-</div>
-
-<div class="clear"></div>
-
-<div class="meme">
-<div class="grid_16 alpha omega">
-<h3><%= @items.size %> Connected Items</h3>
-  <table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-      <th class="grid_3 alpha">Published At</th>
-      <th class="grid_8">Title</th>
-      <th class="grid_5 omega">Author</th>
-    </tr>
-    <% for item in @items.sort_by{ |i| i.published_at }.reverse %>
-    <tr>
-      <td class="grid_3 alpha"><%= display_date(item.published_at) %> <%= display_time(item.published_at) %></td>
-      <td class="grid_8">
-        <%= link_to_item_with_tracking item.title, item %>
-      </td>
-      <td class="grid_5 omega"><div class="alternate_content"><% if ! item.author.nil? %><%= item.author %>, <% end %><%= link_to_item_with_tracking(item.feed.title, item) %></div></td>
-    </tr>
-    <% end %>
-  </table>
-</div>
-</div>
 
 <div class="clear"></div>
 
 </div>
-

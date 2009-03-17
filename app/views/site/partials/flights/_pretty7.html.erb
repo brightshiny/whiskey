@@ -115,7 +115,7 @@
 <div class="meme grid_3<% if number_of_displayed_bottom_memes%4 == 0%> alpha<% elsif number_of_displayed_bottom_memes%4 == 3 %> omega<% end %>">
   <div class="generic">
     <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
-    <p><% if ! meme.item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(meme.item.feed.logo, :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon"), meme.item) %><% end %><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
+    <p><%= render :partial => "favicon", :locals => { :item => meme.item } %><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
   </div>
 </div>
 <% if number_of_displayed_bottom_memes%4 == 3 %>

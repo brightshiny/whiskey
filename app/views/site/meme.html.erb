@@ -59,7 +59,7 @@
 </div>
 
 <div class="grid_5 omega">
-  <h2>Tweets About <%= @words[0..1].map{ |w| w.word }.join("+") %></h2>
+  <h2>Tweets About '<%= @words[0..1].map{ |w| w.word }.join("+") %>'</h2>
   <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
   <script type="text/javascript">
   // http://search.twitter.com/search.json?q=%23haiku

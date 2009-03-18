@@ -1,5 +1,21 @@
+<% if ! defined?(colored) %>
+
 <% if ! item.feed.logo.nil? %>
   <%= link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title, :size => "16x16", :class => "feed_favicon"), item) %>
 <% else %>
   <%= link_to_item_with_tracking(image_tag("/assets/images/fauxvicon.gif", :alt => item.feed.title, :size => "16x16", :class => "feed_favicon"), item) %>
+<% end %>
+
+<% else %>
+
+<% if item.feed.logo.nil?; item.feed.logo="/assets/images/fauxvicon.gif"; end; %>
+
+<% if primary_item.id == item.id %>
+  <%= link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), item) %>
+<% elsif (Time.now - item.published_at) < 2.hours %>
+  <%= link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #fc0;"), item) %>
+<% else %>
+  <%= link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title, :size => "16x16", :class => "feed_favicon"), item) %>
+<% end %>
+
 <% end %>

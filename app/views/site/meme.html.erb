@@ -21,7 +21,7 @@
     <tr>
       <td>
         <h3 class="title" style="font-size: 81%;"><%= link_to_item_with_tracking widow_prevention(item.title), item %></h3>
-        <p class="byline"><%= render :partial => "favicon", :locals => { :item => item } %><%= render :partial => "byline", :locals => { :item => item } %></p>
+        <p class="byline"><%= render :partial => "favicon", :locals => { :item => item, :colored => true, :primary_item => @meme.item } %><%= render :partial => "byline", :locals => { :item => item } %></p>
         <p class="byline"><span class="published_at"><%= display_date(item.published_at) %> <%= display_time(item.published_at) %></span></p>
       </td>
     </tr>

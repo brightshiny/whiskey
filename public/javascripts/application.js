@@ -72,7 +72,7 @@ function autolink(text) {
 }
 
 
-function display_tweet(result, prepend) {
+function display_tweet(result, prepend, quickly) {
   var tweet_id_no_hash = "tweet_"+result.id;
   var tweet_id = "#" + tweet_id_no_hash;
   if(prepend) {
@@ -90,6 +90,9 @@ function display_tweet(result, prepend) {
   } else {
     $('<div></div>').html("").addClass("clear").appendTo("#topical_tweets");
   }
-  // $(tweet_id).slideDown("slow");
-  $(tweet_id).slideDown(800, "easeOutBounce");
+  if(quickly) {
+    $(tweet_id).show();
+  } else {
+    $(tweet_id).slideDown(850, "easeOutBounce");
+  }
 }

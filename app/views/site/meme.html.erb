@@ -45,7 +45,7 @@
     if(data.results.length > 0) {
       $.each(data.results.reverse(), function(i,result) {
         // tweets.push(result);
-        display_tweet(result, true);
+        display_tweet(result, true, true);
       });
     } else {
       $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong><%=h @words_for_twitter_search.join(" ") %></strong>");
@@ -67,7 +67,7 @@
   $.timer(1000, function(timer) {
     if(tweets.length > 0) {
       tweet_to_show = tweets.shift();
-      display_tweet(tweet_to_show, true);
+      display_tweet(tweet_to_show, true, false);
     }
   });
   </script>

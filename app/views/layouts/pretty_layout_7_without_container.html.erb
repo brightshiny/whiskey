@@ -6,7 +6,7 @@
   <title>refinr<% if @page_title %> :: <% if defined?(@archive) %>archived <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %><% else %><%= @page_title %><% end %><% end %></title> 
   <%= stylesheet_link_tag "reset", "960", "text" %>
   <%= stylesheet_link_tag @flight.css_filename %>
-  <%= javascript_include_tag "application", "jquery-1.2.6", "jquery_sparklines", "jquery.timer" %>
+  <%= javascript_include_tag "application", "jquery-1.2.6", "jquery_sparklines", "jquery.timer", "jquery.easing.1.3" %>
 </head>
 <body>
 

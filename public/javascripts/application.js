@@ -90,5 +90,6 @@ function display_tweet(result, prepend) {
   } else {
     $('<div></div>').html("").addClass("clear").appendTo("#topical_tweets");
   }
-  $(tweet_id).slideDown("slow");
+  // $(tweet_id).slideDown("slow");
+  $(tweet_id).slideDown(800, "easeOutBounce");
 }

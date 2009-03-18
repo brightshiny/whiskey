@@ -52,45 +52,17 @@ function track_click(src, link_name) {
 	}
 }
 
-
-// based on implementation from rails http://rails-doc.org/rails/ActionView/Helpers/DateHelper/distance_of_time_in_words
-// explanation at http://blog.peelmeagrape.net/2008/7/26/time-ago-in-words-javascript-part-1
-// unittests at http://blog.peelmeagrape.net/assets/2008/7/26/distanceOfTimeInWords.html
-function distanceOfTimeInWords(fromTime, toTime, includeSeconds) {
-  var fromSeconds = fromTime.getTime();
-  var toSeconds = toTime.getTime();
-  var distanceInSeconds = Math.round(Math.abs(fromSeconds - toSeconds) / 1000)
-  var distanceInMinutes = Math.round(distanceInSeconds / 60)
-  if (distanceInMinutes <= 1) {
-    if (!includeSeconds)
-      return (distanceInMinutes == 0) ? 'less than a minute' : '1 minute'
-    if (distanceInSeconds < 5)
-      return 'less than 5 seconds'
-    if (distanceInSeconds < 10)
-      return 'less than 10 seconds'
-    if (distanceInSeconds < 20)
-      return 'less than 20 seconds'
-    if (distanceInSeconds < 40)
-      return 'half a minute'
-    if (distanceInSeconds < 60)
-      return 'less than a minute'
-    return '1 minute'
+function autolink(text) {
+  array_of_text = text.split(/\s/);
+  for(var i=0;i<array_of_text.length;i++) {
+    word = array_of_text[i];
+    if(word.match(/^(http|https)\:\/\//)) {
+      word = '<a href="' + word + '">' + word + '</a>';
+      array_of_text[i] = word;
+    }
   }
-  if (distanceInMinutes < 45)
-    return distanceInMinutes + ' minutes'
-  if (distanceInMinutes < 90)
-    return "about 1 hour"
-  if (distanceInMinutes < 1440)
-    return "about " + (Math.round(distanceInMinutes / 60)) + ' hours'
-  if (distanceInMinutes < 2880)
-    return "1 day"
-  if (distanceInMinutes < 43200)
-    return (Math.round(distanceInMinutes / 1440)) + ' days'
-  if (distanceInMinutes < 86400)
-    return "about 1 month"
-  if (distanceInMinutes < 525600)
-    return (Math.round(distanceInMinutes / 43200)) + ' months'
-  if (distanceInMinutes < 1051200)
-    return "about 1 year"
-  return "over " + (Math.round(distanceInMinutes / 525600)) + ' years'
+  return array_of_text.join(" ");
 }
+
+
+

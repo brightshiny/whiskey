@@ -352,7 +352,12 @@ li.article_favicon a:hover {
 }
 .tweet img {
   margin: 0;
-  padding: 4px 0;
+  padding: 0;
+  border: 1px solid #efefef;
+  height: 48px;
+  width: 48px;
+  display: block;
+  overflow: hidden;
 }
 .tweet .tweet_user {
   font-weight: bold;

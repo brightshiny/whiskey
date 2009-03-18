@@ -15,7 +15,7 @@
   <div id="meme_<%= @meme.id %>">
     <%= render :partial => "site/partials/meme_sparkline", :locals => { :meme => @meme }%>
   </div>
-  <h4 style="margin-top: 1.5em;font-size: 1.3em;"><%= @items.size %> Connected Items</h4>
+  <h4 style="margin-top: 1.5em;font-size: 1.3em;"><%= @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse.size %> Connected Items</h4>
   <table id="connected_items" width="100%" cellspacing="0" cellpadding="0">
     <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
     <tr>
@@ -74,24 +74,11 @@
 </div>
 
 <div class="grid_2 omega">
-  <h3>Top Words</h3>
-  <table width="100%" cellspacing="0" cellpadding="0">
-    <tr>
-      <th class="grid_1 alpha">Word</th>
-      <th class="grid_1 omega">Count</th>
-    </tr>
-    <% for word in @words %>
-    <tr>
-      <td class="grid_1 alpha"><%= word.word %></td>
-      <td class="grid_1 omega"><%= word.number_of_occurances %></td>
-    </tr>
-    <% end %>
-  </table>
   <% have_displayed_image_title = false %>
   <% for item in @meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
-    <% if item.images.size != 0 && ! item.images.first.nil? && ! item.images.first.local_src.nil? %>
+    <% if item.images.size != 0 && ! item.images.first.nil? %>
     <% if have_displayed_image_title == false %>  
-    <h3 style="margin-top: 1.0em;">Images</h3>
+    <h3>Images</h3>
     <% have_displayed_image_title = true %>
     <% end %>
     <div class="item_image_block" style="background-image: url(<%= image_path(item.images.first.local_src) %>);">

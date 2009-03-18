@@ -259,10 +259,10 @@ li.article_favicon a:hover {
 }
 #top_memes {
   background-color: #fff;
-  padding: 1.5em 0;
+  padding: 1.0em 0;
 }
 #second_memes {
-  padding: 1.5em 0;
+  padding: 1.3em 0 1.1em 0;
   border-top: 1px dotted #999;
 }
 #second_memes h3.title {
@@ -272,7 +272,7 @@ li.article_favicon a:hover {
   border-top: 1px dotted #999;
   border-bottom: 1px dotted #999;
   background-color: #fff;
-  padding: 2.0em 0;
+  padding: 1.5em 0;
 }
 #middle_memes h3.title {
   font-size: 110%;

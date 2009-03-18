@@ -34,16 +34,18 @@
   <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
   <script type="text/javascript">
   // http://search.twitter.com/search.json?q=%23haiku
+  tweets = [];
   max_id = 0;
   twitter_domain = "http://search.twitter.com/search.json";
   twitter_url = twitter_domain + "?callback=?&show_user=false&q=<%= @words_for_twitter_search.join("+") %>";  
   $.getJSON(twitter_url, function(data) {
     $('#loading_tweets').hide();  
-    window.data1 = data;  
+    twitter_url = twitter_domain + data.refresh_url + "&callback=?"; // call this url next time for only new tweets
     max_id = data.max_id;
     if(data.results.length > 0) {
-      $.each(data.results, function(i,result) {
-        display_tweet(result, false);
+      $.each(data.results.reverse(), function(i,result) {
+        // tweets.push(result);
+        display_tweet(result, true);
       });
     } else {
       $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong><%=h @words_for_twitter_search.join(" ") %></strong>");
@@ -51,17 +53,22 @@
   });
   $.timer(10000, function (timer) {
     $.getJSON(twitter_url, function(data) {
-      window.data2 = data;
+      twitter_url = twitter_domain + data.refresh_url + "&callback=?"; // call this url next time for only new tweets
       if(data.max_id > max_id) {
         max_id = data.max_id;
         if(data.results.length > 0) {
           $.each(data.results, function(i,result) {
-            display_tweet(result, true);
+            tweets.push(result);
           });
-          twitter_url = twitter_domain + data.refresh_url + "&callback=?"; // call this url next time for only new tweets
         } 
       }
     });
+  });
+  $.timer(1000, function(timer) {
+    if(tweets.length > 0) {
+      tweet_to_show = tweets.shift();
+      display_tweet(tweet_to_show, true);
+    }
   });
   </script>
 </div>

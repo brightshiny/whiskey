@@ -68,4 +68,23 @@ function autolink(text) {
 }
 
 
-
+function display_tweet(result, prepend) {
+  var tweet_id_no_hash = "tweet_"+result.id;
+  var tweet_id = "#" + tweet_id_no_hash;
+  if(prepend) {
+    $('<div></div>').html("").attr('id',tweet_id_no_hash).addClass("tweet").prependTo("#topical_tweets").hide();
+  } else {
+    $('<div></div>').html("").attr('id',tweet_id_no_hash).addClass("tweet").appendTo("#topical_tweets").hide();
+  }
+  $('<div></div>').html("&nbsp;").attr('id',tweet_id_no_hash+"_img").addClass('grid_1 alpha').appendTo(tweet_id);
+  $('<div></div>').html("<span class=\"tweet_user\"><a href=\"http://twitter.com/"+result.from_user+"\">"+result.from_user+"</a></span><br />"+autolink(result.text)+"<br /><span class=\"tweet_date\">"+result.created_at+"</span>").addClass('grid_5 omega').appendTo(tweet_id);
+  $('<a></a>').html("").attr('id',tweet_id_no_hash+"_img_a").attr('href',"http://twitter.com/"+result.from_user).attr('title',result.from_user).appendTo("#"+tweet_id_no_hash+"_img");
+  $("<img/>").attr("src", result.profile_image_url).attr("height", "48").attr("width", "48").attr("alt", result.from_user).appendTo("#"+tweet_id_no_hash+"_img_a");
+  $('<div></div>').html("").addClass("clear").appendTo(tweet_id);
+  if(prepend) {
+    $('<div></div>').html("").addClass("clear").prependTo("#topical_tweets");
+  } else {
+    $('<div></div>').html("").addClass("clear").appendTo("#topical_tweets");
+  }
+  $(tweet_id).slideDown("slow");
+}

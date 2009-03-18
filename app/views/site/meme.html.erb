@@ -34,27 +34,36 @@
   <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
   <script type="text/javascript">
   // http://search.twitter.com/search.json?q=%23haiku
-  twitter_domain = "http://search.twitter.com/search.json"
-  twitter_url = twitter_domain + "?callback=?&show_user=false&q=<%= @words_for_twitter_search.join("+") %>";
+  max_id = 0;
+  twitter_domain = "http://search.twitter.com/search.json";
+  twitter_url = twitter_domain + "?callback=?&show_user=false&q=<%= @words_for_twitter_search.join("+") %>";  
   $.getJSON(twitter_url, function(data) {
-    window.data = data;
+    $('#loading_tweets').hide();  
+    window.data1 = data;  
+    max_id = data.max_id;
     if(data.results.length > 0) {
       $.each(data.results, function(i,result) {
-        $('#loading_tweets').hide();
-        var tweet_id_no_hash = "tweet_"+result.id;
-        var tweet_id = "#" + tweet_id_no_hash;
-        $('<div></div>').html("").attr('id',tweet_id_no_hash).addClass("tweet").appendTo("#topical_tweets");
-        $('<div></div>').html("&nbsp;").attr('id',tweet_id_no_hash+"_img").addClass('grid_1 alpha').appendTo(tweet_id);
-        $('<div></div>').html("<span class=\"tweet_user\"><a href=\"http://twitter.com/"+result.from_user+"\">"+result.from_user+"</a></span><br />"+autolink(result.text)+"<br /><span class=\"tweet_date\">"+result.created_at+"</span>").addClass('grid_5 omega').appendTo(tweet_id);
-        $('<a></a>').html("").attr('id',tweet_id_no_hash+"_img_a").attr('href',"http://twitter.com/"+result.from_user).attr('title',result.from_user).appendTo("#"+tweet_id_no_hash+"_img");
-        $("<img/>").attr("src", result.profile_image_url).attr("height", "48").attr("width", "48").attr("alt", result.from_user).appendTo("#"+tweet_id_no_hash+"_img_a");
-        $('<div></div>').html("").addClass("clear").appendTo(tweet_id);
-        $('<div></div>').html("").addClass("clear").appendTo("#topical_tweets");
+        display_tweet(result, false);
       });
-      twitter_url = twitter_domain + data.refresh_url; // call this url next time for only new tweets
     } else {
       $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong><%=h @words_for_twitter_search.join(" ") %></strong>");
-    }
+    } 
+  });
+  $.timer(10000, function (timer) {
+    console.log("getting: " + twitter_url);
+    $.getJSON(twitter_url, function(data) {
+      console.log("got: " + data.max_id);
+      window.data2 = data;
+      if(data.max_id > max_id) {
+        max_id = data.max_id;
+        if(data.results.length > 0) {
+          $.each(data.results, function(i,result) {
+            display_tweet(result, true);
+          });
+          twitter_url = twitter_domain + data.refresh_url + "&callback=?"; // call this url next time for only new tweets
+        } 
+      }
+    });
   });
   </script>
 </div>

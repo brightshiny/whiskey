@@ -57,7 +57,10 @@ function autolink(text) {
   for(var i=0;i<array_of_text.length;i++) {
     word = array_of_text[i];
     if(word.match(/^(http|https)\:\/\//)) {
-      word = '<a href="' + word + '">' + word + '</a>';
+      word = '<a class="in_tweet_link" href="' + word + '">' + word + '</a>';
+      array_of_text[i] = word;
+    } else if(word.match(/^\@/)) {
+      word = '<a class="reply_tweet" href="http://twitter.com/' + word.replace(/\@/,'') + '">' + word + '</a>';
       array_of_text[i] = word;
     }
   }

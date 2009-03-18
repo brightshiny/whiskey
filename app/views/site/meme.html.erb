@@ -50,9 +50,7 @@
     } 
   });
   $.timer(10000, function (timer) {
-    console.log("getting: " + twitter_url);
     $.getJSON(twitter_url, function(data) {
-      console.log("got: " + data.max_id);
       window.data2 = data;
       if(data.max_id > max_id) {
         max_id = data.max_id;

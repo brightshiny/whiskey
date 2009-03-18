@@ -10,7 +10,7 @@
 
 <div class="meme">
 
-<div class="grid_5 alpha">
+<div class="grid_4 alpha">
   <h3>Meme Strength Over Time</h3>
   <div id="meme_<%= @meme.id %>">
     <%= render :partial => "site/partials/meme_sparkline", :locals => { :meme => @meme }%>
@@ -20,20 +20,46 @@
     <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
     <tr>
       <td>
-        <div class="grid_4 alpha title_byline">
         <h3 class="title" style="font-size: 81%;"><%= link_to_item_with_tracking widow_prevention(item.title), item %></h3>
         <p class="byline"><%= render :partial => "favicon", :locals => { :item => item } %><%= render :partial => "byline", :locals => { :item => item } %></p>
-        </div>
-        <div class="grid_1 omega published_at">
-          <%= display_date(item.published_at) %> <%= display_time(item.published_at) %>
-        </div>
+        <p class="byline"><span class="published_at"><%= display_date(item.published_at) %> <%= display_time(item.published_at) %></span></p>
       </td>
     </tr>
     <% end %>
   </table>
 </div>
 
-<div class="grid_2">
+<div class="grid_6">
+  <h2>Tweets About '<%= @words_for_twitter_search.join(" ") %>'</h2>
+  <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
+  <script type="text/javascript">
+  // http://search.twitter.com/search.json?q=%23haiku
+  twitter_domain = "http://search.twitter.com/search.json"
+  twitter_url = twitter_domain + "?callback=?&show_user=false&q=<%= @words_for_twitter_search.join("+") %>";
+  $.getJSON(twitter_url, function(data) {
+    window.data = data;
+    if(data.results.length > 0) {
+      $.each(data.results, function(i,result) {
+        $('#loading_tweets').hide();
+        var tweet_id_no_hash = "tweet_"+result.id;
+        var tweet_id = "#" + tweet_id_no_hash;
+        $('<div></div>').html("").attr('id',tweet_id_no_hash).addClass("tweet").appendTo("#topical_tweets");
+        $('<div></div>').html("&nbsp;").attr('id',tweet_id_no_hash+"_img").addClass('grid_1 alpha').appendTo(tweet_id);
+        $('<div></div>').html("<span class=\"tweet_user\">"+result.from_user+"</span><br />"+result.text+"<br /><span class=\"tweet_date\">"+result.created_at+"</span>").addClass('grid_5 omega').appendTo(tweet_id);
+        $('<a></a>').html("").attr('id',tweet_id_no_hash+"_img_a").attr('href',"http://twitter.com/"+result.from_user).attr('title',result.from_user).appendTo("#"+tweet_id_no_hash+"_img");
+        $("<img/>").attr("src", result.profile_image_url).attr("height", "48").attr("width", "48").attr("alt", result.from_user).appendTo("#"+tweet_id_no_hash+"_img_a");
+        $('<div></div>').html("").addClass("clear").appendTo(tweet_id);
+        $('<div></div>').html("").addClass("clear").appendTo("#topical_tweets");
+      });
+      twitter_url = twitter_domain + data.refresh_url; // call this url next time for only new tweets
+    } else {
+      $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong><%=h @words_for_twitter_search.join(" ") %></strong>");
+    }
+  });
+  </script>
+</div>
+
+<div class="grid_2 omega">
   <h3>Top Words</h3>
   <table width="100%" cellspacing="0" cellpadding="0">
     <tr>
@@ -47,9 +73,13 @@
     </tr>
     <% end %>
   </table>
-  <h3 style="margin-top: 1.0em;">Images</h3>
+  <% have_displayed_image_title = false %>
   <% for item in @meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
     <% if item.images.size != 0 && ! item.images.first.nil? && ! item.images.first.local_src.nil? %>
+    <% if have_displayed_image_title == false %>  
+    <h3 style="margin-top: 1.0em;">Images</h3>
+    <% have_displayed_image_title = true %>
+    <% end %>
     <div class="item_image_block" style="background-image: url(<%= image_path(item.images.first.local_src) %>);">
       <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
     </div>
@@ -58,35 +88,6 @@
   </ul>
 </div>
 
-<div class="grid_5 omega">
-  <h2>Tweets About '<%= @words[0..1].map{ |w| w.word }.join("+") %>'</h2>
-  <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
-  <script type="text/javascript">
-  // http://search.twitter.com/search.json?q=%23haiku
-  twitter_domain = "http://search.twitter.com/search.json"
-  twitter_url = twitter_domain + "?callback=?&show_user=false&q=<%= @words[0..1].map{ |w| w.word }.join("+") %>";
-  $.getJSON(twitter_url, function(data) {
-    window.data = data;
-    if(data.results.length > 0) {
-      $.each(data.results, function(i,result) {
-        $('#loading_tweets').hide();
-        var tweet_id_no_hash = "tweet_"+result.id;
-        var tweet_id = "#" + tweet_id_no_hash;
-        $('<div></div>').html("").attr('id',tweet_id_no_hash).addClass("tweet").appendTo("#topical_tweets");
-        $('<div></div>').html("&nbsp;").attr('id',tweet_id_no_hash+"_img").addClass('grid_1 alpha').appendTo(tweet_id);
-        $('<div></div>').html("<span class=\"tweet_user\">"+result.from_user+"</span><br />"+result.text+" <span class=\"tweet_date\">"+result.created_at+"</span>").addClass('grid_4 omega').appendTo(tweet_id);
-        $('<a></a>').html("").attr('id',tweet_id_no_hash+"_img_a").attr('href',"http://twitter.com/"+result.from_user).attr('title',result.from_user).appendTo("#"+tweet_id_no_hash+"_img");
-        $("<img/>").attr("src", result.profile_image_url).attr("height", "48").attr("width", "48").attr("alt", result.from_user).appendTo("#"+tweet_id_no_hash+"_img_a");
-        $('<div></div>').html("").addClass("clear").appendTo(tweet_id);
-        $('<div></div>').html("").addClass("clear").appendTo("#topical_tweets");
-      });
-      twitter_url = twitter_domain + data.refresh_url; // call this url next time for only new tweets
-    } else {
-      $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong><%=h @words[0..1].map{ |w| w.word }.join("+") %></strong>");
-    }
-  });
-  </script>
-</div>
 
 
 <div class="clear"></div>

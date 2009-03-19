@@ -32,7 +32,7 @@
 </div>
 
 <div class="grid_6">
-  <h3>Tweets About '<%= @words_for_twitter_search.join(" ") %>'</h3>
+  <h3>Tweets About '<%= @words_for_twitter_search.join(" ").strip %>'</h3>
   <div class="clear"></div>
   <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
   <script type="text/javascript">

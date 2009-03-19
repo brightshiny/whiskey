@@ -42,7 +42,7 @@
 
 <div class="grid_2 omega">
   <div class="faded">
-    &larr; Join the conversation on Twitter, use the hashtag <a href="http://twitter.com/home?status=%23<%= @words_for_twitter_search.join("").downcase %>">#<%= @words_for_twitter_search.join("").downcase %></a>
+    &larr; Join the conversation on Twitter, use the hashtag <a href="http://twitter.com/home?status=%23<%= @words_for_twitter_search.join("").downcase %>">#<%= @words_for_twitter_search.sort.join("").downcase %></a>
   </div>
   <% have_displayed_image_title = false %>
   <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.total_cosine_similarity(@meme.run) } %>

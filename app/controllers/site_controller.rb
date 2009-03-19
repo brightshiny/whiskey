@@ -75,8 +75,9 @@ class SiteController < ApplicationController
   end
 
   def meme  
+    @meme = Meme.find(:first, :conditions => { :id => params[:id] }, :include => [ :meme_items => { :item_relationship => { :item => :feed } } ] )
+    @page_title = "meme details for #{@meme.id}"
     if ! read_fragment({ :action => "meme", :id => params[:id], :flight => @flight.id })      
-      @meme = Meme.find(:first, :conditions => { :id => params[:id] }, :include => [ :meme_items => { :item_relationship => { :item => :feed } } ] )
       potential_items = @meme.related_memes.map{ |m| m.distinct_meme_items }.flatten.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse
       items_hash = {}
       potential_items.each { |i|
@@ -104,8 +105,6 @@ class SiteController < ApplicationController
         word = matching_words[0][0].gsub(/\W/,'').gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'')
         @words_for_twitter_search.push(word)
       }
-    
-      @page_title = "meme details for #{@meme.id}"
       @meme_strength_graph = open_flash_chart_object(960,300,"/graph/meme_strength/#{@meme.id}")
       @items_published_graph = open_flash_chart_object(960,100,"/graph/items_published/#{@meme.id}")
     end

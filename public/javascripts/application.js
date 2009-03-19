@@ -95,7 +95,7 @@ function display_tweet(result, prepend, quickly) {
   if(quickly) {
     $(tweet_id).show();
   } else {
-    $(tweet_id).slideDown(1000, "easeOutBounce");
+    $(tweet_id).slideDown(850, "easeOutBounce");
   }
 }
 

@@ -47,7 +47,7 @@ class Gobbler::GItem < ActiveRecord::BaseWithoutTable
     return unless content && pool
     srcs = content.scan(/<img [^>]*src=['"](.*?)['"]/i)[0]
     return unless srcs && srcs.kind_of?(Enumerable)
-    for src in srcs.reject{|i| i.match(/(googleadservices.com|feedburner.com)/)}
+    for src in srcs.reject{|i| i.match(/(googleadservices.com|feedburner.com)/)}.reject{ |i| i.match(/\s/)}
       pool.push ImageSrc.new(src,item)
     end
     

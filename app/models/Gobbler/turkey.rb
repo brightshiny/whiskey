@@ -105,9 +105,9 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         image.width = image_size.get_width
         
         if image.height && image.height > 1 && image.width && image.width > 1 # non-nil, non-tracking
-          image.type = image_size.get_type.downcase
-          image.local_src = "#{ITEM_IMAGES_SRC}/#{local_path}/#{image.id}.#{image.type}"
-          file_name = "#{local_dir}/#{image.id}.#{image.type}"
+          image.image_type = image_size.get_type.downcase
+          image.local_src = "#{ITEM_IMAGES_SRC}/#{local_path}/#{image.id}.#{image.image_type}"
+          file_name = "#{local_dir}/#{image.id}.#{image.image_type}"
           File.open(file_name, "w") {|i| i.puts(content) }
           image.save
         else # stupid tracking images
@@ -118,6 +118,10 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
     rescue RuntimeError => e
       logger.error "Image download failed (probably harmless): #{e.message}"  #{e.backtrace.join("\n\t")}"
       image.delete
+    ensure
+      if image.local_src.nil?
+        image.delete
+      end
     end
   end
   

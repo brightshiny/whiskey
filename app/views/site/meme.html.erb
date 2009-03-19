@@ -53,7 +53,7 @@
     <% have_displayed_image_title = true %>
     <% end %>
       <% for image in item.images %><% if ! image.local_src.nil? %>
-      <div class="item_image_block" style="background-image: url(<%= image_path(image.local_src) %>);">
+      <div class="item_image_block" style="background-image: url(<%= image.original_src %>);">
         <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
       </div>
       <% end %><% end %>

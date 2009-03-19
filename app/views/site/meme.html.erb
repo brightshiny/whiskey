@@ -1,3 +1,5 @@
+<% cache({ :action => "meme", :id => params[:id], :flight => @flight.id }) do %>
+
 <div class="meme_details">
 
 <div class="grid_16 alpha omega">
@@ -63,3 +65,5 @@
 
 </div>
 </div>
+
+<% end # cache %>

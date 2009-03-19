@@ -93,13 +93,14 @@ class SiteController < ApplicationController
       all_matching_words = Gobbler::GItem.extract_text(@meme.item.content).strip.scan(reg).map{ |s| s.strip }
       matching_words = {}
       all_matching_words.each { |word| 
+        word = word.gsub(/\'s/,'')
         if matching_words[word].nil?
           matching_words[word] = 0
         end
         matching_words[word] += 1
       }
       matching_words = matching_words.sort { |a,b| b[1] <=> a[1] }
-      word = matching_words[0][0].gsub(/\W/,'').gsub(/\'s/,'')
+      word = matching_words[0][0].gsub(/\W/,'')
       @words_for_twitter_search.push(word)
     }
     

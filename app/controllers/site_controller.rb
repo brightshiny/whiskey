@@ -103,7 +103,7 @@ class SiteController < ApplicationController
         }
         matching_words = matching_words.sort { |a,b| b[1] <=> a[1] }
         begin
-          word = matching_words[0][0].gsub(/\W/,'').gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'')
+          word = matching_words[0][0].gsub(/\Ws/,'').gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'')
           @words_for_twitter_search.push(word)
         rescue
           @words_for_twitter_search.push("")

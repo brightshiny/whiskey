@@ -104,7 +104,7 @@ class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
         image.height = image_size.get_height
         image.width = image_size.get_width
         
-        if image.height && image.height > 1 && image.width && image.width > 1 # non-nil, non-tracking
+        if image.height && image.height > 20 && image.width && image.width > 20 # non-nil, non-tracking, non-favicon
           image.image_type = image_size.get_type.downcase
           image.local_src = "#{ITEM_IMAGES_SRC}/#{local_path}/#{image.id}.#{image.image_type}"
           file_name = "#{local_dir}/#{image.id}.#{image.image_type}"

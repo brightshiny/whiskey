@@ -93,7 +93,7 @@ class SiteController < ApplicationController
       all_matching_words = Gobbler::GItem.extract_text(@meme.item.content).strip.scan(reg).map{ |s| s.strip }
       matching_words = {}
       all_matching_words.each { |word| 
-        word = word.gsub(/\'s/,'')
+        word = word.gsub(/\Ws/,'')
         if matching_words[word].nil?
           matching_words[word] = 0
         end

@@ -203,7 +203,7 @@ strong.byline a,
 }
 
 #about {
-  padding-top: 1.0em;
+  padding-top: 2.0em;
   color: #999;
 }
 #about .grid_8 {
@@ -289,6 +289,9 @@ li.article_favicon a:hover {
 }
 #bottom_memes h3.title {
   font-size: 81%;
+}
+#without_columns {
+  border-top: 1px dotted #999;
 }
 
 

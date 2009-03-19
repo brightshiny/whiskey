@@ -19,6 +19,7 @@
   <h3 class="title" style="font-size: 300%;"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
   <div class="grid_6 alpha">
     <p class="excerpt"><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
+    <p class="excerpt details"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
   </div>
   <div class="grid_4">
     <ul class="alternate_content">
@@ -53,6 +54,7 @@
   <div class="grid_6 alpha">
     <h3 class="title"><%= link_to_item_with_tracking(widow_prevention(meme.item.title), meme.item) %></h3>
     <p class="excerpt"><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
+    <p class="excerpt details"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
   </div>
   <div class="grid_4">
     <ul class="alternate_content">
@@ -90,6 +92,8 @@
   <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
   <p><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
   <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item } %>
+  <div class="clear"></div>
+  <p class="excerpt details"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
 </div>
 <% if number_of_displayed_middle_memes%3 == 2 %>
 <div class="clear"></div> 

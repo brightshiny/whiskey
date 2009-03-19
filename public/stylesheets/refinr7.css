@@ -365,3 +365,8 @@ li.article_favicon a:hover {
 .tweet .tweet_date {
   color: #ccc;
 }
+
+
+.details {
+  padding-top: 0.5em !important;
+}

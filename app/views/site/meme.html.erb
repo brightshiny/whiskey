@@ -34,8 +34,6 @@
     <h3>Tweets About '<%= @words_for_twitter_search.join(" ") %>'</h3>
   </div>
   <div class="grid_2 omega">
-    <a href="http://twitter.com/home?status=%23<%= @words_for_twitter_search.join("").downcase %>">Join in</a><br />
-    #<%= @words_for_twitter_search.join("").downcase %>
   </div>
   <div class="clear"></div>
   <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
@@ -45,11 +43,14 @@
 </div>
 
 <div class="grid_2 omega">
+  <div class="faded">
+    &larr; Join the conversation on Twitter, use the hashtag <a href="http://twitter.com/home?status=%23<%= @words_for_twitter_search.join("").downcase %>">#<%= @words_for_twitter_search.join("").downcase %></a>
+  </div>
   <% have_displayed_image_title = false %>
   <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.total_cosine_similarity(@meme.run) } %>
     <% if item.images.size != 0 %>
     <% if have_displayed_image_title == false %>  
-    <h3>Images</h3>
+    <h3 style="margin-top: 2.5em;">Images</h3>
     <% have_displayed_image_title = true %>
     <% end %>
       <% for image in item.images %><% if ! image.original_src.nil? %>

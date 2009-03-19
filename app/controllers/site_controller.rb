@@ -90,7 +90,7 @@ class SiteController < ApplicationController
     number_of_words_for_twitter_search = 2
     @words[0..(number_of_words_for_twitter_search-1)].each { |partial_word| 
       reg = Regexp.new("\s#{partial_word.word}.*?\s",true)
-      all_matching_words = Gobbler::GItem.extract_text(@meme.item.content).strip.scan(reg).map{ |s| s.strip }.map{ |s| s.gsub(/\'s/,'')}
+      all_matching_words = Gobbler::GItem.extract_text(@meme.item.content).strip.scan(reg).map{ |s| s.strip }
       matching_words = {}
       all_matching_words.each { |word| 
         if matching_words[word].nil?
@@ -99,7 +99,7 @@ class SiteController < ApplicationController
         matching_words[word] += 1
       }
       matching_words = matching_words.sort { |a,b| b[1] <=> a[1] }
-      word = matching_words[0][0].gsub(/\W/,'')
+      word = matching_words[0][0].gsub(/\W/,'').gsub(/\'s/,'')
       @words_for_twitter_search.push(word)
     }
     

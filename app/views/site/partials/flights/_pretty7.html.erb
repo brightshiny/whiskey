@@ -18,7 +18,7 @@
 <div id="meme_<%= meme.id %>" class="meme"> 
   <h3 class="title" style="font-size: 300%;"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
   <div class="grid_6 alpha">
-    <p class="excerpt"><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
+    <p class="excerpt"><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %></p>
   </div>
   <div class="grid_4">
     <ul class="alternate_content">

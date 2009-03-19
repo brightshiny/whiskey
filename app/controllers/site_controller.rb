@@ -102,8 +102,12 @@ class SiteController < ApplicationController
           matching_words[word] += 1
         }
         matching_words = matching_words.sort { |a,b| b[1] <=> a[1] }
-        word = matching_words[0][0].gsub(/\W/,'').gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'')
-        @words_for_twitter_search.push(word)
+        begin
+          word = matching_words[0][0].gsub(/\W/,'').gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'')
+          @words_for_twitter_search.push(word)
+        rescue
+          @words_for_twitter_search.push("")
+        end
       }
       @meme_strength_graph = open_flash_chart_object(960,300,"/graph/meme_strength/#{@meme.id}")
       @items_published_graph = open_flash_chart_object(960,100,"/graph/items_published/#{@meme.id}")

@@ -30,61 +30,33 @@
 </div>
 
 <div class="grid_6">
-  <h3>Tweets About '<%= @words_for_twitter_search.join(" ") %>'</h3>
+  <div class="grid_4 alpha">
+    <h3>Tweets About '<%= @words_for_twitter_search.join(" ") %>'</h3>
+  </div>
+  <div class="grid_2 omega">
+    <a href="http://twitter.com/home?status=%23<%= @words_for_twitter_search.join("").downcase %>">Join in</a><br />
+    #<%= @words_for_twitter_search.join("").downcase %>
+  </div>
+  <div class="clear"></div>
   <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
   <script type="text/javascript">
-  tweets = [];
-  max_id = 0;
-  twitter_domain = "http://search.twitter.com/search.json";
-  callback_parameters = "&callback=?";
-  english_only = "&lang=en";
-  twitter_url = twitter_domain + "?callback=?&show_user=false&q=<%= @words_for_twitter_search.join("+") %>";  
-  $.getJSON(twitter_url, function(data) {
-    $('#loading_tweets').hide();  
-    twitter_url = twitter_domain + data.refresh_url + callback_parameters + english_only; // call this url next time for only new tweets
-    max_id = data.max_id;
-    if(data.results.length > 0) {
-      $.each(data.results.reverse(), function(i,result) {
-        tweets.push(result);
-        // display_tweet(result, true, true);
-      });
-    } else {
-      $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong><%=h @words_for_twitter_search.join(" ") %></strong>");
-    } 
-  });
-  $.timer(10000, function (timer) {
-    $.getJSON(twitter_url, function(data) {
-      twitter_url = twitter_domain + data.refresh_url + callback_parameters + english_only; // call this url next time for only new tweets
-      if(data.max_id > max_id) {
-        max_id = data.max_id;
-        if(data.results.length > 0) {
-          $.each(data.results, function(i,result) {
-            tweets.push(result);
-          });
-        } 
-      }
-    });
-  });
-  $.timer(1500, function(timer) {
-    if(tweets.length > 0) {
-      tweet_to_show = tweets.shift();
-      display_tweet(tweet_to_show, true, false);
-    }
-  });
+    show_tweets(["<%= @words_for_twitter_search.join('","')%>"]);
   </script>
 </div>
 
 <div class="grid_2 omega">
   <% have_displayed_image_title = false %>
-  <% for item in @meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
-    <% if item.images.size != 0 && ! item.images.first.nil? && ! item.images.first.local_src.nil? %>
+  <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.total_cosine_similarity(@meme.run) } %>
+    <% if item.images.size != 0 %>
     <% if have_displayed_image_title == false %>  
     <h3>Images</h3>
     <% have_displayed_image_title = true %>
     <% end %>
-    <div class="item_image_block" style="background-image: url(<%= image_path(item.images.first.local_src) %>);">
-      <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
-    </div>
+      <% for image in item.images %><% if ! image.local_src.nil? %>
+      <div class="item_image_block" style="background-image: url(<%= image_path(image.local_src) %>);">
+        <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
+      </div>
+      <% end %><% end %>
     <% end %>
   <% end %>
   </ul>

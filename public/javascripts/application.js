@@ -39,7 +39,9 @@ function update_time() {
         newTime = [time, units].join(" "); 
       } 
     }
-    time_span.innerHTML = newTime;
+    if(newTime != "") {
+      time_span.innerHTML = newTime;
+    }
   }
 }
 
@@ -93,6 +95,74 @@ function display_tweet(result, prepend, quickly) {
   if(quickly) {
     $(tweet_id).show();
   } else {
-    $(tweet_id).slideDown(850, "easeOutBounce");
+    $(tweet_id).slideDown(1000, "easeOutBounce");
   }
+}
+
+function sort_tweets(tweets) {
+  tweets.sort(sort_tweets_by_created_at);
+}
+function sort_tweets_by_created_at(a, b) {
+  var x = a.created_at;
+  var y = b.created_at;
+  return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+}
+
+function show_tweets(word_array) {
+  tweets = [];
+  max_id = 0;
+  twitter_domain = "http://search.twitter.com/search.json";
+  callback_parameters = "&callback=?";
+  english_only = "&lang=en";
+  twitter_url = twitter_domain + "?show_user=false&q=" + word_array.join('+') + callback_parameters;  
+  twitter_url_hashtag = twitter_domain + "?show_user=false&q=%23" + word_array.join('') + callback_parameters;  
+  $.getJSON(twitter_url, function(data) {
+    $('#loading_tweets').hide();  
+    if(data.results.length > 0) {
+      tweets = tweets.concat(data.results);
+    } 
+    twitter_url = twitter_domain + data.refresh_url + callback_parameters + english_only; // call this url next time for only new tweets
+    max_id = data.max_id;
+    sort_tweets(tweets);
+  });
+  $.getJSON(twitter_url_hashtag, function(data) {
+    if(data.results.length > 0) {
+      tweets = tweets.concat(data.results);
+    } 
+    twitter_url_hashtag = twitter_domain + data.refresh_url + callback_parameters + english_only; // call this url next time for only new tweets    
+    sort_tweets(tweets);
+  });
+  $.timer(5000, function(timer) {
+    if(tweets.length == 0) {
+      $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong>" + word_array.join(' ') + "</strong>");
+    }
+    timer.stop();
+  });
+  $.timer(10000, function (timer) {  
+    $.getJSON(twitter_url, function(data) {
+      twitter_url = twitter_domain + data.refresh_url + callback_parameters + english_only; // call this url next time for only new tweets
+      if(data.max_id > max_id) {
+        max_id = data.max_id;
+        if(data.results.length > 0) {
+          tweets = tweets.concat(data.results);
+        } 
+      }
+    });
+    $.getJSON(twitter_url_hashtag, function(data) {
+      twitter_url_hashtag = twitter_domain + data.refresh_url + callback_parameters + english_only; // call this url next time for only new tweets
+      if(data.max_id > max_id) {
+        max_id = data.max_id;
+        if(data.results.length > 0) {
+          tweets = tweets.concat(data.results);
+        } 
+      }
+    });
+    sort_tweets(tweets);
+  });
+  $.timer(1500, function(timer) {
+    if(tweets.length > 0) {
+      tweet_to_show = tweets.shift();
+      display_tweet(tweet_to_show, true, false);
+    }
+  });
 }

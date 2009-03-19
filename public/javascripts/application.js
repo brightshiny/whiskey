@@ -115,7 +115,7 @@ function show_tweets(word_array) {
   callback_parameters = "&callback=?";
   english_only = "&lang=en";
   twitter_url = twitter_domain + "?show_user=false&q=" + word_array.join('+') + callback_parameters;  
-  twitter_url_hashtag = twitter_domain + "?show_user=false&q=%23" + word_array.join('') + callback_parameters;  
+  twitter_url_hashtag = twitter_domain + "?show_user=false&q=%23" + word_array.sort().join('') + callback_parameters;  
   $.getJSON(twitter_url, function(data) {
     $('#loading_tweets').hide();  
     if(data.results.length > 0) {

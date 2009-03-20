@@ -97,7 +97,7 @@ class SiteController < ApplicationController
         all_matching_words = Gobbler::GItem.extract_text(big_giant_content_blob).strip.scan(reg).map{ |s| s.strip.gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'').gsub(/\Ws/,'').gsub(/[^a-z0-9]/i,'') }
         matching_words = {}
         all_matching_words.each { |word| 
-          word = word.gsub(/([a-z])s$/i,'\1')
+          # word = word.gsub(/([a-z])s$/i,'\1') # depluralize
           if matching_words[word].nil?
             matching_words[word] = 0
           end

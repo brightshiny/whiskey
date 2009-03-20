@@ -105,7 +105,7 @@ class SiteController < ApplicationController
         }
         matching_words = matching_words.sort { |a,b| b[1] <=> a[1] }
         begin
-          word = matching_words[0][0]
+          word = matching_words[0][0].downcase
           @words_for_twitter_search.push(word)
         rescue
           @words_for_twitter_search.push("")

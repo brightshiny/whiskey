@@ -110,7 +110,7 @@ class SiteController < ApplicationController
             @words_for_twitter_search.push(word)
           end
         rescue
-          @words_for_twitter_search.push("")
+          # do nothing
         end
       }
       @words_for_twitter_search = @words_for_twitter_search[0..(number_of_words_for_twitter_search-1)]

@@ -88,11 +88,13 @@ class SiteController < ApplicationController
         @items.push(items_hash[k])
       }
       @words = Word.find_by_sql(["select w.id, w.word, sum(iw.count) as number_of_occurances from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id join item_words iw on iw.item_id = ir.item_id join words w on w.id = iw.word_id where m.id = ? group by w.id order by 3 desc limit 10", @meme.id])
+      
       @words_for_twitter_search = []
       number_of_words_for_twitter_search = 2
       @words[0..(number_of_words_for_twitter_search-1)].each { |partial_word| 
         reg = Regexp.new("\s#{partial_word.word}.*?\s",true)
-        all_matching_words = Gobbler::GItem.extract_text(@meme.item.content).strip.scan(reg).map{ |s| s.strip }
+        big_giant_content_blob = @meme.distinct_meme_items.map{ |mi| mi.item.content }.flatten.join(" ")
+        all_matching_words = Gobbler::GItem.extract_text(big_giant_content_blob).strip.scan(reg).map{ |s| s.strip.gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'').gsub(/\Ws/,'').gsub(/[^a-z0-9]/i,'') }
         matching_words = {}
         all_matching_words.each { |word| 
           word = word.gsub(/[a-z]s$/i,'')
@@ -103,12 +105,13 @@ class SiteController < ApplicationController
         }
         matching_words = matching_words.sort { |a,b| b[1] <=> a[1] }
         begin
-          word = matching_words[0][0].gsub(/\Ws/,'').gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'')
+          word = matching_words[0][0]
           @words_for_twitter_search.push(word)
         rescue
           @words_for_twitter_search.push("")
         end
       }
+      
       @meme_strength_graph = open_flash_chart_object(960,300,"/graph/meme_strength/#{@meme.id}")
       @items_published_graph = open_flash_chart_object(960,100,"/graph/items_published/#{@meme.id}")
     end

@@ -51,7 +51,7 @@
     <h3 style="margin-top: 2.5em;">Images</h3>
     <% have_displayed_image_title = true %>
     <% end %>
-      <% for image in item.images[0..0] %><% if ! image.local_src.nil? %>
+      <% for image in item.images[0..0] %><% if ! image.local_src.nil? && image.width > 50 && image.width > 50 %>
       <div class="item_image_block" style="background-image: url(<%= image_path(image.local_src) %>);">
         <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
       </div>

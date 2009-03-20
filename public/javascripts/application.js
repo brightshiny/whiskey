@@ -132,9 +132,9 @@ function show_tweets(word_array) {
     twitter_url_hashtag = twitter_domain + data.refresh_url + callback_parameters + english_only; // call this url next time for only new tweets    
     sort_tweets(tweets);
   });
-  $.timer(5000, function(timer) {
+  $.timer(7000, function(timer) {
     if(tweets.length == 0) {
-      $("#topical_tweets").html("<p></p>").html("Sorry there are no Tweets matching: <strong>" + word_array.join(' ') + "</strong>");
+      $("#topical_tweets").html("<p></p>").html("Sorry, there are either no Tweets matching <strong>" + word_array.join(' ') + "</strong> or Twitter is experiencing problems.</p><p style=\"margin-top: 1.5em;\">Please try again in a few minutes.");
     }
     timer.stop();
   });

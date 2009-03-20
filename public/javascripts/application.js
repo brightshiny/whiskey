@@ -95,7 +95,7 @@ function display_tweet(result, prepend, quickly) {
   if(quickly) {
     $(tweet_id).show();
   } else {
-    $(tweet_id).slideDown(850, "easeOutBounce");
+    $(tweet_id).slideDown(750, "easeOutExpo");
   }
 }
 
@@ -159,7 +159,7 @@ function show_tweets(word_array) {
     });
     sort_tweets(tweets);
   });
-  $.timer(1500, function(timer) {
+  $.timer(1700, function(timer) {
     if(tweets.length > 0) {
       tweet_to_show = tweets.shift();
       display_tweet(tweet_to_show, true, false);

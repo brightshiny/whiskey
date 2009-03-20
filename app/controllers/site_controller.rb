@@ -91,7 +91,7 @@ class SiteController < ApplicationController
       
       @words_for_twitter_search = []
       number_of_words_for_twitter_search = 2
-      @words[0..(number_of_words_for_twitter_search-1)].each { |partial_word| 
+      @words[0..5].each { |partial_word| 
         reg = Regexp.new("\s#{partial_word.word}.*?\s",true)
         big_giant_content_blob = @meme.distinct_meme_items.map{ |mi| mi.item.content }.flatten.join(" ")
         all_matching_words = Gobbler::GItem.extract_text(big_giant_content_blob).strip.scan(reg).map{ |s| s.strip.gsub(/\342\200\231s/,'').gsub(/\342\200\235/,'').gsub(/\Ws/,'').gsub(/[^a-z0-9]/i,'') }
@@ -105,12 +105,15 @@ class SiteController < ApplicationController
         }
         matching_words = matching_words.sort { |a,b| b[1] <=> a[1] }
         begin
-          word = matching_words[0][0].downcase
-          @words_for_twitter_search.push(word)
+          if matching_words[0][1] > 0
+            word = matching_words[0][0].downcase
+            @words_for_twitter_search.push(word)
+          end
         rescue
           @words_for_twitter_search.push("")
         end
       }
+      @words_for_twitter_search = @words_for_twitter_search[0..(number_of_words_for_twitter_search-1)]
       
       @meme_strength_graph = open_flash_chart_object(960,300,"/graph/meme_strength/#{@meme.id}")
       @items_published_graph = open_flash_chart_object(960,100,"/graph/items_published/#{@meme.id}")

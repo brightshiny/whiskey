@@ -63,6 +63,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.scroll "/scroll/:u", :controller => "list_of_items", :action => "scroll"
 
+  map.connect "/c/:i/:t", :controller => "clicks", :action => "create"
   map.connect "/c/:i", :controller => "clicks", :action => "create"
 
   # See how all your routes lay out with "rake routes"

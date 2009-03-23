@@ -50,7 +50,6 @@ class Gobbler::ImageEater
       end
       
       if !image.nil?
-        image.transparent_color = 'white'
         image.write("#{FEED_IMAGES_CACHE_DIR}/#{@destfile}")
         @link = "#{FEED_IMAGES_SRC}/#{@destfile}"
       end

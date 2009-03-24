@@ -1,7 +1,6 @@
 #require 'hpricot'
 require 'RMagick'
 
-
 class Gobbler::ImageEater
   
     attr_reader :link
@@ -19,7 +18,7 @@ class Gobbler::ImageEater
       begin
         doc = open("http://#{@source}")
         doc.each_line do |x|
-          if x.match(/link.*rel\s*="*shortcut*\s*icon"*\s+/)
+          if x.match(/\<link.*?rel=\"(shortcut icon|icon)\"/)
             urlToTry = x.match(/href\s*="*(.*?)"*\s+/)[1]
             if urlToTry.match(/\.ico$/)
               image = Magick::Image.from_blob(open(urlToTry).read) { self.format = "ico" }[0]

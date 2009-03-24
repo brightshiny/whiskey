@@ -9,7 +9,7 @@ class Gobbler::ImageEater
     def initialize(source,reference)
       reference = "%06d" % reference
       @source = source
-      @destfile = reference + ".gif"
+      @destfile = reference + ".png"
       @link = nil
     end
     

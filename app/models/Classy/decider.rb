@@ -1,4 +1,5 @@
 require 'linalg'
+require 'pp'
 
 module Classy
   class Decider
@@ -44,7 +45,8 @@ module Classy
       run.save
       
       # magic in-memory data structure for meme processing
-      relationship_map = {}
+      buckets = []
+      cosine_similarities = {}
       
       puts " " if !verbose # spinner needs space to grow
       
@@ -64,20 +66,44 @@ module Classy
             puts "\t(skipped) %1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id] if verbose
           else
             puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id] if verbose
-            ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
-            relationship_map[ir.item_id] = Array.new unless relationship_map.has_key?(ir.item_id)
-            relationship_map[ir.item_id].push(ir)
+            #ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
+            cosine_similarities[doc.id] = {} unless cosine_similarities.has_key?(doc.id)
+            cosine_similarities[doc.id][pdoc.id] = pdoc.score
+
+            still_searching = true
+            for bucket in buckets do
+              for item_id in bucket.keys do
+                if item_id == pdoc.id || item_id == doc.id
+                  bucket[pdoc.id] = true
+                  bucket[doc.id] = true
+                  still_searching = false
+                  break;
+                end
+              end
+              break if !still_searching
+            end
+            
+            if still_searching
+              bucket = {pdoc.id => true, doc.id => true}
+              buckets.push bucket
+            end
+            
             total_score += pdoc.score
           end
         }
         puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)" if verbose
       }
+      puts
+      #pp cosine_similarities
+      #pp buckets
       
       # generate memes!
-      Meme.memes_from_item_relationship_map(run, relationship_map, true)
+      #Meme.memes_from_item_relationship_map(run, relationship_map, true)
       # generate meme_relationships with the previous run
-      prev_run = Run.find(:first, :conditions => ["user_id = ? and ended_at < ?", run.user_id, Time.now], :order => "ended_at desc")
-      run.generate_meme_relationships(prev_run) if prev_run
+      #prev_run = Run.find(:first, :conditions => ["user_id = ? and ended_at < ?", run.user_id, Time.now], :order => "ended_at desc")
+      #run.generate_meme_relationships(prev_run) if prev_run
+      
+      UberMeme.make_memes(:run => run, :buckets => buckets, :cosine_similarities => cosine_similarities)
       run.ended_at = Time.now
       run.save
       return run

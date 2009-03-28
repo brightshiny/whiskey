@@ -34,11 +34,10 @@ class SiteController < ApplicationController
   
   def load_run
     if params[:id].nil?
-      user = User.find(5)
       @run = Run.find(:first, 
-                      :conditions => ["user_id = ? and ended_at is not null", user.id],
-      :order => "ended_at desc, id desc"
-      )
+                      :conditions => ["user_id = ? and ended_at is not null", 5],
+                      :order => "id desc"
+                     )
     else
       @run = Run.find(params[:id])
     end
@@ -47,30 +46,19 @@ class SiteController < ApplicationController
   def load_memes(run)
     @memes = []
     if ! @run.nil?
-      @memes = Meme.find(:all, 
+      @memes = UberMeme.find(:all, 
         :conditions => ["run_id = ?", run.id], 
-        :include => [ :meme_items => :item_relationship ]
+        :include => :item_uber_memes,
+        :order => "strength desc"
       )
-      if ! @memes.nil? && ! @memes.empty?
-        @memes = @memes.sort_by{ |m| m.strength }.reverse.reject{ |m| m.distinct_meme_items.size <= 2 } 
-      end
     end
   end  
   
   def load_items
     @items_by_meme = {}
-    for meme in @memes
-      @items_by_meme[meme.id] = []
-      meme_items = meme.distinct_meme_items.sort_by{ |mi| mi.total_cosine_similarity }.reverse
-      if meme_items
-        items_to_push = []
-        for mi in meme_items do
-          # if mi.item_relationship.item.content.strip.split(/\s/).size > 1
-            items_to_push.push(mi.item_relationship.item)
-          # end
-        end
-        @items_by_meme[meme.id] = items_to_push[0..4]
-      end
+    for uber_meme in @memes
+      meme_items = ItemUberMeme.find(:all, :conditions => ["uber_meme_id = ?", uber_meme.id], :order => "total_cosine_similarity desc")
+      @items_by_meme[uber_meme.id] = meme_items[0..4]
     end
   end
 
@@ -119,5 +107,22 @@ class SiteController < ApplicationController
       @items_published_graph = open_flash_chart_object(960,100,"/graph/items_published/#{@meme.id}")
     end
   end
+
+#  def meme    
+#    @meme = Meme.find(:first, :conditions => { :id => params[:id] }, :include => [ :meme_items => { :item_relationship => { :item => :feed } } ] )
+#    potential_items = @meme.related_memes.map{ |m| m.distinct_meme_items }.flatten.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse
+#    items_hash = {}
+#    potential_items.each { |i|
+#      items_hash[i.id] = i
+#    }
+#    @items = []
+#    items_hash.keys.each { |k|
+#      @items.push(items_hash[k])
+#    }
+#    @words = Word.find_by_sql(["select w.id, w.word, sum(iw.count) as number_of_occurances from memes m join meme_items mi on mi.meme_id = m.id join item_relationships ir on ir.id = mi.item_relationship_id join item_words iw on iw.item_id = ir.item_id join words w on w.id = iw.word_id where m.id = ? group by w.id order by 3 desc limit 10", @meme.id])
+#    @page_title = "meme details for #{@meme.id}"
+#    @meme_strength_graph = open_flash_chart_object(960,300,"/graph/meme_strength/#{@meme.id}")
+#    @items_published_graph = open_flash_chart_object(960,100,"/graph/items_published/#{@meme.id}")
+#  end
   
 end

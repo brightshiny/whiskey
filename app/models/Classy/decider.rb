@@ -1,5 +1,4 @@
 require 'linalg'
-require 'pp'
 
 module Classy
   class Decider
@@ -92,12 +91,7 @@ module Classy
           end
         }
         puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)" if verbose
-      }
-      puts "====> cosine similarities:"
-      pp cosine_similarities
-      puts "====> buckets:"
-      pp buckets
-      
+      }      
       
       UberMeme.make_memes(:run => run, :buckets => buckets, :cosine_similarities => cosine_similarities)
       run.ended_at = Time.now

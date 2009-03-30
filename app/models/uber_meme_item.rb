@@ -1,4 +1,4 @@
-class ItemUberMeme < ActiveRecord::Base
+class UberMemeItem < ActiveRecord::Base
   belongs_to :item
   belongs_to :run
 end

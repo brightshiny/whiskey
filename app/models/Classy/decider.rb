@@ -93,15 +93,11 @@ module Classy
         }
         puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)" if verbose
       }
-      puts
-      #pp cosine_similarities
-      #pp buckets
+      puts "====> cosine similarities:"
+      pp cosine_similarities
+      puts "====> buckets:"
+      pp buckets
       
-      # generate memes!
-      #Meme.memes_from_item_relationship_map(run, relationship_map, true)
-      # generate meme_relationships with the previous run
-      #prev_run = Run.find(:first, :conditions => ["user_id = ? and ended_at < ?", run.user_id, Time.now], :order => "ended_at desc")
-      #run.generate_meme_relationships(prev_run) if prev_run
       
       UberMeme.make_memes(:run => run, :buckets => buckets, :cosine_similarities => cosine_similarities)
       run.ended_at = Time.now

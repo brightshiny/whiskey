@@ -3,8 +3,9 @@ require 'optparse'
 class Run < ActiveRecord::Base
   belongs_to :user
   has_many :item_relationships
-  has_many :items, :through => :item_relationships
-  has_many :memes
+  has_many :items, :through => :uber_meme_items
+  has_many :uber_memes
+  has_many :uber_meme_items
   include Graphviz
   include EncryptedId
   
@@ -14,36 +15,6 @@ class Run < ActiveRecord::Base
                                    k: #{self.k}
            minimum_cosine_similarity: #{self.minimum_cosine_similarity}
     maximum_matches_per_query_vector: #{self.maximum_matches_per_query_vector}"
-  end
-  
-  def self.to_graphviz
-    run_id = nil
-    source = "memes"
-    opts = OptionParser.new
-    opts.on("-iRUN_ID", "--id=RUN_ID") {|val| run_id = val}
-    opts.on("-sSOURCE", "--source=SOURCE", "source in [memes,item_relationships], default=memes") { |val| source=val}
-    rest = opts.parse(ARGV)
-    
-    if run_id.nil?
-      puts "I didn't understand: " + rest.join(', ') if !rest.nil?
-      puts opts.to_s
-      return
-    end
-    
-    if !source || (source != "memes" && source != "item_relationships")
-      puts "Weird source."
-      puts opts.to_s
-    end
-    
-    run = Run.find(run_id)
-    
-    if source == "memes"
-      run.memes.each do |meme|
-        meme.to_graphviz    
-      end
-    else
-      run.to_graphviz
-    end
   end
   
   def self.go
@@ -89,52 +60,26 @@ class Run < ActiveRecord::Base
       :skip_single_terms => skip_single_terms, 
       :a => docs, :q => docs, :verbose => false})
   end
-  
-  def self.calc_meme_stats
-    memes = Meme.find(:all, :joins => " as `memes` join runs r on `memes`.run_id = r.id", :conditions => ["`memes`.strength is null and r.ended_at is not null"])
-    if memes
-      memes.each {|m| Meme.find(m.id).calc_stats }  # dumb, but joins make objects read-only
-    end
-  end
 
   attr_accessor :cached_average_meme_strength
   def average_meme_strength
-    if ! self.ended_at.nil? && ! self.memes.empty? && self.cached_average_meme_strength.nil?
-      self.cached_average_meme_strength = (self.memes.map{ |m| m.strength }.sum / self.memes.size).to_f
+    if ! self.ended_at.nil? && ! self.uber_memes.empty? && self.cached_average_meme_strength.nil?
+      self.cached_average_meme_strength = (self.uber_memes.map{ |m| m.strength }.sum / self.uber_memes.size).to_f
     end
     return self.cached_average_meme_strength
   end
   
   attr_accessor :cached_standard_deviation_meme_strength
   def standard_deviation_meme_strength
-    if ! self.ended_at.nil? && ! self.memes.empty? 
-      total_sq_deviation = self.memes.map{ |m| (self.average_meme_strength - m.strength)**2 }.sum
-      self.cached_standard_deviation_meme_strength = (Math.sqrt(total_sq_deviation / self.memes.size)).to_f
+    if ! self.ended_at.nil? && ! self.uber_memes.empty? 
+      total_sq_deviation = self.uber_memes.map{ |m| (self.average_meme_strength - m.strength)**2 }.sum
+      self.cached_standard_deviation_meme_strength = (Math.sqrt(total_sq_deviation / self.uber_memes.size)).to_f
     else 
       return 0
     end
     return self.cached_standard_deviation_meme_strength
   end
-  
-  def generate_meme_relationships(prev_run)
-    MemeComparison.transaction do
-      meme_comparison = MemeComparison.find(:first, :conditions => ["run_id = ? and related_run_id = ?", self.id, prev_run.id])
-      if !meme_comparison
-        meme_comparison = MemeComparison.create({:run_id => self.id, :related_run_id => prev_run.id})
-      end
-      self.memes.each do |m1|
-        prev_run.memes.each do |m2|
-          if m1.similar_to(m2)
-            existing_count = MemeRelationship.count(:conditions => ["meme_comparison_id = ? and meme_id = ? and related_meme_id = ?", meme_comparison.id, m1.id, m2.id])
-            if existing_count <= 0
-              MemeRelationship.create({:meme_comparison_id => meme_comparison.id, :meme_id => m1.id, :related_meme_id => m2.id})
-            end
-          end
-        end
-      end
-    end
-  end
-  
+    
   attr_accessor :cached_published_at_range
   def published_at_range
     if self.cached_published_at_range.nil?
@@ -181,6 +126,55 @@ class Run < ActiveRecord::Base
       :conditions => ["user_id = ? and ended_at is not null", user_id],
       :order => "ended_at desc, id desc"
     )
+  end
+  
+  def convert_to_uber_memes
+    buckets = []
+    cosine_similarities = {}
+    
+    for ir in self.item_relationships
+      doc = Item.find(ir.item_id)
+      pdoc = Item.find(ir.related_item_id)
+      if doc && pdoc && doc.id != pdoc.id
+        #ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
+        cosine_similarities[doc.id] = {} unless cosine_similarities.has_key?(doc.id)
+        cosine_similarities[doc.id][pdoc.id] = ir.cosine_similarity
+        
+        still_searching = true
+        for bucket in buckets do
+          for item_id in bucket.keys do
+            if item_id == pdoc.id || item_id == doc.id
+              bucket[pdoc.id] = true
+              bucket[doc.id] = true
+              still_searching = false
+              break;
+            end
+          end
+          break if !still_searching
+        end
+        
+        if still_searching
+          bucket = {pdoc.id => true, doc.id => true}
+          buckets.push bucket
+        end
+      end
+    end
+    if buckets.size > 0
+      UberMeme.make_memes(:run => self, :buckets => buckets, :cosine_similarities => cosine_similarities)
+    end
+  end
+  
+  def self.convert_to_uber_memes
+    max_run=Run.find_by_sql("select r.* from runs r where id = (select max(id) as 'cat' from runs where ended_at is not null)").shift
+    for i in 1 .. max_run.id
+      Run.transaction do
+        run = Run.find(i)
+        if run && run.ended_at && run.uber_meme_items.size <= 0
+          puts "Run #{run.id}"
+          run.convert_to_uber_memes
+        end
+      end
+    end
   end
 
 end

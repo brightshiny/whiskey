@@ -42,12 +42,8 @@ class SiteController < ApplicationController
   
   def load_memes(run)
     @memes = []
-    if ! @run.nil?
-      @memes = UberMeme.find(:all, 
-        :conditions => ["uber_memes.run_id = ? and uber_meme_items.run_id = uber_memes.run_id", run.id], 
-        :include => :uber_meme_items,
-        :order => "strength desc"
-      )
+    if ! run.nil?
+      @memes = UberMeme.find_by_sql(["select * from uber_meme_items umi join uber_memes um on um.id = umi.uber_meme_id where umi.run_id = ? group by umi.uber_meme_id order by strength desc", run.id])
     end
   end  
 

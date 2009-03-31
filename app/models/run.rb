@@ -71,11 +71,14 @@ class Run < ActiveRecord::Base
   
   attr_accessor :cached_standard_deviation_meme_strength
   def standard_deviation_meme_strength
-    if ! self.ended_at.nil? && ! self.uber_memes.empty? 
+    if ! self.ended_at.nil? && ! self.uber_memes.empty? && self == Run.current(5) && self.cached_standard_deviation_meme_strength.nil?
       total_sq_deviation = self.uber_memes.map{ |m| (self.average_meme_strength - m.strength)**2 }.sum
       self.cached_standard_deviation_meme_strength = (Math.sqrt(total_sq_deviation / self.uber_memes.size)).to_f
-    else 
-      return 0
+    elsif ! self.ended_at.nil? && ! self.uber_memes.empty? && self != Run.current(5) && self.cached_standard_deviation_meme_strength.nil?
+      uber_meme_strengths = UberMeme.find_by_sql(["select um.id, sum(umi.total_cosine_similarity) as calculated_meme_strength from uber_meme_items umi join uber_memes um on um.id = umi.uber_meme_id where umi.run_id = ? group by umi.uber_meme_id order by strength desc", self.id])
+      average_meme_strength = uber_meme_strengths.map{ |um| um.calculated_meme_strength.to_f }.sum / uber_meme_strengths.size
+      total_sq_deviation = uber_meme_strengths.map{ |um| (average_meme_strength - um.calculated_meme_strength.to_f)**2 }.sum
+      self.cached_standard_deviation_meme_strength = (Math.sqrt(total_sq_deviation / uber_meme_strengths.size)).to_f
     end
     return self.cached_standard_deviation_meme_strength
   end

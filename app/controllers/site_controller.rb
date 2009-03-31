@@ -8,7 +8,6 @@ class SiteController < ApplicationController
     if ! read_fragment({ :action => "index", :run => @run.id, :flight => @flight.id, :user => current_user })    
       load_memes(@run)
       @maximum_meme_strength = @memes.map{ |m| m.strength }.max
-      load_items
       if @run != Run.current(5)
         @archive = true
       end
@@ -36,7 +35,6 @@ class SiteController < ApplicationController
     if !params[:id].nil?
       @run = Run.find(:first, :conditions => ["id = ? and ended_at is not null", params[:id]])
     end
-    
     unless @run
       @run = Run.find(:first, :conditions => ["user_id = ? and ended_at is not null", 5], :order => "id desc")
     end
@@ -46,20 +44,12 @@ class SiteController < ApplicationController
     @memes = []
     if ! @run.nil?
       @memes = UberMeme.find(:all, 
-        :conditions => ["run_id = ?", run.id], 
+        :conditions => ["uber_memes.run_id = ? and uber_meme_items.run_id = uber_memes.run_id", run.id], 
         :include => :uber_meme_items,
         :order => "strength desc"
       )
     end
   end  
-  
-  def load_items
-    @items_by_meme = {}
-    for uber_meme in @memes
-      meme_items = UberMemeItem.find(:all, :conditions => ["uber_meme_id = ?", uber_meme.id], :order => "total_cosine_similarity desc")
-      @items_by_meme[uber_meme.id] = meme_items[0..4]
-    end
-  end
 
   def meme  
     #@meme = Meme.find(:first, :conditions => { :id => params[:id] }, :include => [ :meme_items => { :item_relationship => { :item => :feed } } ] )

@@ -1,5 +1,9 @@
-#require 'hpricot'
 require 'RMagick'
+
+# I know this is wacky ass code
+@invertNegation = true
+#vers = Magick::Magick_version.match(/\d+\.\d+\.\d+-\d+/)[0].split(/\.|-/)
+# 6.4.8-4 is last bad version
 
 class Gobbler::ImageEater
   
@@ -22,6 +26,7 @@ class Gobbler::ImageEater
             urlToTry = x.match(/href\s*="*(.*?)"*\s+/)[1]
             if urlToTry.match(/\.ico$/)
               image = Magick::Image.from_blob(open(urlToTry).read) { self.format = "ico" }[0]
+              image = image.negate_channel(true,Magick::AlphaChannel) if @invertNegation
             else
               image = Magick::Image.from_blob(open(urlToTry).read)
             end
@@ -35,14 +40,13 @@ class Gobbler::ImageEater
       end
       if image.nil?
         begin
-    #      image = Magick::ImageList.new("http://#{@source}/favicon.png")
           image = Magick::Image.from_blob(open("http://#{@source}/favicon.png").read)
-
         rescue
         end
         if image.nil?
           begin
             image = Magick::Image.from_blob(open("http://#{@source}/favicon.ico").read) { self.format = "ico" }[0]
+            image = image.negate_channel(true,Magick::AlphaChannel) if @invertNegation
           rescue
           end
         end

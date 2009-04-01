@@ -18,7 +18,7 @@ development:
   adapter: mysql
   encoding: utf8
   database: whiskey_development
-  pool: 5
+  pool: 10
   username: whiskey
   password: whiskey
 
@@ -29,7 +29,7 @@ test:
   adapter: mysql
   encoding: utf8
   database: whiskey_test
-  pool: 5
+  pool: 10
   username: whiskey
   password: whiskey
   socket: /tmp/mysql.sock
@@ -38,7 +38,7 @@ production:
   adapter: mysql
   encoding: utf8
   database: whiskey_production
-  pool: 5
+  pool: 10
   username: whiskey
   password: whiskey
   socket: /tmp/mysql.sock

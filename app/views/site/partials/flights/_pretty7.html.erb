@@ -1,3 +1,5 @@
+<% cache({ :action => "index", :run => @run.id, :flight => @flight.id, :user => current_user }) do %>
+
 <% number_of_displayed_top_memes = 0 %>
 <% number_of_displayed_middle_memes = 0 %>
 <% number_of_displayed_bottom_memes = 0 %>
@@ -158,3 +160,5 @@ $.timer(60000, function(timer) {
   update_time();
 });
 </script>
+
+<% end %>

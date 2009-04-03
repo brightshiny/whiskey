@@ -43,7 +43,7 @@ class SiteController < ApplicationController
   def load_memes(run)
     @memes = []
     if ! run.nil?
-      @memes = UberMeme.find_by_sql(["select * from uber_meme_items umi join uber_memes um on um.id = umi.uber_meme_id where umi.run_id = ? group by umi.uber_meme_id order by strength desc", run.id])
+      @memes = UberMeme.find_by_sql(["select um.* from uber_meme_items umi join uber_memes um on um.id = umi.uber_meme_id where umi.run_id = ? group by umi.uber_meme_id order by strength desc", run.id])
     end
   end  
 

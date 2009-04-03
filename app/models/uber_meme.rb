@@ -96,9 +96,9 @@ class UberMeme < ActiveRecord::Base
     return UberMemeItem.find(:all, :conditions => ["uber_meme_id = ? and run_id = ?", self.id, self.run.id])
   end
   
-  # def strength 
-  #   self.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum
-  # end
+  def strength 
+    self.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum
+  end
   
   attr_accessor :cached_z_score_strength  
   def z_score_strength

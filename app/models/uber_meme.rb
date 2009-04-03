@@ -89,7 +89,7 @@ class UberMeme < ActiveRecord::Base
         my_items.delete(k)
       end
     end
-    return (common_item_count > 2) # related if >2 items in common
+    return (common_item_count > 3) # related if > 3 items in common
   end
   
   def distinct_meme_items
@@ -128,8 +128,8 @@ class UberMeme < ActiveRecord::Base
   attr_accessor :cached_strength_over_time
   def strength_over_time
     if self.cached_strength_over_time.nil?
-      memes = UberMeme.find_by_sql(["select sum(total_cosine_similarity) as 'strength' from uber_meme_items where uber_meme_id = ? group by run_id order by run_id asc", self.id])
-      last_n_strengths = memes.map{ |m| m.strength }
+      memes = UberMeme.find_by_sql(["select sum(total_cosine_similarity) as 'calculated_meme_strength' from uber_meme_items where uber_meme_id = ? group by run_id order by run_id asc", self.id])
+      last_n_strengths = memes.map{ |m| m.calculated_meme_strength }
       self.cached_strength_over_time = last_n_strengths
     end
     return self.cached_strength_over_time

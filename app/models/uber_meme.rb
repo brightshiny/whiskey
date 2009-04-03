@@ -64,7 +64,8 @@ class UberMeme < ActiveRecord::Base
       end
       
       current_meme.item = Item.find(lead_item_id)
-      current_meme.strength = total_bucket_strength
+      # current_meme.strength = total_bucket_strength
+      current_meme.strength = current_meme.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum 
       current_meme.save
     end
   end
@@ -94,6 +95,10 @@ class UberMeme < ActiveRecord::Base
   def distinct_meme_items
     return UberMemeItem.find(:all, :conditions => ["uber_meme_id = ? and run_id = ?", self.id, self.run.id])
   end
+  
+  # def strength 
+  #   self.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum
+  # end
   
   attr_accessor :cached_z_score_strength  
   def z_score_strength

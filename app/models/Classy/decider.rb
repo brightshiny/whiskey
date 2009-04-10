@@ -94,6 +94,17 @@ module Classy
       }      
       
       UberMeme.make_memes(:run => run, :buckets => buckets, :cosine_similarities => cosine_similarities)
+      
+      umras = UberMemeRunAssociation.find(:all, :conditions => ["run_id = ?", run.id])
+      run.meme_strength_average = umras.map{ |umra| umra.strength }.sum / umras.size
+      total_sq_deviation = umras.map{ |umra| (run.meme_strength_average - umra.strength)**2 }.sum
+      run.meme_strength_standard_deviation = (Math.sqrt(total_sq_deviation / umras.size)).to_f
+      
+      umras.each{ |umra| 
+        umra.strength_z_score = umra.strength / run.meme_strength_standard_deviation
+        umra.save
+      }
+      
       run.ended_at = Time.now
       run.save
       return run

@@ -66,6 +66,7 @@ class UberMeme < ActiveRecord::Base
       current_meme.item = Item.find(lead_item_id)
       # current_meme.strength = total_bucket_strength
       current_meme.strength = current_meme.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum 
+      UberMemeRunAssociation.create({ :run_id => run.id, :uber_meme_id => current_meme.id, :strength => current_meme.strength }) 
       current_meme.save
     end
   end

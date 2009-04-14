@@ -65,26 +65,26 @@ module Classy
             puts "\t(skipped) %1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id] if verbose
           else
             puts "\t%1.5f - %s (%s)\n" % [pdoc.score, pdoc.title, pdoc.id] if verbose
-            #ir = ItemRelationship.create({ :item_id => doc.id, :related_item_id => pdoc.id, :run_id => run.id, :cosine_similarity => pdoc.score }) 
             cosine_similarities[doc.id] = {} unless cosine_similarities.has_key?(doc.id)
             cosine_similarities[doc.id][pdoc.id] = pdoc.score
 
+            # add items to buckets if the buckets already exist
             still_searching = true
-            for bucket in buckets do
-              for item_id in bucket.keys do
-                if item_id == pdoc.id || item_id == doc.id
-                  bucket[pdoc.id] = true
-                  bucket[doc.id] = true
-                  still_searching = false
-                  break;
-                end
+            for bucket in buckets 
+              if bucket.keys.include?(pdoc.id) || bucket.keys.include?(doc.id)
+                bucket[pdoc.id] = true
+                bucket[doc.id] = true
+                still_searching = false
               end
-              break if !still_searching
             end
             
-            if still_searching
-              bucket = {pdoc.id => true, doc.id => true}
-              buckets.push bucket
+            # otherwise make a new bucket
+            if still_searching == true
+              bucket = {}
+              bucket[pdoc.id] = true
+              bucket[doc.id] = true
+              buckets.push(bucket)
+              still_searching = false
             end
             
             total_score += pdoc.score
@@ -93,17 +93,44 @@ module Classy
         puts "\tTotal Score: #{total_score} (#{total_score.to_f / predicted_docs.size.to_f} avg)" if verbose
       }      
       
+      # puts
+      # buckets.each { |bucket|
+      #   puts "#{bucket.keys.join(", ")}"
+      # }
+      
       UberMeme.make_memes(:run => run, :buckets => buckets, :cosine_similarities => cosine_similarities)
       
-      umras = UberMemeRunAssociation.find(:all, :conditions => ["run_id = ?", run.id])
-      run.meme_strength_average = umras.map{ |umra| umra.strength }.sum / umras.size
-      total_sq_deviation = umras.map{ |umra| (run.meme_strength_average - umra.strength)**2 }.sum
-      run.meme_strength_standard_deviation = (Math.sqrt(total_sq_deviation / umras.size)).to_f
+      # umras = UberMemeRunAssociation.find(:all, :conditions => ["run_id = ?", run.id])
+      # run.meme_strength_average = umras.map{ |umra| umra.strength }.sum / umras.size
+      # total_sq_deviation = umras.map{ |umra| (run.meme_strength_average - umra.strength)**2 }.sum
+      # run.meme_strength_standard_deviation = (Math.sqrt(total_sq_deviation / umras.size)).to_f
+      # 
+      # umras.each{ |umra| 
+      #   umra.strength_z_score = umra.strength / run.meme_strength_standard_deviation
+      #   umra.save
+      # }
       
-      umras.each{ |umra| 
-        umra.strength_z_score = umra.strength / run.meme_strength_standard_deviation
-        umra.save
+      puts "Making UMRAs..."
+      run_data = {}
+      uber_meme_run_ids = UberMemeItem.find_by_sql(["select uber_meme_id, run_id, sum(total_cosine_similarity) as strength from uber_meme_items where run_id = ? group by uber_meme_id, run_id", run.id])
+      uber_meme_run_ids.each { |umi|
+        if run_data[umi.run_id].nil?
+          run_data[umi.run_id] = { :total_strength => 0, :number_of_uber_memes => 0, :strengths => [], :standard_deviation => 0 }
+        end
+        run_data[umi.run_id][:total_strength] += umi.strength.to_f
+        run_data[umi.run_id][:number_of_uber_memes] += 1
+        run_data[umi.run_id][:strengths].push({ :uber_meme_id => umi.uber_meme_id, :strength => umi.strength.to_f })
       }
+      run_data.keys.each { |run_id|
+        data = run_data[run_id]
+        average_meme_strength = data[:total_strength] / data[:number_of_uber_memes]
+        total_deviation = data[:strengths].map{ |s| (average_meme_strength - s[:strength])**2 }.sum
+        run_data[run_id][:standard_deviation] = (Math.sqrt(total_deviation / data[:number_of_uber_memes])).to_f
+      }
+      uber_meme_run_ids.each { |umi|       
+        UberMemeRunAssociation.create({ :uber_meme_id => umi.uber_meme_id, :run_id => umi.run_id, :strength => umi.strength.to_f, :strength_z_score => (umi.strength.to_f / run_data[umi.run_id][:standard_deviation]) }) 
+      }
+      puts "... done making UMRAs"
       
       run.ended_at = Time.now
       run.save

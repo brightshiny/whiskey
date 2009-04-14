@@ -7,7 +7,7 @@
 <% @memes.each_with_index do |meme, n| %>
 
 <% primary_item = meme.item %>
-<% if meme.z_score_strength > 1.5 %>
+<% if meme.z_score_strength(@run) > 1.5 %>
 
 <% if number_of_displayed_top_memes == 0 %>
 <div id="top_memes">
@@ -24,7 +24,7 @@
   </div>
   <div class="grid_4">
     <ul class="alternate_content">
-      <% for meme_item in meme.distinct_meme_items[1..2] %>
+      <% for meme_item in meme.distinct_meme_items(@run)[1..2] %>
       <li>
         <%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %><br />
         <%= render :partial => "byline", :locals => { :item => meme_item.item, :meme => meme } %>
@@ -33,7 +33,7 @@
     </ul>
   </div>
   <div class="grid_2 omega">
-    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item } %>
+    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item, :run => @run } %>
     <p class="excerpt details" style="clear: both;"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
   </div>
   <div class="clear"></div>  
@@ -59,7 +59,7 @@
   </div>
   <div class="grid_4">
     <ul class="alternate_content">
-      <% for meme_item in meme.distinct_meme_items[1..2] %>
+      <% for meme_item in meme.distinct_meme_items(@run)[1..2] %>
       <li>
         <%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %><br />
         <%= render :partial => "byline", :locals => { :item => meme_item.item, :meme => meme } %>
@@ -68,7 +68,7 @@
     </ul>
   </div>
   <div class="grid_2 omega">
-    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item } %>
+    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item, :run => @run } %>
     <p class="excerpt details" style="clear: both;"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
   </div>  
   <div class="clear"></div>  
@@ -93,7 +93,7 @@
 <div class="meme grid_4<% if number_of_displayed_middle_memes%3 == 0%> alpha<% elsif number_of_displayed_middle_memes%3 == 2 %> omega<% end %>">
   <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
   <p><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
-  <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item } %>
+  <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item, :run => @run } %>
   <div class="clear"></div>
   <p class="excerpt details"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
 </div>

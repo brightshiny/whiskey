@@ -7,7 +7,6 @@ class SiteController < ApplicationController
     load_run
     if ! read_fragment({ :action => "index", :id => @run.id, :flight => @flight.id, :user => current_user })    
       load_memes(@run)
-      @maximum_meme_strength = @memes.map{ |m| m.strength }.max
       if @run != Run.current(5)
         @archive = true
       end
@@ -43,7 +42,11 @@ class SiteController < ApplicationController
   def load_memes(run)
     @memes = []
     if ! run.nil?
-      @memes = UberMeme.find_by_sql(["select um.* from uber_meme_items umi join uber_memes um on um.id = umi.uber_meme_id where umi.run_id = ? group by umi.uber_meme_id order by strength desc", run.id])
+      @memes = UberMeme.find(:all, 
+        :joins => "join uber_meme_run_associations on uber_meme_run_associations.uber_meme_id = uber_memes.id",
+        :conditions => ["uber_meme_run_associations.run_id = ?", run.id],
+        :order => "uber_meme_run_associations.strength_z_score desc"
+      )
     end
   end  
 

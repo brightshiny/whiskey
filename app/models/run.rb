@@ -4,8 +4,10 @@ class Run < ActiveRecord::Base
   belongs_to :user
   has_many :item_relationships
   has_many :items, :through => :uber_meme_items
-  has_many :uber_memes
+  # has_many :uber_memes
   has_many :uber_meme_items
+  has_many :uber_meme_run_associations
+  has_many :uber_memes, :through => :uber_meme_run_associations
   include Graphviz
   include EncryptedId
   
@@ -47,19 +49,13 @@ class Run < ActiveRecord::Base
       return
     end
     
-    # start_date = Time.now
-    # most_recent_doc = user.recent_documents_from_feeds(1).first
-    # if ! most_recent_doc.nil?
-    #   start_date = most_recent_doc.published_at
-    # end
-    # docs = user.documents_from_feeds_by_date_range(start_date-hours_to_scan.hours, start_date, max_docs_for_a, min_docs_for_a)
     docs = user.recent_documents_from_feeds(max_docs_for_a)
     decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
     decider.memes({:user => user, :k => k, :n => max_docs_for_a,
       :maximum_matches_per_query_vector => max_matches_per_q, 
       :minimum_cosine_similarity => minimum_cosine_similarity, 
       :skip_single_terms => skip_single_terms, 
-      :a => docs, :q => docs, :verbose => false})
+      :a => docs, :q => docs, :verbose => true})
   end
 
   attr_accessor :cached_average_meme_strength

@@ -2,6 +2,8 @@ class UberMeme < ActiveRecord::Base
   belongs_to :item
   belongs_to :run
   has_many :uber_meme_items
+  has_many :uber_meme_run_associations
+  has_many :runs, :through => :uber_meme_run_associations
   attr_accessor :number_of_columns, :break_afterwards, :is_alpha
   
   def self.make_memes(opts={})
@@ -66,7 +68,7 @@ class UberMeme < ActiveRecord::Base
       current_meme.item = Item.find(lead_item_id)
       # current_meme.strength = total_bucket_strength
       current_meme.strength = current_meme.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum 
-      UberMemeRunAssociation.create({ :run_id => run.id, :uber_meme_id => current_meme.id, :strength => current_meme.strength }) 
+      # UberMemeRunAssociation.create({ :run_id => run.id, :uber_meme_id => current_meme.id, :strength => current_meme.strength }) 
       current_meme.save
     end
   end
@@ -93,20 +95,42 @@ class UberMeme < ActiveRecord::Base
     return (common_item_count > 3) # related if > 3 items in common
   end
   
-  def distinct_meme_items
-    return UberMemeItem.find(:all, :conditions => ["uber_meme_id = ? and run_id = ?", self.id, self.run.id])
+  attr_accessor :cached_distinct_meme_items
+  def distinct_meme_items(run=nil)
+    if self.cached_distinct_meme_items.nil?
+      if ! run.nil?
+        self.cached_distinct_meme_items = UberMemeItem.find(:all, :conditions => ["uber_meme_id = ? and run_id = ?", self.id, run.id])
+      else
+        self.cached_distinct_meme_items = UberMemeItem.find(:all, :conditions => ["uber_meme_id = ?", self.id], :group => "item_id")
+      end
+    end
+    return self.cached_distinct_meme_items
   end
   
-  def strength 
-    self.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum
+  attr_accessor :cached_strength
+  def strength(run)
+    if self.cached_strength.nil?
+      # self.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum
+      self.uber_meme_run_association(run).strength
+    end
+    return self.cached_strength
   end
   
   attr_accessor :cached_z_score_strength  
-  def z_score_strength
+  def z_score_strength(run)
     if self.cached_z_score_strength.nil?
-      self.cached_z_score_strength = self.strength / self.run.standard_deviation_meme_strength
+      # self.cached_z_score_strength = self.strength / self.run.standard_deviation_meme_strength
+      self.cached_z_score_strength = self.uber_meme_run_association(run).strength_z_score
     end
     return self.cached_z_score_strength
+  end
+  
+  attr_accessor :cached_uber_meme_run_association
+  def uber_meme_run_association(run)
+    if self.cached_uber_meme_run_association.nil?
+      self.cached_uber_meme_run_association = UberMemeRunAssociation.find(:first, :conditions => ["uber_meme_id = ? and run_id = ?", self.id, run.id])
+    end
+    return self.cached_uber_meme_run_association
   end
   
   attr_accessor :cached_strength_trend

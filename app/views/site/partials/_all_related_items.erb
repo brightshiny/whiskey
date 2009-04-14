@@ -1,5 +1,5 @@
 <ul class="all_related_items">
-  <% meme.distinct_meme_items.sort_by{ |mi| mi.item.published_at }.each do |mi| %>
+  <% meme.distinct_meme_items(run).sort_by{ |mi| mi.item.published_at }.each do |mi| %>
     <% if mi.item.feed.logo.nil?
       mi.item.feed.logo = "/assets/images/fauxvicon.gif";
     end %>

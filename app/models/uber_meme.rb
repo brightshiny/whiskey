@@ -99,9 +99,9 @@ class UberMeme < ActiveRecord::Base
   def distinct_meme_items(run=nil)
     if self.cached_distinct_meme_items.nil?
       if ! run.nil?
-        self.cached_distinct_meme_items = UberMemeItem.find(:all, :select => "distinct uber_meme_items.*", :conditions => ["uber_meme_id = ? and run_id = ?", self.id, run.id])
+        self.cached_distinct_meme_items = UberMemeItem.find(:all, :select => "distinct uber_meme_items.*", :conditions => ["uber_meme_id = ? and run_id = ?", self.id, run.id], :order => "total_cosine_similarity desc")
       else
-        self.cached_distinct_meme_items = UberMemeItem.find(:all, :select => "distinct uber_meme_items.*", :conditions => ["uber_meme_id = ?", self.id], :group => "item_id")
+        self.cached_distinct_meme_items = UberMemeItem.find(:all, :select => "distinct uber_meme_items.*", :conditions => ["uber_meme_id = ?", self.id], :group => "item_id", :order => "total_cosine_similarity desc")
       end
     end
     return self.cached_distinct_meme_items

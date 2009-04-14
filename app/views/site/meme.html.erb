@@ -1,4 +1,4 @@
-<% cache({ :action => "meme", :id => params[:id], :run => @meme.run_id, :flight => @flight.id }) do %>
+<% cache({ :action => "meme", :id => params[:id], :flight => @flight.id }) do %>
 
 <div class="meme_details">
 
@@ -36,7 +36,7 @@
   <div class="clear"></div>
   <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
   <script type="text/javascript">
-    show_tweets(["<%= @words_for_twitter_search.join('","')%>"]);
+    show_tweets(["<%= @words_for_twitter_search.join('","') %>"]);
   </script>
 </div>
 
@@ -45,7 +45,7 @@
     &larr; Join the conversation on Twitter, just mention <a href="http://twitter.com/home?status=<%= @words_for_twitter_search.join(" ") %>"><%= @words_for_twitter_search.join(" and ") %></a> in a tweet or use the hashtag <a href="http://twitter.com/home?status=%23rfr<%= @meme.id %>">#rfr<%= @meme.id %></a>
   </div>
   <% have_displayed_image_title = false %>
-  <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.total_cosine_similarity(@meme.run) } %>
+  <% for item in @items %>
     <% if item.images.size != 0 %>
     <% if have_displayed_image_title == false %>  
     <h3 style="margin-top: 2.5em;">Images</h3>

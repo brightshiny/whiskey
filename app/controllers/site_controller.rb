@@ -52,10 +52,10 @@ class SiteController < ApplicationController
 
   def meme  
     #@meme = Meme.find(:first, :conditions => { :id => params[:id] }, :include => [ :meme_items => { :item_relationship => { :item => :feed } } ] )
-    @meme = UberMeme.find(:first, :conditions => { :id => params[:id]}, :include => [:run])
+    @meme = UberMeme.find(:first, :conditions => { :id => params[:id] })
     @page_title = "meme details" # for #{@meme.id}"
-    if ! read_fragment({ :action => "meme", :id => params[:id], :run => @meme.run_id, :flight => @flight.id })
-      @items = Item.find(:all, :joins => "join uber_meme_items ium on (ium.item_id = `items`.id)", :conditions => ["ium.uber_meme_id = ? and ium.run_id = ?", @meme.id, @meme.run.id], :order => "published_at desc")
+    if ! read_fragment({ :action => "meme", :id => params[:id], :flight => @flight.id })
+      @items = @meme.distinct_meme_items.map{ |dmi| dmi.item }
       @words = Word.find_by_sql(["select w.id, w.word, sum(iw.count) as number_of_occurances from uber_memes m join uber_meme_items ium on ium.uber_meme_id = m.id join item_words iw on iw.item_id = ium.item_id join words w on w.id = iw.word_id where m.id = ? group by w.id order by 3 desc limit 10", @meme.id])
       
       @words_for_twitter_search = []

@@ -32,7 +32,12 @@ module Classy
       terms_skipped_count = 0
       total_terms_count = 0
       
-      item_words = ItemWord.find(:all, :conditions => ["item_id = ?", doc.id], :include => [:word])
+      item_words = []
+      if doc.item_words.loaded?
+        item_words = doc.item_words
+      else
+        item_words = ItemWord.find(:all, :conditions => ["item_id = ?", doc.id], :include => [:word])
+      end
       item_words.each do |iw|
         count = iw.count.to_f
         total_terms_count += 1

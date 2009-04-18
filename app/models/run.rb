@@ -48,7 +48,17 @@ class Run < ActiveRecord::Base
       puts "Valid user id required.\n\n#{opts.to_s}"
       return
     end
-    
+
+    # Save docs for later example
+    #
+    #   To save: 
+    #   File.open("/Users/nick/Desktop/saved.m", "w") { |f| f.puts(Marshal.dump(docs)) }
+    #
+    #   To load: 
+    #   require "Item"
+    #   d2 = File.open("/Users/nick/Desktop/saved.m","rb") { |f| Marshal.load(f) }
+    #
+
     docs = user.recent_documents_from_feeds(max_docs_for_a)
     decider = Classy::Decider.new(:skip_single_terms => skip_single_terms)
     decider.memes({:user => user, :k => k, :n => max_docs_for_a,

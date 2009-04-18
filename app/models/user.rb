@@ -6,6 +6,7 @@ class User < ActiveRecord::Base
   has_many :clicks
   has_many :reads
   has_many :runs
+  has_many :item_words
   
   attr_accessible :login, :email, :password, :password_confirmation, :openid_identifier
   
@@ -134,7 +135,15 @@ class User < ActiveRecord::Base
     #   :order => "items.published_at desc",
     #   :limit => number_of_items_to_return
     # ) 
-    Item.find_by_sql(["select i.* from items i where i.feed_id in (select feed_id from feed_users fu where fu.user_id = ?) and i.published_at < now() order by i.published_at desc limit ?", self.id, number_of_items_to_return])
+    feedusers = FeedUser.find(:all, :conditions => ["user_id = ?", self.id])
+    feed_ids = feedusers.map{ |f| f.feed_id }
+    items = Item.find(:all, 
+      :conditions => ["feed_id in (?) and published_at < ?", feed_ids, Time.now],
+      :include => { :item_words => :word },
+      :order => "published_at desc", 
+      :limit => number_of_items_to_return
+    )
+    # Item.find_by_sql(["select i.* from items i where i.feed_id in (select feed_id from feed_users fu where fu.user_id = ?) and i.published_at < now() order by i.published_at desc limit ?", self.id, number_of_items_to_return])
   end
   
   def documents_from_feeds_by_date_range(start_date, end_date, number_of_items_to_return = 10000, min_number_of_items_to_return = 500)

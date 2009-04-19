@@ -165,7 +165,7 @@ module Classy
       documents = []
       matched_documents.each { |d| 
         document = all_docs.select{ |d2| d2.id == d[:id] }[0]
-        if ! document.nil?
+        if ! document.nil? # is this right?
           document.score = d[:score]
           documents.push(document)
         end

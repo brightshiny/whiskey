@@ -12,6 +12,9 @@ module Classy
     def memes(opts={})
       q = opts[:q]
       a = opts[:a]
+      
+      all_docs = q
+       
       verbose = opts[:verbose] || false
       spinner = verbose ? nil : Spinner.new
       user_id = opts[:user].id if opts[:user]
@@ -58,7 +61,7 @@ module Classy
           spinner.spin
         end
         
-        predicted_docs = process_q([doc], run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
+        predicted_docs = process_q([doc], all_docs, run.minimum_cosine_similarity, run.k, run.maximum_matches_per_query_vector, run.skip_single_terms)
         total_score = 0
         predicted_docs.each { |pdoc|
           if doc.id == pdoc.id
@@ -137,7 +140,7 @@ module Classy
       return run
     end
     
-    def process_q(docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)
+    def process_q(docs, all_docs, required_cos_sim=0.97, required_k=2, num_best_matches_to_return=2,skip_single_terms=false)
       u2, v2, eig2 = @matrix.process_svd(required_k)
       
       matched_documents = []
@@ -150,26 +153,25 @@ module Classy
           cos_sim = (q_embed.transpose.dot(x.transpose)) / (x.norm * q_embed.norm)
           if cos_sim >= required_cos_sim
             doc_id = @matrix.doc_idx_to_id(doc_idx)
-            doc = Item.find(doc_id) if !doc_id.nil?
-            title = doc.nil? ? "None?" : doc.title
-            all_matched_documents.push({ :id => doc.id, :title => doc.title, :score => cos_sim })
+            doc2 = all_docs.select{ |d2| d2.id == doc_id }[0] # Item.find(doc_id) if !doc_id.nil?
+            title = doc2.nil? ? "None?" : doc2.title
+            all_matched_documents.push({ :id => doc2.id, :title => doc2.title, :score => cos_sim })
           end
           doc_idx += 1
         end
         all_matched_documents.sort_by{ |d| d[:score] }.reverse[0..(num_best_matches_to_return-1)].each{ |d| matched_documents.push(d) }
       end
 
-      # TODO: Return a hash w/doc id instead of hitting the db and load the actual item in another method later
-      documents = Item.find(:all, :conditions => ["id in (?)", matched_documents.map{ |d| d[:id] }])
-      documents.each{ |d|
-        d.score = matched_documents.select{ |md| md[:id] == d.id }.first[:score]
+      documents = []
+      matched_documents.each { |d| 
+        document = all_docs.select{ |d2| d2.id == d[:id] }[0]
+        if ! document.nil?
+          document.score = d[:score]
+          documents.push(document)
+        end
       }
       documents = documents.sort_by{ |d| d.score }.reverse
       return documents
-      # rescue
-      #   puts "Error in matching Qs"
-      #   return []
-      # end
     end    
   end
 end

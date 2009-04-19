@@ -158,6 +158,8 @@ module Classy
         end
         all_matched_documents.sort_by{ |d| d[:score] }.reverse[0..(num_best_matches_to_return-1)].each{ |d| matched_documents.push(d) }
       end
+
+      # TODO: Return a hash w/doc id instead of hitting the db and load the actual item in another method later
       documents = Item.find(:all, :conditions => ["id in (?)", matched_documents.map{ |d| d[:id] }])
       documents.each{ |d|
         d.score = matched_documents.select{ |md| md[:id] == d.id }.first[:score]

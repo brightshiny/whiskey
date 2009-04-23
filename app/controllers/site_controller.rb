@@ -13,6 +13,8 @@ class SiteController < ApplicationController
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end
+    minutes_until_expiration = 30 - ((Time.now - @run.ended_at)/(60)).floor <= 0 ? 0 : 30 - ((Time.now - @run.ended_at)/(60)).floor
+    expires_in minutes_until_expiration
     render :action => "index", :layout => "layouts/pretty_layout_7_without_container"
   end
   

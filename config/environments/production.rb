@@ -23,6 +23,8 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
+URL_FOR_CACHE = "refinr.com/current"
+
 # Gobbler fetch threads
 GOBBLER_THREAD_COUNT = 5
 

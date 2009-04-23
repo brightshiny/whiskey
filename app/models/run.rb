@@ -11,6 +11,24 @@ class Run < ActiveRecord::Base
   include Graphviz
   include EncryptedId
   
+  after_save :delete_cached_meme_pages
+  def delete_cached_meme_pages
+    if ! self.ended_at.nil?
+      logger.info "Cache Sweeper: Clearing cache of run #{self.id}"
+      @flight = Flight.find(:first, 
+        :conditions => ["controller_name = ? and action_name = ?", "site", "index"], 
+        :order => "id desc"
+      )
+      umras = UberMemeRunAssociation.find(:all, :conditions => ["run_id = ?", self.id])
+      umras.each { |umra| 
+        key = { :controller => :site, :action => "meme", :id => umra.uber_meme_id, :flight => @flight.id }
+        cache_file_path = "/views/" + URL_FOR_CACHE + "/site/meme/#{umra.uber_meme_id}.flight=#{@flight.id}.cache"
+        logger.info "Deleting: #{RAILS_CACHE.cache_path + cache_file_path}"
+        File::delete(RAILS_CACHE.cache_path + cache_file_path) if File::exists?(RAILS_CACHE.cache_path + cache_file_path)
+      }
+    end
+  end
+  
   def to_s
     "                               db id: #{self.id}
            number_of_documents_for_a: #{self.n}

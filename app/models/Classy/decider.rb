@@ -100,7 +100,8 @@ module Classy
       
       puts "Making UMRAs..."
       run_data = {}
-      uber_meme_run_ids = UberMemeItem.find_by_sql(["select uber_meme_id, run_id, sum(total_cosine_similarity) as strength from uber_meme_items where run_id = ? group by uber_meme_id, run_id", run.id])
+      # uber_meme_run_ids = UberMemeItem.find_by_sql(["select uber_meme_id, run_id, sum(total_cosine_similarity) as strength from uber_meme_items where run_id = ? group by uber_meme_id, run_id", run.id])
+      uber_meme_run_ids = UberMemeItem.find_by_sql(["select uber_meme_id, run_id, sum(mean_strength_per_feed) as strength from (select umi.uber_meme_id, umi.item_id, umi.run_id, i.id, sum(umi.total_cosine_similarity), count(i.feed_id), sum(umi.total_cosine_similarity) / count(i.feed_id) as mean_strength_per_feed, i.feed_id from uber_meme_items umi join items i on i.id = umi.item_id where umi.run_id = ? group by i.feed_id) as A group by uber_meme_id order by uber_meme_id", run.id])
       uber_meme_run_ids.each { |umi|
         if run_data[umi.run_id].nil?
           run_data[umi.run_id] = { :total_strength => 0, :number_of_uber_memes => 0, :strengths => [], :standard_deviation => 0 }

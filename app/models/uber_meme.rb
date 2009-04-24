@@ -67,8 +67,9 @@ class UberMeme < ActiveRecord::Base
       
       current_meme.item = Item.find(lead_item_id)
       # current_meme.strength = total_bucket_strength
-      current_meme.strength = current_meme.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum 
-      # UberMemeRunAssociation.create({ :run_id => run.id, :uber_meme_id => current_meme.id, :strength => current_meme.strength }) 
+      # current_meme.strength = current_meme.distinct_meme_items.map{ |mi| mi.total_cosine_similarity }.sum
+      memes_for_strength_calc = UberMeme.find_by_sql(["select uber_meme_id as id, sum(mean_strength_per_feed) as calculated_strength from (select umi.uber_meme_id, umi.item_id, i.id, sum(umi.total_cosine_similarity), count(i.feed_id), sum(umi.total_cosine_similarity) / count(i.feed_id) as mean_strength_per_feed, i.feed_id from uber_meme_items umi join items i on i.id = umi.item_id where umi.uber_meme_id = ? group by i.feed_id) as A", current_meme.id])
+      current_meme.strength = memes_for_strength_calc.first.calculated_strength
       current_meme.save
     end
   end

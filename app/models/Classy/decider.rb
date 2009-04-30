@@ -2,7 +2,7 @@ require 'linalg'
 
 module Classy
   class Decider
-    @@K_MULTIPLIER = 2.4
+    @@K_MULTIPLIER = 2.5
     attr_reader :matrix
     
     def initialize(opts={})

@@ -138,7 +138,7 @@ class User < ActiveRecord::Base
     feedusers = FeedUser.find(:all, :conditions => ["user_id = ?", self.id])
     feed_ids = feedusers.map{ |f| f.feed_id }
     items = Item.find(:all, 
-      :conditions => ["feed_id in (?) and published_at < ?", feed_ids, Time.now],
+      :conditions => ["feed_id in (?) and published_at < ? and parsed_at is not null", feed_ids, Time.now],
       :include => { :item_words => :word },
       :order => "published_at desc", 
       :limit => number_of_items_to_return

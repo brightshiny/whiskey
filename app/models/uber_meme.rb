@@ -93,7 +93,7 @@ class UberMeme < ActiveRecord::Base
         my_items.delete(k)
       end
     end
-    return (common_item_count > 3) # related if > 3 items in common
+    return (common_item_count > 5) # related if > 5 items in common
   end
   
   attr_accessor :cached_distinct_meme_items

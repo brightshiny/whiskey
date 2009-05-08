@@ -1,0 +1,39 @@
+<h1><%= @feed.title %></h1>
+
+<table>
+  <tr>
+    <td>RSS Feed</td>
+    <td><%= link_to "RSS", @feed.link %></td>
+  </tr>
+  <tr>
+    <td>Favicon</td>
+    <td><% if ! @feed.logo.nil? %><%= image_tag(@feed.logo, :alt => @feed.title, :size => "16x16", :class => "feed_favicon") %><% else %>No favicon<% end %></td>
+  </tr>
+  <tr>
+    <td># Items Published by in the Last 7 Days</td>
+    <td><%= @feed.items_published_in_the_last_n_days(7).size %></td>
+  </tr>
+  <tr>
+    <td># Items That Have Made The Front Page</td>
+    <td><%= @feed.items_that_have_made_the_front_page.size %></td>
+  </tr>
+  <tr>
+    <td>Last Updated</td>
+    <td><%= @feed.last_updated_at %></td>
+  </tr>
+</table>
+
+<h2>Items published on <strong><%= @feed.title %></strong> in the last 7 days</h2>
+<ul>
+  <% for item in @feed.items_published_in_the_last_n_days(7) %>
+  <li><%= link_to_item_with_tracking widow_prevention(item.title), item %></li>
+  <% end %>
+</ul>
+
+<h2>Articles from <strong><%= @feed.title %></strong> That Stayed on the Front Page Longest</h2>
+<ul>
+  <% for item in @feed.items_that_have_made_the_front_page[0..9] %>
+  <li><%= link_to_item_with_tracking widow_prevention(item.title), item %></li>
+  <% end %>
+</ul>
+

@@ -1,8 +1,0 @@
-<h2>Run <%= @run.id %></h2>
-
-<%= render :partial => "runs/partials/details", :locals => { :run => @run } %>
-
-<% for meme in @memes %>
-  <%= render :partial => "meme/partials/main_headline_plus_related_headlines", :locals => { :meme => meme } %>  
-  <hr />
-<% end %>

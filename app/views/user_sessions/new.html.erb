@@ -9,6 +9,10 @@
       <p><%= f.label :submit, "Login", :style => "visibility: hidden;" %><%= f.submit "Login" %></p> 
     </div>
   </div>
+  
+  <div class="grid_6 alpha">
+    <%= flash[:notice] %>
+  </div>
 
   <div class="clear"></div>    
 

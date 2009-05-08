@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   
-  before_filter :require_no_user, :only => [:new, :create]
+  before_filter :require_no_user, :only => [:new, :create, :thanks]
   before_filter :require_user, :only => [:show, :edit, :update]
   
   def new
@@ -12,10 +12,13 @@ class UsersController < ApplicationController
     if @user.signup!(params)
       @user.deliver_activation_instructions!
       flash[:notice] = "Your account has been created. Please check your e-mail for your activation instructions"
-      redirect_to account_path
+      redirect_to thanks_path
     else
       render :action => :new
     end
+  end
+  
+  def thanks
   end
   
   def show

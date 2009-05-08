@@ -16,6 +16,8 @@ class ActivationsController < ApplicationController
 
     if @user.activate!(params)
       @user.deliver_activation_confirmation!
+      @user_session = UserSession.create(:login => @user.login, :password => params[:user][:password], :remember_me => true)
+
       flash[:notice] = "Your account has been activated."
       redirect_to account_url
       cookies[:u] = { :value => "", :expires => (Time.now - 999) }

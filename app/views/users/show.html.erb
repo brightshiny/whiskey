@@ -1,18 +1,8 @@
 <h2><%= current_user.login %></h2>
 
 <div class="grid_8 alpha">
-  <h3>Public Versions of the Site</h3>
-  <ul>
-    <li><%= link_to "Just turned it on", :controller => :site, :action => :index %></li>
-    <li><%= link_to "Grids #1", :controller => :site, :action => :pretty %></li>
-  </ul>
   <h3>Things to do</h3>
   <ul>
-    <li><%= link_to "Upload an OPML file", :controller => :opml, :action => :upload %></li>
-    <li><%= link_to "View subscribed feeds", :controller => :opml, :action => :show %> (<%= current_user.feeds.size %>)
-      [<%= link_to "OPML", :controller => :opml, :action => :show , :format => :xml %>]</li>
-    <li><%= link_to "View your high priority feed", high_priority_feed_path( :u => KEY.url_safe_encrypt64(current_user.id)) %>
-    <li><%= link_to "View your scrolling feed", scroll_path( :u => KEY.url_safe_encrypt64(current_user.id)) %>
     <li><%= link_to "Edit account information", edit_account_path %></li>
   </ul>
 </div>

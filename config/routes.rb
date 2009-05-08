@@ -17,8 +17,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users
   map.resource :user_session
   
-  map.register '/register/:activation_code', :controller => 'activations', :action => 'new'
-  map.activate '/activate/:id', :controller => 'activations', :action => 'create'
+  map.verify '/verify/:perishable_token', :controller => 'activations', :action => 'new'
+  map.activate '/activate/:perishable_token', :controller => 'activations', :action => 'create'
   
   map.root :controller => "site", :action => "index"
 

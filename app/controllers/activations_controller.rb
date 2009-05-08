@@ -3,14 +3,14 @@ class ActivationsController < ApplicationController
   
   def new
     @user_session = UserSession.new
-    @user = User.find_using_perishable_token(params[:activation_code], 1.week) || (raise Exception)
+    @user = User.find(:first, :conditions => ["perishable_token = ?", params[:perishable_token]])
     cookies[:u] = { :value => params[:activation_code] }
     raise Exception if @user.active?
   end
 
   def create
     @user_session = UserSession.new
-    @user = User.find(params[:id])
+    @user = User.find(:first, :conditions => ["perishable_token = ?", params[:perishable_token]])
 
     raise Exception if @user.active?
 

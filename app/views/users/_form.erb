@@ -3,11 +3,7 @@
 
 <% unless form.object.new_record? %>
 
-  <% if form.object.openid_identifier.nil? %>
   <p><%= form.label :password, "Change password" %> <%= form.password_field :password %></p>
   <p><%= form.label :password_confirmation %> <%= form.password_field :password_confirmation %></p>
-  <% else %>
-  <p><%= form.label :openid_identifier, "OpenID url" %> <%= form.text_field :openid_identifier %></p>
-  <% end %>
   
 <% end %>

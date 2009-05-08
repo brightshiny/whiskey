@@ -1,7 +1,7 @@
 <h2>Edit Account Information</h2>
 
 <div class="grid_8 alpha">
-<% form_for @user, :url => account_path do |f| %>
+<% form_for @user do |f| %>
   <%= f.error_messages %>
   <%= render :partial => "form", :object => f %>
   <p><%= label_tag :user_submit, "Submit form" %> <%= f.submit "Update" %></p>

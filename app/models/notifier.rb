@@ -14,7 +14,7 @@ class Notifier < ActionMailer::Base
     from          "refinr infobot <info@refinr.com>"
     recipients    user.email
     sent_on       Time.now
-    body          :account_activation_url => register_url(user.perishable_token)
+    body          :account_activation_url => verify_url(user.perishable_token)
   end
   
   def activation_confirmation(user)

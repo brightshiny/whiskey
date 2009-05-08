@@ -103,10 +103,11 @@ ActionMailer::Base.default_charset = "utf-8"
 ActionMailer::Base.smtp_settings = {
   :address => "smtp.gmail.com",
   :port => 587,
-  :domain => "gmail.com",
+  :domain => "refinr.com",
   :authentication => :login,
-  :user_name => "whiskeybrightshinyme@gmail.com",
-  :password => "9aHefafaXath&GAz"
+  :user_name => "info@refinr.com",
+  :password => "9aHefafaXath"
+  # :password => "9aHefafaXath&GAz"
 }
 
 # From where should images be pulled?

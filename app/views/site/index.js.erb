@@ -1,1 +1,1 @@
-<% cache(:action => "index", :run => @run.id, :flight => @flight.id, :format => @format_for_response, :user => current_user) do %>{ "top_stories" : [<% for meme in @memes[0..9] %><%= meme.to_json %>,<% end %>] }<% end %>
+<% cache(:action => "index", :id => @run.id, :flight => @flight.id, :format => @format_for_response, :user => current_user) do %>{ "top_stories" : [<% for meme in @memes[0..9] %><%= meme.to_json %>,<% end %>] }<% end %>

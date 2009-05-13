@@ -10,6 +10,7 @@ class SiteController < ApplicationController
       if @run != Run.current(5)
         @archive = true
       end
+      logger.info "Brand new render: #{action_name} | #{@run.id} | #{@flight.id}"
     else
       logger.info "Cache hit: #{action_name} | #{@run.id} | #{@flight.id}"
     end

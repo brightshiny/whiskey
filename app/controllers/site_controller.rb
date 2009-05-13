@@ -18,7 +18,10 @@ class SiteController < ApplicationController
     
     respond_to do |format|
       format.html { render :action => "index", :layout => "layouts/pretty_layout_7_without_container" }
-      format.js { render :action => "index", :layout => false }
+      format.js { 
+        response.headers['Content-type'] = 'text/javascript; charset=utf-8'
+        render :action => "index", :layout => false 
+      }
     end
     
   end

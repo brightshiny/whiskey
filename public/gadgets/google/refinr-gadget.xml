@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <Module>
+   <ModulePrefs title="refinr.com :: top stories" height="20">
+     <Require feature="opensocial-0.8" />
+     <Require feature="dynamic-height" />
+     <Require feature="com.google.gadgets.analytics" /> 
+   </ModulePrefs>
+   <Content type="html">
+     <![CDATA[
+       <style type="text/css">
+         #refinr_gadget_container {
+           margin: 0; padding: 0; font-size: 13px;
+         }
+         #refinr_gadget_container ul, #refinr_gadget_container ul li {
+           margin: 0; padding: 0; list-style-type: none; 
+         }
+         #refinr_gadget_container ul li {
+           margin-bottom: 0.5em; margin-left: 26px; text-indent: -26px;
+         }
+         #refinr_gadget_container ul li img {
+           border: 0; vertical-align: middle; margin-right: 10px;
+         }
+         #refinr_gadget_container ul li .published_at {
+           color: #999;
+         }
+       </style>
+       <div id="refinr_gadget_container">Loading refinr top stories..<blink>.</blink></div>
+       <script type="text/javascript">
+         var refinr_gadget_ga = new _IG_GA("UA-7793453-1");
+         refinr_gadget_ga.reportPageview('/gadgets/google');
+         gadgets.util.registerOnLoadHandler(makeJSONRequest);
+       </script>
+       <script type="text/javascript" src="http://refinr.com/gadgets/google/refinr-gadget.js"></script>
+     ]]>
+   </Content>
+ </Module>

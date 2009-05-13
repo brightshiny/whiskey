@@ -162,7 +162,7 @@ class UberMeme < ActiveRecord::Base
   end
   
   def to_json
-    self.item.to_json( :only => [ :title, :author, :link, :published_at ], :methods => :encrypted_id, :include => { :feed => { :only => [ :title, :logo ] } })
+    self.item.to_json( :only => [ :title, :author, :link, :published_at ], :methods => [ :encrypted_id, :published_date ], :include => { :feed => { :only => [ :title, :logo ] } })
   end
    
 end

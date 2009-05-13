@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
  <Module>
-   <ModulePrefs title="refinr.com :: Top Tech News" height="40">
+   <ModulePrefs title="refinr.com :: Top Tech News" 
+     description="This is refinr, a new way to keep on top of technology news. Every half-hour we read hundreds of news sources from across the web and refine all that content down to just the most important bits. We help you find all the news you need to stay up-to-the-minute in the world of technology."
+     author="refinr.com"
+     author_email="info@refinr.com"
+     screenshot="http://refinr.com/gadgets/google/refinr_google_gadget.png"
+     thumbnail="http://refinr.com/gadgets/google/refinr_google_gadget_tn.png"
+     title_url="http://refinr.com"
+     height="40">
      <Require feature="opensocial-0.8" />
      <Require feature="dynamic-height" />
      <Require feature="com.google.gadgets.analytics" /> 

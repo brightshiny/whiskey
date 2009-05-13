@@ -5,7 +5,11 @@ class SiteController < ApplicationController
   
   def index
     load_run
-    if ! read_fragment({ :action => "index", :id => @run.id, :flight => @flight.id, :user => current_user })    
+    @format_for_response = "html"
+    if ! params[:format].nil?
+      @format_for_response = params[:format]
+    end
+    if ! read_fragment({ :action => "index", :id => @run.id, :flight => @flight.id, :format => @format_for_response, :user => current_user })    
       load_memes(@run)
       if @run != Run.current(5)
         @archive = true
@@ -16,7 +20,6 @@ class SiteController < ApplicationController
     end
     minutes_until_expiration = 30 - ((Time.now - @run.ended_at)/(60)).floor <= 0 ? 0 : 30 - ((Time.now - @run.ended_at)/(60)).floor
     expires_in minutes_until_expiration
-    
     respond_to do |format|
       format.html { render :action => "index", :layout => "layouts/pretty_layout_7_without_container" }
       format.js { 
@@ -24,7 +27,6 @@ class SiteController < ApplicationController
         render :action => "index", :layout => false 
       }
     end
-    
   end
   
   def current

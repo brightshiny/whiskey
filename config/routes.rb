@@ -19,6 +19,9 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :feeds
   
+  map.connect '/site/current', :controller => "site", :action => "current"
+  map.resources :site
+  
   map.thanks '/thanks', :controller => 'users', :action => 'thanks'
   map.verify '/verify/:perishable_token', :controller => 'activations', :action => 'new'
   map.activate '/activate/:perishable_token', :controller => 'activations', :action => 'create'

@@ -15,7 +15,12 @@ class SiteController < ApplicationController
     end
     minutes_until_expiration = 30 - ((Time.now - @run.ended_at)/(60)).floor <= 0 ? 0 : 30 - ((Time.now - @run.ended_at)/(60)).floor
     expires_in minutes_until_expiration
-    render :action => "index", :layout => "layouts/pretty_layout_7_without_container"
+    
+    respond_to do |format|
+      format.html { render :action => "index", :layout => "layouts/pretty_layout_7_without_container" }
+      format.js { render :action => "index", :layout => false }
+    end
+    
   end
   
   def current

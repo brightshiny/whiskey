@@ -60,8 +60,4 @@ class Item < ActiveRecord::Base
     self.total_cosine_similarity(run) / num_item_relationships_in_run.to_f
   end
   
-  def encrypted_id
-    KEY.url_safe_encrypt64(self.id)
-  end
-  
 end

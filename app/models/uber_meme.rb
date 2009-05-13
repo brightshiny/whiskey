@@ -160,5 +160,9 @@ class UberMeme < ActiveRecord::Base
     end
     return self.cached_strength_over_time
   end
- 
+  
+  def to_json
+    self.item.to_json( :only => [ :title, :author, :link, :published_at ], :methods => :encrypted_id, :include => { :feed => { :only => [ :title, :logo ] } })
+  end
+   
 end

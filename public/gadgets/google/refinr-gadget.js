@@ -13,7 +13,6 @@ function makeJSONRequest() {
 function response(obj) {  
   data = obj.data.top_stories;
   window.refinr_gadget_container.innerHTML = "";
-  window.refinr_data = obj;
   if(data) {
     var ul = document.createElement("ul");
     for(var i=0;i<data.length;i++) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
  <Module>
-   <ModulePrefs title="refinr.com :: top stories" height="20">
+   <ModulePrefs title="refinr.com :: Top Tech News" height="30">
      <Require feature="opensocial-0.8" />
      <Require feature="dynamic-height" />
      <Require feature="com.google.gadgets.analytics" /> 

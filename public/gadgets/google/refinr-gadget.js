@@ -20,6 +20,7 @@ function response(obj) {
       var s = document.createElement("span");
       var a  = document.createElement("a");
       a.href = data[i].item.link;
+      a.target = "_blank";
       a.setAttribute('onclick', 'track_click("http://refinr.com/c/' + data[i].item.encrypted_id + '", "' + data[i].item.title + '")');      
       var img = document.createElement('img');
       if(data[i].item.feed.logo) {
@@ -45,6 +46,15 @@ function response(obj) {
       li.appendChild(s);
       ul.appendChild(li);
     }
+    var li = document.createElement("li");
+    var a  = document.createElement("a");
+    a.href = "http://refinr.com/";
+    a.target = "_blank";
+    var a_t = document.createTextNode("More top tech news at refinr.com");
+    a.appendChild(a_t);
+    li.appendChild(a);
+    li.style.marginTop = "1.0em";
+    ul.appendChild(li);
     window.refinr_gadget_container.appendChild(ul);
   } else {
     document.write("Error connecting to refinr.com, please try again later");

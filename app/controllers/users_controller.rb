@@ -8,14 +8,14 @@ class UsersController < ApplicationController
   end
   
   def create
-    @user = User.new
-    if @user.signup!(params)
-      @user.deliver_activation_instructions!
-      flash[:notice] = "Your account has been created. Please check your e-mail for your activation instructions"
-      redirect_to thanks_path
-    else
-      render :action => :new
-    end
+    # @user = User.new
+    # if @user.signup!(params)
+    #   @user.deliver_activation_instructions!
+    #   flash[:notice] = "Your account has been created. Please check your e-mail for your activation instructions"
+    #   redirect_to thanks_path
+    # else
+    #   render :action => :new
+    # end
   end
   
   def thanks

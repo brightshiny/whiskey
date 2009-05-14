@@ -51,7 +51,7 @@ module ApplicationHelper
     
     title = item.title
     html_options.merge!({ :title => "#{title} | #{item.feed.title}" })
-    html_options.merge!({ :onclick => "track_click('#{url}/#{CGI::escape(title)}')"})
+    html_options.merge!({ :onclick => "track_click('#{url}', '#{CGI::escape(title)}')"})
     if html_options
       html_options = html_options.stringify_keys
       href = html_options['href']

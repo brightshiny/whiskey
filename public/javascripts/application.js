@@ -45,12 +45,12 @@ function update_time() {
   }
 }
 
-function track_click(src, link_name) {
+function track_click(src, title) {
 	if(document.images) {
 		(new Image()).src = src;
 	}
 	if (pageTracker) {
-		pageTracker._trackPageview(link_name)
+		try { pageTracker._trackPageview("/link/to/" + title); } catch(err) {}
 	}
 }
 

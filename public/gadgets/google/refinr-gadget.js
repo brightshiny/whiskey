@@ -73,8 +73,4 @@ function track_click(src, link_name) {
   
 if(window.refinr_gadget_container) {
   makeJSONRequest();
-  // var script_tag = document.createElement('script');
-  // script_tag.type = "text/javascript";
-  // script_tag.src = refinr_gadget_data_src;
-  // window.refinr_gadget_container.appendChild(script_tag);  
 }

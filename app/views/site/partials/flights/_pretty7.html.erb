@@ -149,8 +149,7 @@
 <script type="text/javascript">
 <% if params[:id].nil? -%>
 // Check for new versions
-// $.timer(120000, function (timer) {
-$.timer(5000, function (timer) {
+$.timer(120000, function (timer) {
   $.get("/site/current", function(data){
     should_page_be_updated(data);
     try { pageTracker._trackPageview('/site/current'); } catch(err) {}

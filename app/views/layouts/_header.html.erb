@@ -1,6 +1,6 @@
 <div id="heading">
   <div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">  
-    <h1 id="logo"><%= link_to image_tag("refinr_logo.gif"), :controller => :site, :action => :index %></h1>
+    <h1 id="logo"><%= link_to image_tag("refinr_logo.gif"), "/" %></h1>
     <h2 id="tagline">Tech News For Busy People</h2>
     <% if defined?(@flight) && defined?(@page_title) %>
     <h3 id="page_title"><%= @page_title %></h3>

@@ -43,18 +43,6 @@ h3#related {
   font-weight: normal;
   color: #222;
 }
-.alternate_content ul {
-  margin: 0;
-  padding: 0;
-  list-style-type: none;
-  display: inline;
-}
-.alternate_content li {
-  margin: 0;
-  padding: 0 0 0.5em 0;
-  line-height: 1.3em;
-  list-style-type: none;
-}
 .more_from span {
   text-transform: uppercase;
 }
@@ -187,10 +175,6 @@ strong.byline a,
   visibility: hidden;
 }
 
-#footer {
-  margin-top: 1.5em;
-}
-
 #time_to_update {
   color: #D24A31;
 }
@@ -222,14 +206,6 @@ strong.byline a,
   border: 10px solid #efefef;
   margin: 1.0em 0 3.0em 0;
 }
-
-#about {
-  padding-top: 1.5em;
-  font-size: 16px;
-  line-height: 1.4em;
-}
-#about .grid_8 {}
-#about .grid_4 {}
 
 .trending {
   font-weight: bold;
@@ -351,7 +327,6 @@ li.article_favicon a:hover {
 #bottom_memes {}
 #bottom_memes .container_12 {
   padding: 1.5em 0;
-  border-bottom: 1px solid #222;
 }
 #bottom_memes h2 {
   font-size: 16px;
@@ -367,13 +342,34 @@ li.article_favicon a:hover {
   padding: 0;
   list-style-type: none;
 }
-#bottom_memes ul li,
+
+#bottom_memes ul,
+.alternate_content ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+  display: inline;
+}
+#bottom_memes li,
 .alternate_content li {
-  margin-left: 26px !important;
-  text-indent: -26px !important;
+  margin: 0;
+  padding: 0 0 0.5em 0;
+  line-height: 1.3em;
   list-style-type: none;
 }
-#bottom_memes .feed_favicon,
+#bottom_memes li {
+  padding-bottom: 0.2em;
+}
+#bottom_memes ul li,
+.alternate_content li {
+  margin-left: 27px !important;
+  text-indent: -27px !important;
+  list-style-type: none;
+}
+#bottom_memes .feed_favicon {
+  margin-right: 9px;
+  vertical-align: middle;
+}
 .alternate_content .feed_favicon {
   margin-right: 5px;
 }
@@ -389,6 +385,20 @@ li.article_favicon a:hover {
   font-size: 16px;
   line-height: 1.4em;
 }
+
+#about {
+  border-top: 1px solid #222;
+  padding-top: 1.5em;
+  font-size: 16px;
+  line-height: 1.4em;
+}
+#about .grid_8 {}
+#about .grid_4 {}
+
+
+#footer {}
+
+
 
 #without_columns {
   border-top: 0px dotted #999;

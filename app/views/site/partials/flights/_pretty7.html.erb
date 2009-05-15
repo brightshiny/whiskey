@@ -63,9 +63,7 @@
 <ul>
 <% end %>
 
-<li>
-  <% if ! meme.item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(meme.item.feed.logo, :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% else %><%= link_to_item_with_tracking(image_tag("fauxvicon.gif", :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% end %><%= link_to_item_with_tracking(widow_prevention(meme.item.title), meme.item) %>
-</li>
+<li><% if ! meme.item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(meme.item.feed.logo, :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% else %><%= link_to_item_with_tracking(image_tag("fauxvicon.gif", :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% end %><%= link_to_item_with_tracking(widow_prevention(meme.item.title), meme.item) %></li>
 
 <% end %>
 

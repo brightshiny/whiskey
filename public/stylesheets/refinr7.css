@@ -373,8 +373,13 @@ li.article_favicon a:hover {
   margin-right: 9px;
   vertical-align: middle;
 }
-.alternate_content .feed_favicon {
+#meme_details .alternate_content .feed_favicon {
   margin-right: 9px;
+  vertical-align: middle;
+}
+.alternate_content .feed_favicon {
+  margin-right: 5px;
+  vertical-align: middle;
 }
 #bottom_memes p {
   font-size: 14px;

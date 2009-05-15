@@ -399,7 +399,9 @@ li.article_favicon a:hover {
 #about .grid_4 {}
 
 
-#footer {}
+#footer {
+  padding-bottom: 1.5em;
+}
 
 
 

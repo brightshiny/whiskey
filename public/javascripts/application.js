@@ -163,7 +163,7 @@ function show_tweets(word_array) {
     });
     sort_tweets(tweets);
   });
-  $.timer(1700, function(timer) {
+  $.timer(900, function(timer) {
     if(tweets.length > 0) {
       tweet_to_show = tweets.shift();
       display_tweet(tweet_to_show, true, false);

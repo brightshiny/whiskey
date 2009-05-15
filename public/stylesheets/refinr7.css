@@ -465,7 +465,8 @@ p.excerpt, p.byline {
 #connected_items p.byline {}
 
 .tweet {
-  padding: 0.5em 0;
+  padding: 0 0 0.5em 0;
+  line-height: 1.4em;
 }
 .tweet img {
   margin: 0;

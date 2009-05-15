@@ -230,7 +230,7 @@ p.excerpt, p.byline {
 
 #top_memes {
   background-color: #fff;
-  padding: 1.5em 0;
+  padding: 1.6em 0;
 }
 #meme_details #top_memes {
 
@@ -268,7 +268,7 @@ p.excerpt, p.byline {
 
 #second_memes, #fourth_memes {}
 #second_memes .container_12 {
-  padding: 1.5em 0;
+  padding: 1.6em 0;
   border-top: 1px solid #222;
 }
 #second_memes h3.title {
@@ -276,18 +276,18 @@ p.excerpt, p.byline {
   font-size: 30px;
 }
 #second_memes p {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.4em;
   color: #222;
 }
 
 #fourth_memes .container_12 {
-  padding: 1.5em 0;
+  padding: 1.6em 0;
   border-bottom: 1px solid #222;
 }
 #fourth_memes h3.title {
   font-weight: normal;
-  font-size: 22px;
+  font-size: 20px;
 }
 #fourth_memes p {
   font-size: 16px;
@@ -299,7 +299,7 @@ p.excerpt, p.byline {
 
 #middle_memes {}
 #middle_memes .container_12 {
-  padding: 1.5em 0;
+  padding: 1.6em 0;
   border-top: 1px solid #222;
   border-bottom: 1px solid #222;
 }
@@ -308,7 +308,7 @@ p.excerpt, p.byline {
 }
 #middle_memes h3.title {
   font-weight: normal;
-  font-size: 22px;
+  font-size: 20px;
 }
 #middle_memes p {
   font-size: 16px;

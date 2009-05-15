@@ -10,11 +10,15 @@
 </head>
 <body>
 
+
+<div style="background-color: #fff; border-left: 1px solid #222; border-right: 1px solid #222; width: 1000px; margin: auto;" class="">
 <%= render :partial => "layouts/header" %>
-
-<div><%= yield :layout %></div>
-
-<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>"><%= render :partial => "layouts/footer" %></div>
+<%= yield :layout %>
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
+  <%= render :partial => "layouts/footer" %>
+  <div class="clear: both;"></div>
+</div>
+</div>
 
 <%= render :partial => "layouts/uservoice" %>
 <%= render :partial => "layouts/google_analytics" %>

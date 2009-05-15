@@ -2,7 +2,7 @@ body {
   font-family: helvetica, arial, "sans serif";
   font-family: times, "times new roman", serif;
   font-size: 16px;
-  background-color: #fff;
+  background-color: #efefef;
   color: #000;
 }
 
@@ -310,9 +310,7 @@ p.excerpt {
   border-top: 1px solid #222;
   border-bottom: 1px solid #222;
 }
-#meme_details #middle_memes .container_12 {
-  border-bottom: 0px solid #fff;
-}
+#meme_details #middle_memes .container_12 {}
 #middle_memes h3.title {
   padding-bottom: 0.3em;
   font-weight: normal;

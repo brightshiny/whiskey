@@ -21,7 +21,7 @@ a {
   color: #D24A31;
 }
 a:hover {
-  color: #FF9400;
+  color: #08F;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -425,17 +425,17 @@ li.article_favicon a:hover {
   bottom: 30px;
   margin-left: -480px;
   padding: 25px 0;
-  border: 1px dotted #999;
-  background-color: #fff;
+  border: 1px solid #222;
   z-index: 999;
-  font-size: 150%;
+  font-size: 16px;
   text-align: center;
   line-height: 1.2em;
-  background-color: #E7F6FF;
-  color: #444;
+  background-color: #efefef;
+  color: #222;
 }
 #updater h3 {
-  font-size: 300%;
+  font-size: 32px;
+  font-weight: normal;
 }
 #updater h3, 
 #updater p {
@@ -443,8 +443,7 @@ li.article_favicon a:hover {
   padding: 0;
 }
 #seconds_until_refresh {
-  color: #333;
-  font-weight: bold;
+  color: #222;
 }
 
 .cardinality {

@@ -1,68 +1,71 @@
 <% cache({ :action => "meme", :id => params[:id], :flight => @flight.id }) do %>
-
-<div class="meme_details">
-
-<div class="grid_16 alpha omega">
-  <% @meme.number_of_columns = 16 %>
-  <% @meme.is_alpha = true %>
-  <%= render :partial => "site/partials/generic_meme", :locals => { :item => @meme.item, :meme => @meme, :ignore_title_sizing => true } %>
-</div>
-
-<div class="clear"></div>
-
-<div class="meme">
-
-<div class="grid_4 alpha">
-  <div id="meme_<%= @meme.id %>">
-    <%= render :partial => "site/partials/meme_sparkline", :locals => { :meme => @meme }%>
-  </div>
-  <h3><%= @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse.size %> Connected Items</h3>
-  <table id="connected_items" width="100%" cellspacing="0" cellpadding="0">
-    <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>
-    <tr>
-      <td>
-        <h3 class="title" style="font-size: 81%;"><%= link_to_item_with_tracking widow_prevention(item.title), item %></h3>
-        <p class="byline"><%= render :partial => "favicon", :locals => { :item => item, :colored => true, :primary_item => @meme.item } %><%= render :partial => "byline", :locals => { :item => item } %></p>
-        <p class="byline"><span class="published_at"><%= display_date(item.published_at) %> <%= display_time(item.published_at) %></span></p>
-      </td>
-    </tr>
-    <% end %>
-  </table>
-</div>
-
-<div class="grid_6">
-  <h3>Tweets About '<%= @words_for_twitter_search.join(" ").strip %>'</h3>
-  <div class="clear"></div>
-  <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
-  <script type="text/javascript">
-    show_tweets(["<%= @words_for_twitter_search.join('","') %>"]);
-  </script>
-</div>
-
-<div class="grid_2 omega">
-  <div class="faded">
-    &larr; Join the conversation on Twitter, just mention <a href="http://twitter.com/home?status=<%= @words_for_twitter_search.join(" ") %>"><%= @words_for_twitter_search.join(" and ") %></a> in a tweet or use the hashtag <a href="http://twitter.com/home?status=%23rfr<%= @meme.id %>">#rfr<%= @meme.id %></a>
-  </div>
-  <% have_displayed_image_title = false %>
-  <% for item in @items %>
-    <% if item.images.size != 0 %>
-    <% if have_displayed_image_title == false %>  
-    <h3 style="margin-top: 2.5em;">Images</h3>
-    <% have_displayed_image_title = true %>
-    <% end %>
-      <% for image in item.images[0..0] %><% if ! image.local_src.nil? && image.width > 55 && image.height > 55 %>
-      <div class="item_image_block" style="background-image: url(<%= image_path(image.local_src) %>);">
-        <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
+<div id="meme_details">
+  
+<div id="top_memes">
+  <div class="container_12">
+    <% @meme.number_of_columns = 16 %>
+    <div class="grid_12">
+      <div class="generic">
+        <h3 class="title"><%= link_to_item_with_tracking widow_prevention(@meme.item.title), @meme.item %></h3>
+        <p class="excerpt">
+          <%= render :partial => "byline", :locals => { :item => @meme.item } %>&nbsp;&mdash;&nbsp;<%= limit_text(:meme=>@meme,:text=>@meme.item.content) %>
+        </p>
       </div>
-      <% end %><% end %>
+    </div>
+  </div>
+</div> <!-- top_memes -->
+
+<div class="clear"></div>
+
+<div id="second_memes">
+  <div class="container_12">
+    <% images_displayed = 0 %>
+    <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.flatten %>
+      <% for image in item.images[0..0] %>
+        <% if ! image.local_src.nil? && image.width > 55 && image.height > 55 && images_displayed < 4 %>
+          <div class="item_image_block grid_3" style="background-image: url(<%= image_path(image.local_src) %>);">
+          <%= link_to_item_with_tracking "<span>#{item.feed.title}</span>", item %>
+          </div>
+          <% images_displayed += 1 %>
+        <% end %>
+      <% end %>
     <% end %>
-  <% end %>
-  </ul>
+    <div class="clear"></div>
+  </div>
 </div>
 
 <div class="clear"></div>
 
-</div>
-</div>
+<div id="middle_memes">
+
+<div class="container_12">
+  
+  <div class="grid_6">
+    <h2>All <%= @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse.size %> Related Articles</h2>
+    <ul class="alternate_content">
+      <% for item in @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse %>    
+      <% @meme.number_of_columns = 4 %>
+      <li>
+        <% if ! item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(item.feed.logo, :alt => item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), item) %><% else %><%= link_to_item_with_tracking(image_tag("fauxvicon.gif", :alt => item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), item) %><% end %><%= link_to_item_with_tracking(widow_prevention(item.title), item) %><br />
+        <%= limit_text(:meme=>@meme,:text=>item.content) %><br />
+        <span class="display_date"><%= display_date(item.published_at) %> <%= display_time(item.published_at) %></span>
+      </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <div class="grid_6">
+    <h2>Tweets About &lsquo;<%= @words_for_twitter_search.join(" ").strip %>&rsquo;</h2>
+    <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
+    <script type="text/javascript">
+      show_tweets(["<%= @words_for_twitter_search.join('","') %>"]);
+    </script>
+  </div>
+
+<div class="clear"></div>
+
+</div><!-- middle_memes -->
+
+</div><!-- meme_details -->
 
 <% end # cache %>

@@ -107,17 +107,6 @@ p.excerpt, p.byline {
   font-weight: normal;
 }
 
-strong.byline, 
-.alternate_content strong.byline {
-  color: #D24A31;
-}
-strong.byline a,
-.alternate_content strong.byline a {
-  color: #D24A31;
-}
-.alternate_content .website a {
-  color: #D24A31;
-}
 .alternate_content {
   font-weight: normal;
 }
@@ -153,25 +142,24 @@ strong.byline a,
   font-weight: normal;
 }
 
-.meme_details .item_image_block {
+.item_image_block {
   height: 100px;
   background-position: center center;
   background-repeat: no-repeat;
-  margin-bottom: 20px;
   background-color: #efefef;
 }
-.meme_details .item_image_block a {
+.item_image_block a {
   display: block;
   height: 100%;
   width: 100%;
-  border-top: 10px solid #2579d2;
+  border: 1px solid #D24A31;
   text-decoration: none;
 }
-.meme_details .item_image_block a:hover {
+.item_image_block a:hover {
   background-color: transparent;
-  border-top: 10px solid #ffcc00;
+  border: 1px solid #D24A31;
 }
-.meme_details .item_image_block a span {
+.item_image_block a span {
   visibility: hidden;
 }
 
@@ -313,6 +301,9 @@ li.article_favicon a:hover {
   border-top: 1px solid #222;
   border-bottom: 1px solid #222;
 }
+#meme_details #middle_memes .container_12 {
+  border-bottom: 0px solid #fff;
+}
 #middle_memes h3.title {
   font-weight: normal;
   font-size: 22px;
@@ -324,6 +315,12 @@ li.article_favicon a:hover {
   padding: 0;
   color: #222;
 }
+#middle_memes h2 {
+  font-size: 16px;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+
 #bottom_memes {}
 #bottom_memes .container_12 {
   padding: 1.5em 0;
@@ -371,7 +368,7 @@ li.article_favicon a:hover {
   vertical-align: middle;
 }
 .alternate_content .feed_favicon {
-  margin-right: 5px;
+  margin-right: 9px;
 }
 #bottom_memes p {
   font-size: 14px;
@@ -387,7 +384,7 @@ li.article_favicon a:hover {
 }
 
 #about {
-  border-top: 1px solid #222;
+  border-top: 3px solid #222;
   padding-top: 1.5em;
   font-size: 16px;
   line-height: 1.4em;
@@ -460,8 +457,7 @@ li.article_favicon a:hover {
 #connected_items p.byline {}
 
 .tweet {
-  border-top: 1px solid #efefef;
-  padding: 1.0em 0;
+  padding: 0.5em 0;
 }
 .tweet img {
   margin: 0;
@@ -472,13 +468,14 @@ li.article_favicon a:hover {
   display: block;
   overflow: hidden;
 }
-.tweet .tweet_user {
-  font-weight: bold;
-}
+.tweet .tweet_user {}
 .tweet .tweet_date {
-  color: #ccc;
+  font-style: italic;
 }
 
+.display_date {
+  font-style: italic;
+}
 
 .details {
   padding-top: 0.5em !important;

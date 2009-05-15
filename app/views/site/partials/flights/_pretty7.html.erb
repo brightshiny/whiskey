@@ -88,7 +88,7 @@
       <td class="value"><%= @memes.size %></td>
     </tr>
     <tr>
-      <td class="key">Articles Read</td>
+      <td class="key">Articles Grouped</td>
       <td class="value"><%= @memes.map{ |m| m.distinct_meme_items(@run).size }.flatten.sum %></td>
     </tr>
     <tr>

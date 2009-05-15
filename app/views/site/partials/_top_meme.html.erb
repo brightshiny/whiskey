@@ -7,7 +7,7 @@
     <p class="excerpt"><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %>&nbsp;&mdash;&nbsp;<%= limit_text(:meme=>meme,:text=>meme.item.content) %></p>
     <div class="related_items">
       <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => meme.item, :run => @run } %>
-      <!-- <%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %> -->
+      <%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %>
     </div>
   </div>
   <div class="grid_4">

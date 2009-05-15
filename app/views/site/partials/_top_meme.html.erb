@@ -15,9 +15,9 @@
       <% for meme_item in meme.distinct_meme_items(@run)[1..2] %>
       <li>
         <% if ! meme_item.item.feed.logo.nil? %>
-          <%= link_to_item_with_tracking(image_tag(meme_item.item.feed.logo, :alt => meme_item.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme_item.item) %>
+          <%= link_to_item_with_tracking(image_tag(meme_item.item.feed.logo, :alt => meme_item.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => ""), meme_item.item) %>
         <% else %>
-          <%= link_to_item_with_tracking(image_tag("fauxvicon.gif", :alt => meme_item.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme_item.item) %>
+          <%= link_to_item_with_tracking(image_tag("fauxvicon.gif", :alt => meme_item.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => ""), meme_item.item) %>
         <% end %>
         <%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %>
       </li>

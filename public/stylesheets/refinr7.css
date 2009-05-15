@@ -100,9 +100,15 @@ h3#page_title {
 .grid_3 h3 a, 
 .grid_4 h3 a { }
 
-p.excerpt, p.byline {
-  margin: 0;
-  padding: 0;
+p.excerpt {
+  margin: 0 0 0.4em 0 !important;
+  padding: 0.2em 0 0.5em 0 !important;
+  border-bottom: 1px dotted #ccc;
+}
+#meme_details p.excerpt {
+  border-bottom: 0px;
+  margin: 0 0 0 0 !important;
+  padding: 0.2em 0 0 0 !important;
 }
 
 .author {
@@ -223,7 +229,8 @@ p.excerpt, p.byline {
 }
 .excerpt .feed_favicon {
   vertical-align: middle !important;
-  margin-right: 9px;
+  margin-right: 3px;
+  margin-top: -5px;
 }
 
 .rank {
@@ -251,11 +258,7 @@ p.excerpt, p.byline {
   color: #222;
 }
 
-.related_items {
-  border-top: 1px dotted #ccc;
-  margin-top: 0.5em;
-  padding-top: 0.5em;
-}
+.related_items { }
 .related_items_title {
   font-weight: normal;
   text-transform: uppercase;

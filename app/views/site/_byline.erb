@@ -1,2 +1,2 @@
 <% if ! item.author.nil? %><span class="author"><%= widow_prevention(item.author) %>, </span><% end %>
-<span class="website"><%= link_to_item_with_tracking(widow_prevention(item.feed.title), item) %></span>
+<span class="website"><%= link_to_item_with_tracking((item.feed.title.strip), item) %></span>

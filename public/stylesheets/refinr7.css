@@ -221,6 +221,10 @@ p.excerpt, p.byline {
   vertical-align: middle;
   border: 1px solid #2579d2 !important;
 }
+.excerpt .feed_favicon {
+  vertical-align: middle !important;
+  margin-right: 9px;
+}
 
 .rank {
   font-size: 300%;
@@ -277,7 +281,7 @@ p.excerpt, p.byline {
 }
 #second_memes p {
   font-size: 18px;
-  line-height: 1.4em;
+  line-height: 1.3em;
   color: #222;
 }
 
@@ -307,8 +311,9 @@ p.excerpt, p.byline {
   border-bottom: 0px solid #fff;
 }
 #middle_memes h3.title {
+  padding-bottom: 0.3em;
   font-weight: normal;
-  font-size: 20px;
+  font-size: 20;
 }
 #middle_memes p {
   font-size: 16px;
@@ -333,6 +338,7 @@ p.excerpt, p.byline {
   text-transform: uppercase;
 }
 #bottom_memes h3.title {
+  padding-bottom: 0.3em;
   font-weight: normal;
   font-size: 18px;
 }

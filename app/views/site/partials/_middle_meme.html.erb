@@ -1,7 +1,7 @@
 <% meme.number_of_columns = 4 %>
 <div class="grid_4">
   <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
-  <p class="excerpt"><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %>&nbsp;&mdash;&nbsp;<%= limit_text(:meme=>meme,:text=>meme.item.content) %></p>
+  <p class="excerpt"><% if ! meme.item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(meme.item.feed.logo, :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% else %><%= link_to_item_with_tracking(image_tag("fauxvicon.gif", :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% end %><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %>&nbsp;&mdash;&nbsp;<%= limit_text(:meme=>meme,:text=>meme.item.content) %></p>
   <div class="related_items">
     <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => meme.item, :run => @run } %>
   </div>

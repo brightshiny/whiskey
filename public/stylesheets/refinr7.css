@@ -205,11 +205,13 @@ p.excerpt {
   margin: 0;
   padding: 0.25em 0;
 }
+#openid_container,
+#login_container { }
 #openid_container .sleeve, 
 #login_container .sleeve {
   padding: 10px;
   border: 10px solid #efefef;
-  margin: 1.0em 0 3.0em 0;
+  margin: 1.0em auto 3.0em auto;
 }
 
 .trending {

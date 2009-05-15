@@ -249,8 +249,8 @@ p.excerpt, p.byline {
 
 .related_items {
   border-top: 1px dotted #ccc;
-  margin-top: 0.3em;
-  padding-top: 0.3em;
+  margin-top: 0.5em;
+  padding-top: 0.5em;
 }
 .related_items_title {
   font-weight: normal;

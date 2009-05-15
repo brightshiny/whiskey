@@ -6,7 +6,13 @@ body {
   color: #000;
 }
 #page {
-  background-color: #fff; border-left: 1px solid #222; border-right: 1px solid #222; width: 1000px; margin: auto;
+  background-color: #fff; 
+  border-left: 1px solid #222; 
+  border-right: 1px solid #222; 
+  border-bottom: 1px solid #222;
+  width: 1000px; 
+  margin: auto;
+  margin-bottom: 20px;
 }
 label, input {
   vertical-align: middle;

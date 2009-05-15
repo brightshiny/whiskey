@@ -5,7 +5,9 @@ body {
   background-color: #efefef;
   color: #000;
 }
-
+#page {
+  background-color: #fff; border-left: 1px solid #222; border-right: 1px solid #222; width: 1000px; margin: auto;
+}
 label, input {
   vertical-align: middle;
 }

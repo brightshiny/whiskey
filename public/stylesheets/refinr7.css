@@ -20,6 +20,9 @@ label {
 a {
   color: #D24A31;
 }
+a:hover {
+  color: #FF9400;
+}
 
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.3em;
@@ -233,6 +236,9 @@ li.article_favicon a:hover {
 #top_memes {
   background-color: #fff;
   padding: 1.5em 0;
+}
+#meme_details #top_memes {
+
 }
 #top_memes h3.title {
   font-weight: normal;
@@ -478,5 +484,14 @@ li.article_favicon a:hover {
 }
 
 .details {
-  padding-top: 0.5em !important;
+  font-size: 16px;
+  line-height: 1.4em;
+  vertical-align: middle;
+}
+.details a {
+  text-decoration: none;
+}
+
+.website a {
+  text-decoration: none;
 }

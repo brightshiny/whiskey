@@ -12,6 +12,7 @@
         </p>
       </div>
     </div>
+    <div class="clear"></div>
   </div>
 </div> <!-- top_memes -->
 
@@ -55,7 +56,7 @@
   </div>
 
   <div class="grid_6">
-    <h2>Tweets About &lsquo;<%= @words_for_twitter_search.join(" ").strip %>&rsquo;</h2>
+    <h2>Twitter Search For &lsquo;<a href="http://search.twitter.com/search?q=<%= @words_for_twitter_search.join("+").strip %>"><%= @words_for_twitter_search.join(" ").strip %>&rsquo;</a></h2>
     <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
     <script type="text/javascript">
       show_tweets(["<%= @words_for_twitter_search.join('","') %>"]);

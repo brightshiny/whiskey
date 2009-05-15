@@ -1,0 +1,7 @@
+<% meme.number_of_columns = 3 %>
+<div class="meme grid_3">
+  <div class="generic">
+    <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
+    <p><%= render :partial => "favicon", :locals => { :item => meme.item } %><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></p>
+  </div>
+</div>

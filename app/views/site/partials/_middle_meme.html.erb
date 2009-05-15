@@ -1,0 +1,10 @@
+<% meme.number_of_columns = 4 %>
+<div class="grid_4">
+  <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
+  <p class="excerpt"><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %>&nbsp;&mdash;&nbsp;<%= limit_text(:meme=>meme,:text=>meme.item.content) %></p>
+  <div class="related_items">
+    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => meme.item, :run => @run } %>
+    <!-- <%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %> -->
+  </div>
+  <div class="clear"></div>
+</div>

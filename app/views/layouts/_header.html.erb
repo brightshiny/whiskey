@@ -1,0 +1,12 @@
+<div id="heading">
+  <div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">  
+    <h1 id="logo"><%= link_to image_tag("refinr_logo.gif"), :controller => :site, :action => :index %></h1>
+    <h2 id="tagline">Tech News For Busy People</h2>
+    <% if defined?(@flight) && defined?(@page_title) %>
+    <h3 id="page_title"><%= @page_title %></h3>
+    <% elsif defined?(@flight) && defined?(@run) %>                                                     
+    <h3 id="page_title"><span title="Updated on <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %>">updated <span id="time_ago"><%= time_ago_in_words(@run.ended_at) %></span> ago</span></h3>
+    <% end %>
+    <div class="clear"></div>
+  </div>
+</div>

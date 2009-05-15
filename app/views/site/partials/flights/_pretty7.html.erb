@@ -6,135 +6,100 @@
 
 <% @memes.each_with_index do |meme, n| %>
 
-<% primary_item = meme.item %>
-<% if meme.z_score_strength(@run) > 1.5 %>
+<% if n < 3 %>
 
-<% if number_of_displayed_top_memes == 0 %>
+<% if n == 0 %>
 <div id="top_memes">
 <div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
 <h2 class="meme_grouping_title hide">Top Meme</h2>
-<% end %>
-
-<% if n == 0 %>
-<% meme.number_of_columns = 12 %>
-<div id="meme_<%= meme.id %>" class="meme"> 
-  <h3 class="title" style="font-size: 300%;"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
-  <div class="grid_6 alpha">
-    <p class="excerpt"><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %></p>
-  </div>
-  <div class="grid_4">
-    <ul class="alternate_content">
-      <% for meme_item in meme.distinct_meme_items(@run)[1..2] %>
-      <li>
-        <%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %><br />
-        <%= render :partial => "byline", :locals => { :item => meme_item.item, :meme => meme } %>
-      </li>
-      <% end %>
-    </ul>
-  </div>
-  <div class="grid_2 omega">
-    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item, :run => @run } %>
-    <p class="excerpt details" style="clear: both;"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
-  </div>
-  <div class="clear"></div>  
-</div>
-
-<div class="clear"></div>  
-
-
-<% else %>
-<% if n == 1 %>
+<%= render :partial => "site/partials/top_meme", :locals => { :meme => meme } %>
 </div>
 </div><!-- top_memes -->
 <div id="second_memes">
 <div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
 <h2 class="meme_grouping_title hide">Secondary Memes</h2>
-<% end %>
-
-<% meme.number_of_columns = 12 %>
-<div id="meme_<%= meme.id %>" class="meme">  
-  <div class="grid_6 alpha">
-    <h3 class="title"><%= link_to_item_with_tracking(widow_prevention(meme.item.title), meme.item) %></h3>
-    <p class="excerpt"><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %></p>
-  </div>
-  <div class="grid_4">
-    <ul class="alternate_content">
-      <% for meme_item in meme.distinct_meme_items(@run)[1..2] %>
-      <li>
-        <%= link_to_item_with_tracking(widow_prevention(meme_item.item.title), meme_item.item) %><br />
-        <%= render :partial => "byline", :locals => { :item => meme_item.item, :meme => meme } %>
-      </li>
-      <% end %>
-    </ul>
-  </div>
-  <div class="grid_2 omega">
-    <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item, :run => @run } %>
-    <p class="excerpt details" style="clear: both;"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
-  </div>  
-  <div class="clear"></div>  
-</div>
-
-<div class="clear"></div>  
-<% end %>
-<% number_of_displayed_top_memes += 1 %>
-
 <% else %>
 
-<% if number_of_displayed_middle_memes < 6 %>
-<% if number_of_displayed_middle_memes == 0 %>
-</div><!-- top_memes container -->
-</div><!-- top_memes -->
+<%= render :partial => "site/partials/second_meme", :locals => { :meme => meme } %>
+<%= cycle('', '<div class="clear"></div>', :name => "top_meme_count_breaks") %> 
 
+<% end %>
+
+<% elsif n < 6 %>
+
+<% if n == 3 %>
+</div><!-- second_memes container -->
+</div><!-- second_memes -->
 <div id="middle_memes">
 <div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
 <h2 class="meme_grouping_title hide">Tertiary Memes</h2>
 <% end %>
-<% meme.number_of_columns = 4 %>
-<div class="meme grid_4<% if number_of_displayed_middle_memes%3 == 0%> alpha<% elsif number_of_displayed_middle_memes%3 == 2 %> omega<% end %>">
-  <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
-  <p><strong><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %></strong>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
-  <%= render :partial => "site/partials/all_related_items", :locals => { :meme => meme, :primary_item => primary_item, :run => @run } %>
-  <div class="clear"></div>
-  <p class="excerpt details"><%= link_to "Details &raquo;", :controller => :site, :action => :meme, :id => meme.id %></p>
-</div>
-<% if number_of_displayed_middle_memes%3 == 2 %>
-<div class="clear"></div> 
-<% end %>
 
-<% number_of_displayed_middle_memes += 1 %>
+<%= render :partial => "site/partials/middle_meme", :locals => { :meme => meme } %>
 
-<% if number_of_displayed_middle_memes == 6 %>
-<div class="clear"></div>
+<%= cycle("", "", '<div class="clear"></div>', :name => "middle_meme_count_breaks") %>
+
+<% elsif n < 9 %>
+
+<% if n == 6 %>
 </div><!-- middle_memes container -->
 </div><!-- middle_memes -->
+<div id="fourth_memes">
+<div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
+<% end %>
+
+<%= render :partial => "site/partials/middle_meme", :locals => { :meme => meme } %>
+
+<% else #  n >= 9 %>
+
+<% if n == 9 %>
+<div class="clear"></div>
+</div><!-- fourth_memes container -->
+</div><!-- fourth_memes -->
 <div id="bottom_memes">
 <div class="container_<%= SiteController::MAX_NUMBER_OF_COLUMNS %>">
-<h2 class="meme_grouping_title hide">Rumblings</h2>
+<div class="grid_8">
+<h2 class="meme_grouping_title">Below the Fold</h2>
+<ul>
+<% end %>
+
+<li>
+  <% if ! meme.item.feed.logo.nil? %><%= link_to_item_with_tracking(image_tag(meme.item.feed.logo, :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% else %><%= link_to_item_with_tracking(image_tag("fauxvicon.gif", :alt => meme.item.feed.title, :size => "16x16", :class => "feed_favicon", :style => "border-color: #D24A31;"), meme.item) %><% end %><%= link_to_item_with_tracking(widow_prevention(meme.item.title), meme.item) %>
+</li>
+
 <% end %>
 
 
-<% else %>
-
-
-
-<% meme.number_of_columns = 3 %>
-<div class="meme grid_3<% if number_of_displayed_bottom_memes%4 == 0%> alpha<% elsif number_of_displayed_bottom_memes%4 == 3 %> omega<% end %>">
-  <div class="generic">
-    <h3 class="title"><%= link_to_item_with_tracking widow_prevention(meme.item.title), meme.item %></h3>
-    <p><%= render :partial => "favicon", :locals => { :item => meme.item } %><%= render :partial => "byline", :locals => { :item => meme.item, :meme => meme } %>, <%= limit_text(:meme=>meme,:text=>meme.item.content) %><% if current_user %> <%= link_to "#", :controller => :site, :action => :meme, :id => meme.id %><% end %></p>
-  </div>
+<% end %>
+</ul>
 </div>
-<% if number_of_displayed_bottom_memes%4 == 3 %>
-<div class="clear"></div>
-<% end %>
-<% number_of_displayed_bottom_memes += 1%>
+<div class="grid_4">
 
-<% end %>
+  <h2>Archived</h2>
+  <% if defined?(@run) %>
+  <p id="next_or_previous">
+    <% if defined?(@run) && ! @run.previous.nil? %>This edition of <a href="/">refinr</a> was published on <%= display_date(@run.ended_at) %> at <%= display_time(@run.ended_at) %>.  
+    The <%= link_to "previous edition was posted on #{display_date(@run.previous.ended_at)} at #{display_time(@run.previous.ended_at)}", :controller => :site, :action => :index, :id => @run.previous.id %><% if ! @run.next.nil? %>, and the <%=  link_to "following edition was posted #{display_date(@run.next.ended_at)} at #{display_time(@run.next.ended_at)}", :controller => :site, :action => :index, :id => @run.next.id  %>.  The newest edition was <a href="/">published <%= time_ago_in_words(Run.current(@run.user_id).ended_at) %> ago</a><% end %><% end %>.
+  </p>
+  <% end %>
 
+  <h2>Statistics</h2>
+  <table style="width: 100%;">
+    <tr>
+      <td class="key">Memes Found</td>
+      <td class="value"><%= @memes.size %></td>
+    </tr>
+    <tr>
+      <td class="key">Articles Read</td>
+      <td class="value"><%= @memes.map{ |m| m.distinct_meme_items(@run).size }.flatten.sum %></td>
+    </tr>
+    <tr>
+      <td class="key">Words Tracked</td>
+      <td class="value"><%= @memes.map{ |m| m.distinct_meme_items(@run).map{ |i| i.item.words.size } }.flatten.flatten.flatten.sum %></td>
+    </tr>
+  </table>
 
-<% end %>
-<% end %>
-
+</div>
 <div class="clear"></div>
 </div><!-- bottom_memes container-->
 </div><!-- bottom_memes -->

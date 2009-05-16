@@ -1,7 +1,7 @@
 class TwitterClient
   
   def self.send_item(uber_meme)
-    res = Net::HTTP.post_form(URI.parse('http://pnt.me/links/c'), {'link[destination]'=>"http://refinr.com/site/meme/#{uber_meme.id}"})
+    res = Net::HTTP.post_form(URI.parse('http://pnt.me/links/secret'), {'link[destination]'=>"http://refinr.com/site/meme/#{uber_meme.id}"})
     if res.response.code == "200" && res.body.match(/^http/) && res.body.size < 25
       puts "Tweeting: #{c.body_str}"
       link = res.body          

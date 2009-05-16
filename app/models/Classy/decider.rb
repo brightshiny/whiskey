@@ -135,7 +135,7 @@ module Classy
         else
           puts "Not strong enough: #{strongest_meme.strength_z_score}"
         end  
-        TwitterClient.send_private("Run #{run.id} / Memes #{umras.size} / S #{(((strongest_meme.strength_z_score)*100).floor.to_f)/100.0} / T #{((((run.ended_at - run.started_at) / 60) * 100).floor.to_f)/100} min")
+        TwitterClient.send_private("R #{run.id} / M #{umras.size} / S #{(((strongest_meme.strength_z_score)*100).floor.to_f)/100.0} / T #{((((run.ended_at - run.started_at) / 60) * 100).floor.to_f)/100} min")
       rescue
        puts "Twitter stuff failed"
       end

@@ -125,18 +125,20 @@ module Classy
       run.ended_at = Time.now
       run.save
       
-      # begin
+      begin
         strongest_meme = umras.sort{ |a,b| b.strength_z_score <=> a.strength_z_score }.first
+        strong_enough = false
         if strongest_meme.strength_z_score > 3.0
           puts "Tweeting Strongest Meme (#{strongest_meme.strength_z_score}): #{strongest_meme.uber_meme.item.title}"
           TwitterClient.send_item(strongest_meme.uber_meme)
-          TwitterClient.send_private("Run #{run.id} complete. Found #{umras.size} memes.")
+          strong_enough = true
         else
           puts "Not strong enough: #{strongest_meme.strength_z_score}"
         end  
-      # rescue
-      #   puts "Twitter stuff failed"
-      # end
+        TwitterClient.send_private("Run #{run.id} complete. Found #{umras.size} memes. Tried to send pub tweet: #{strong_enough}")
+      rescue
+       puts "Twitter stuff failed"
+      end
       
       return run
     end

@@ -3,7 +3,7 @@ class TwitterClient
   def self.send_item(uber_meme)
     res = Net::HTTP.post_form(URI.parse('http://pnt.me/links/secret'), {'link[destination]'=>"http://refinr.com/site/meme/#{uber_meme.id}"})
     if res.response.code == "200" && res.body.match(/^http/) && res.body.size < 25
-      puts "Tweeting: #{res.body}"
+      puts "Tweeting: #{uber_meme.item.title} -- #{res.body}"
       link = res.body          
       httpauth = Twitter::HTTPAuth.new('refinr_private', '9aHefafaXath')
       base = Twitter::Base.new(httpauth)

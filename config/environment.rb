@@ -32,6 +32,7 @@ Rails::Initializer.run do |config|
   config.gem "authlogic"
   config.gem "htmlentities"
   config.gem "stemmer"
+  config.gem "twitter"
   config.gem "imagesize", :lib => "image_size"
   config.gem "rmagick", :lib => "RMagick"
 

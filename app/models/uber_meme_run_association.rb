@@ -1,4 +1,4 @@
 class UberMemeRunAssociation < ActiveRecord::Base
   has_many :runs
-  has_many :uber_memes
+  belongs_to :uber_meme
 end

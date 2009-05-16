@@ -116,13 +116,28 @@ module Classy
         total_deviation = data[:strengths].map{ |s| (average_meme_strength - s[:strength])**2 }.sum
         run_data[run_id][:standard_deviation] = (Math.sqrt(total_deviation / data[:number_of_uber_memes])).to_f
       }
+      umras = []
       uber_meme_run_ids.each { |umi|       
-        UberMemeRunAssociation.create({ :uber_meme_id => umi.uber_meme_id, :run_id => umi.run_id, :strength => umi.strength.to_f, :strength_z_score => (umi.strength.to_f / run_data[umi.run_id][:standard_deviation]) }) 
+        umras.push(UberMemeRunAssociation.create({ :uber_meme_id => umi.uber_meme_id, :run_id => umi.run_id, :strength => umi.strength.to_f, :strength_z_score => (umi.strength.to_f / run_data[umi.run_id][:standard_deviation]) }))
       }
       puts "... done making UMRAs"
       
       run.ended_at = Time.now
       run.save
+      
+      # begin
+        strongest_meme = umras.sort{ |a,b| b.strength_z_score <=> a.strength_z_score }.first
+        if strongest_meme.strength_z_score > 1.0
+          puts "Tweeting Strongest Meme (#{strongest_meme.strength_z_score}): #{strongest_meme.uber_meme.item.title}"
+          TwitterClient.send_item(strongest_meme.uber_meme.item)
+          TwitterClient.send_private("Run #{run.id} complete. Found #{umras.size} memes.")
+        else
+          puts "Not strong enough: #{strongest_meme.strength_z_score}"
+        end  
+      # rescue
+      #   puts "Twitter stuff failed"
+      # end
+      
       return run
     end
     

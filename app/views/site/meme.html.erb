@@ -40,6 +40,14 @@
 <div id="middle_memes">
 
 <div class="container_12">
+
+  <div class="grid_6">
+    <h2>Twitter Search For &lsquo;<a href="http://search.twitter.com/search?q=<%= @words_for_twitter_search.join("+").strip %>"><%= @words_for_twitter_search.join(" ").strip %>&rsquo;</a></h2>
+    <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
+    <script type="text/javascript">
+      show_tweets(["<%= @words_for_twitter_search.join('","') %>"]);
+    </script>
+  </div>
   
   <div class="grid_6">
     <h2>All <%= @meme.distinct_meme_items.map{ |mi| mi.item }.sort_by{ |i| i.published_at }.reverse.size %> Related Articles</h2>
@@ -53,14 +61,6 @@
       </li>
       <% end %>
     </ul>
-  </div>
-
-  <div class="grid_6">
-    <h2>Twitter Search For &lsquo;<a href="http://search.twitter.com/search?q=<%= @words_for_twitter_search.join("+").strip %>"><%= @words_for_twitter_search.join(" ").strip %>&rsquo;</a></h2>
-    <div id="topical_tweets"><span id="loading_tweets">Loading tweets..<blink>.</blink></span></div>
-    <script type="text/javascript">
-      show_tweets(["<%= @words_for_twitter_search.join('","') %>"]);
-    </script>
   </div>
 
 <div class="clear"></div>

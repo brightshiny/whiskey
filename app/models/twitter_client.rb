@@ -5,7 +5,7 @@ class TwitterClient
     if res.response.code == "200" && res.body.match(/^http/) && res.body.size < 25
       puts "Tweeting: #{c.body_str}"
       link = res.body          
-      httpauth = Twitter::HTTPAuth.new('refinr', '9aHefafaXath')
+      httpauth = Twitter::HTTPAuth.new('refinr_private', '9aHefafaXath')
       base = Twitter::Base.new(httpauth)
       text = "News: #{uber_meme.item.title[0..110]}"
       if uber_meme.item.title.size > 110

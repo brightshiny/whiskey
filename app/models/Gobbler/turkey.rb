@@ -4,6 +4,7 @@ require 'digest/sha1'
 require 'cgi'
 require 'fileutils'
 
+
 class Gobbler::Turkey < ActiveRecord::BaseWithoutTable
   attr_reader :decoder
 

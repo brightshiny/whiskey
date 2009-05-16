@@ -128,7 +128,7 @@ module Classy
       begin
         strongest_meme = umras.sort{ |a,b| b.strength_z_score <=> a.strength_z_score }.first
         strong_enough = false
-        if strongest_meme.strength_z_score > 3.0
+        if strongest_meme.strength_z_score > 3.4
           puts "Tweeting Strongest Meme (#{strongest_meme.strength_z_score}): #{strongest_meme.uber_meme.item.title}"
           TwitterClient.send_item(strongest_meme.uber_meme)
           strong_enough = true
